@@ -37,3 +37,45 @@ PlayerID varchar(15) NOT NULL,
 TeamID varchar(8) NOT NULL,
 JerseyNum INT NOT NULL
 )
+
+---------------------------------------------------------------------------------------
+
+ALTER TABLE dbo.Tournament
+ADD PRIMARY KEY (ID)
+
+ALTER TABLE dbo.Phase
+ADD PRIMARY KEY (ID)
+
+ALTER TABLE dbo.Team
+ADD PRIMARY KEY (ID)
+
+ALTER TABLE dbo.Player
+ADD PRIMARY KEY (ID)
+
+ALTER TABLE dbo.Team_In_Tournament
+ADD CONSTRAINT PK_TeamTourn PRIMARY KEY(TeamID, TournamentID)
+
+ALTER TABLE dbo.Player_In_Team
+ADD CONSTRAINT PK_PlayerTeam PRIMARY KEY(PlayerID, TeamID)
+
+--------------------------------------------------------------------------------------
+
+ALTER TABLE dbo.Phase
+ADD CONSTRAINT FK_Phase FOREIGN KEY(TournamentID)
+REFERENCES dbo.Tournament(ID)
+
+ALTER TABLE dbo.Team_In_Tournament
+ADD CONSTRAINT FK_TIT_TeamID FOREIGN KEY(TeamID)
+REFERENCES dbo.Team(ID)
+
+ALTER TABLE dbo.Team_In_Tournament
+ADD CONSTRAINT FK_TIT_TournID FOREIGN KEY(TournamentID)
+REFERENCES dbo.Tournament(ID)
+
+ALTER TABLE dbo.Player_In_Team
+ADD CONSTRAINT FK_PIT_PlayerID FOREIGN KEY(PlayerID)
+REFERENCES dbo.Player(ID)
+
+ALTER TABLE dbo.Player_In_Team
+ADD CONSTRAINT FK_PIT_TeamID FOREIGN KEY(TeamID)
+REFERENCES dbo.Team(ID)
