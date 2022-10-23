@@ -6,7 +6,7 @@
         public string name { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
-        public bool local { get; set; }
+        public int local { get; set; }
         public string description { get; set; }
     }
 }

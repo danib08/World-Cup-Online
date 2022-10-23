@@ -50,7 +50,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpGet("{id}")]
-        public string GetMatch(string id)
+        public string GetMatch(int id)
         {
 
             string lbl_id;
@@ -186,7 +186,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteMatch(string id)
+        public ActionResult DeleteMatch(int id)
         {
             //SQL Query
             string query = @"

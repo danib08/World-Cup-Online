@@ -1,26 +1,25 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
 using System.Globalization;
+using Newtonsoft.Json.Linq;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TournamentController : ControllerBase
+    public class PhaseController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-
-        public TournamentController(IConfiguration configuration)
+        public PhaseController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         [HttpGet]
-        public JsonResult GetTournaments()
+        public JsonResult GetPhases()
         {
             string query = @"stored procedure";
 
@@ -30,7 +29,7 @@ namespace WorldCupOnline_API.Controllers
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
                 myCon.Open();
-                using(SqlCommand myCommand = new SqlCommand(query, myCon))
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -40,7 +39,7 @@ namespace WorldCupOnline_API.Controllers
             }
 
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach(DataColumn column in table.Columns)
+            foreach (DataColumn column in table.Columns)
             {
                 column.ColumnName = ti.ToLower(column.ColumnName);
             }
@@ -49,14 +48,11 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpGet("{id}")]
-        public string GetTournament(string id)
+        public string GetPhase(int id)
         {
             string lbl_id;
             string lbl_name;
-            string lbl_startdate;
-            string lbl_enddate;
-            string lbl_local;
-            string lbl_description;
+            string lbl_tournamentid;
 
             //SQL Query
             string query = @"
@@ -85,15 +81,10 @@ namespace WorldCupOnline_API.Controllers
 
                 lbl_id = row["id"].ToString();
                 lbl_name = row["name"].ToString();
-                lbl_startdate = row["startDate"].ToString();
-                lbl_enddate = row["endDate"].ToString();
-                lbl_local = row["local"].ToString();
-                lbl_description= row["description"].ToString();
-
+                lbl_tournamentid = row["tournamentID"].ToString();
 
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
-                   new JProperty("startDate", DateTime.Parse(lbl_startdate)), new JProperty("endDate", DateTime.Parse(lbl_enddate)),
-                   new JProperty("local", lbl_local), new JProperty("description", float.Parse(lbl_description)));
+                   new JProperty("tournamentID", float.Parse(lbl_tournamentid)));
 
                 return data.ToString();
             }
@@ -104,12 +95,9 @@ namespace WorldCupOnline_API.Controllers
             }
         }
 
-
         [HttpPost]
-        public JsonResult PostTournament(Tournament tournament)
+        public JsonResult PostPhase(Phase phase)
         {
-            
-
             //SQL Query
             string query = @"
                              stored procedure
@@ -123,27 +111,22 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 //Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", tournament.id);
-                myCommand.Parameters.AddWithValue("@name", tournament.name);
-                myCommand.Parameters.AddWithValue("@startdate", tournament.startDate);
-                myCommand.Parameters.AddWithValue("@enddate", tournament.endDate);
-                myCommand.Parameters.AddWithValue("@local", tournament.local);
-                myCommand.Parameters.AddWithValue("@description", tournament.description);
-
+                myCommand.Parameters.AddWithValue("@id", phase.id);
+                myCommand.Parameters.AddWithValue("@name", phase.name);
+                myCommand.Parameters.AddWithValue("@tournamentID", phase.tournamentID);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
                 myReader.Close();
                 myCon.Close();//Closed connection
+
             }
 
             return new JsonResult(table); //Returns table with info
-
         }
 
-
         [HttpPut]
-        public ActionResult PutTournament(Tournament tournament)
+        public ActionResult PutPhase(Phase phase)
         {
             //SQL Query
             string query = @"
@@ -158,13 +141,9 @@ namespace WorldCupOnline_API.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))//Sql command with query and connection
                 {
                     //Added parameters
-                    myCommand.Parameters.AddWithValue("@id", tournament.id);
-                    myCommand.Parameters.AddWithValue("@name", tournament.name);
-                    myCommand.Parameters.AddWithValue("@startdate", tournament.startDate);
-                    myCommand.Parameters.AddWithValue("@enddate", tournament.endDate);
-                    myCommand.Parameters.AddWithValue("@local", tournament.local);
-                    myCommand.Parameters.AddWithValue("@description", tournament.description);
-
+                    myCommand.Parameters.AddWithValue("@id", phase.id);
+                    myCommand.Parameters.AddWithValue("@name", phase.name);
+                    myCommand.Parameters.AddWithValue("@tournamentID", phase.tournamentID);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -176,7 +155,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteTournament(string id)
+        public ActionResult DeletePhase(int id)
         {
             //SQL Query
             string query = @"

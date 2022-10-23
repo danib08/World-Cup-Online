@@ -50,7 +50,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpGet("{teamid}/{matchid}")]
-        public string GetTeam_In_Match(string teamid, string matchid)
+        public string GetTeam_In_Match(string teamid, int matchid)
         {
             string lbl_teamid;
             string lbl_matchid;
@@ -159,7 +159,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpDelete("{teamid}/{matchid}")]
-        public ActionResult DeleteState(string teamid, string matchid)
+        public ActionResult DeleteTeam_In_Match(string teamid, int matchid)
         {
             //SQL Query
             string query = @"
