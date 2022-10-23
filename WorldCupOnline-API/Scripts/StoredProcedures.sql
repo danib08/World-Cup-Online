@@ -234,3 +234,120 @@ as begin
 	end
 end
 go
+
+create procedure proc_match(@ID int,
+			    @StartDate datetime,
+			    @StartTime time,
+			    @Score varchar(7),
+			    @Location varchar(50),
+			    @State varchar(30),
+			    @TournamentID varchar(6),
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.Match(ID,StartDate,StartTime,Location,State,TournamentID)
+		values(@ID,@StartDate,@StartTime,@Location,@State,@TournamentID)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.Match
+	end
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.Match
+		where ID = @ID
+	end
+
+
+	if @StatementType = 'Update'
+	begin
+		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,State=@State, TournamentID=@TournamentID
+		where ID=@ID 	
+	end
+
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.Match 
+		where ID = @ID
+	end
+end
+go
+
+
+create procedure proc_state(@Name varchar(30),
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.State(Name)
+		values(@Name)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.State
+	end
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.State
+		where Name = @Name
+	end
+
+/**
+	if @StatementType = 'Update'
+	begin
+		update dbo.Match set startDate=@startDate,startTime=@startTime,location=@location,state=@state, tournamentId=@tournamentId
+		where Id=@Id 	
+	end
+*/
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.State
+		where Name = @Name
+	end
+end
+go
+
+
+create procedure proc_teamInMatch(@TeamID varchar(8),
+				  @MatchID int,
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.Team_In_Match(TeamID,MatchID)
+		values(@TeamID,@MatchID)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.Team_In_Match
+	end
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.Team_In_Match
+		where TeamID = @TeamID and MatchID = @MatchID
+	end
+
+/**
+	if @StatementType = 'Update'
+	begin
+		update dbo.Match set startDate=@startDate,startTime=@startTime,location=@location,state=@state, tournamentId=@tournamentId
+		where Id=@Id 	
+	end
+*/
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.Team_In_Match
+		where TeamID = @TeamID and MatchID = @MatchID
+	end
+end
+go
