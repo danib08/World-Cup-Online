@@ -66,7 +66,7 @@ namespace WorldCupOnline_API.Controllers
             string query = @"
                             stored procedure";
             DataTable table = new DataTable();//Created table to store data
-            string sqlDataSource = _configuration.GetConnectionString("StraviaTec");
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection created
             {
@@ -93,7 +93,7 @@ namespace WorldCupOnline_API.Controllers
                 lbl_startTime = row["starttime"].ToString();
                 lbl_score = row["score"].ToString();
                 lbl_location = row["location"].ToString();
-                lbl_state = row["states"].ToString();
+                lbl_state = row["state"].ToString();
                 lbl_tournamentId = row["tournamentid"].ToString();
 
 

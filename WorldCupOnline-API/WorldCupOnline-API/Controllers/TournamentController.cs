@@ -22,7 +22,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetTournaments()
         {
-            string query = @"select * from dbo.Tournament";
+            string query = @"stored procedure";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -51,20 +51,18 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet("{id}")]
         public string GetTournament(string id)
         {
-
             string lbl_id;
             string lbl_name;
-            string lbl_startDate;
-            string lbl_endDate;
+            string lbl_startdate;
+            string lbl_enddate;
             string lbl_local;
             string lbl_description;
-
 
             //SQL Query
             string query = @"
                             stored procedure";
             DataTable table = new DataTable();//Created table to store data
-            string sqlDataSource = _configuration.GetConnectionString("StraviaTec");
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection created
             {
@@ -87,14 +85,14 @@ namespace WorldCupOnline_API.Controllers
 
                 lbl_id = row["id"].ToString();
                 lbl_name = row["name"].ToString();
-                lbl_startDate = row["startDate"].ToString();
-                lbl_endDate = row["endDate"].ToString();
+                lbl_startdate = row["startDate"].ToString();
+                lbl_enddate = row["endDate"].ToString();
                 lbl_local = row["privacy"].ToString();
                 lbl_description= row["kilometers"].ToString();
 
 
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
-                   new JProperty("startDate", DateTime.Parse(lbl_startDate)), new JProperty("endDate", DateTime.Parse(lbl_endDate)), new JProperty("privacy", lbl_local),
+                   new JProperty("startDate", DateTime.Parse(lbl_startdate)), new JProperty("endDate", DateTime.Parse(lbl_enddate)), new JProperty("privacy", lbl_local),
                    new JProperty("kilometers", float.Parse(lbl_description)));
 
                 return data.ToString();

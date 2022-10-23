@@ -52,16 +52,14 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet("{teamid}/{matchid}")]
         public string GetTeam_In_Match(string teamid, string matchid)
         {
-
             string lbl_teamid;
             string lbl_matchid;
-
 
             //SQL Query
             string query = @"
                             stored procedure";
             DataTable table = new DataTable();//Created table to store data
-            string sqlDataSource = _configuration.GetConnectionString("StraviaTec");
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection created
             {
@@ -83,11 +81,8 @@ namespace WorldCupOnline_API.Controllers
 
                 DataRow row = table.Rows[0];
 
-
                 lbl_teamid = row["teamid"].ToString();
                 lbl_matchid = row["matchid"].ToString();
-
-
 
                 var data = new JObject(new JProperty("teamid", lbl_teamid), new JProperty("matchid", lbl_matchid));
                 
@@ -106,8 +101,6 @@ namespace WorldCupOnline_API.Controllers
         [HttpPost]
         public JsonResult PostTeam_In_Match(Team_In_Match team_In_Match)
         {
-
-
             //SQL Query
             string query = @"
                              stored procedure
@@ -124,13 +117,10 @@ namespace WorldCupOnline_API.Controllers
                 myCommand.Parameters.AddWithValue("@teamid", team_In_Match.teamid);
                 myCommand.Parameters.AddWithValue("@matchid", team_In_Match.matchid);
 
-
-
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
                 myReader.Close();
                 myCon.Close();//Closed connection
-
             }
 
             return new JsonResult(table); //Returns table with info

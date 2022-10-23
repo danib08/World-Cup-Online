@@ -59,7 +59,7 @@ namespace WorldCupOnline_API.Controllers
             string query = @"
                             stored procedure";
             DataTable table = new DataTable();//Created table to store data
-            string sqlDataSource = _configuration.GetConnectionString("StraviaTec");
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection created
             {
@@ -80,10 +80,7 @@ namespace WorldCupOnline_API.Controllers
 
                 DataRow row = table.Rows[0];
 
-
                 lbl_name = row["name"].ToString();
-
-
 
                 var data = new JObject(new JProperty("name", lbl_name));
 
@@ -101,8 +98,6 @@ namespace WorldCupOnline_API.Controllers
         [HttpPost]
         public JsonResult PostState(State state)
         {
-
-
             //SQL Query
             string query = @"
                              stored procedure
@@ -117,9 +112,6 @@ namespace WorldCupOnline_API.Controllers
 
                 //Parameters added with values
                 myCommand.Parameters.AddWithValue("@name", state.name);
-
-
-
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
                 myReader.Close();
@@ -149,9 +141,6 @@ namespace WorldCupOnline_API.Controllers
                 {
                     //Added parameters
                     myCommand.Parameters.AddWithValue("@name", state.name);
-
-
-
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
