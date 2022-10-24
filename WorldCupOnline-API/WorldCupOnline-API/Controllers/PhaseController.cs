@@ -21,7 +21,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetPhases()
         {
-            string query = @"stored procedure";
+            string query = @"exec proc_phase 0,'','','Select'";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -56,7 +56,7 @@ namespace WorldCupOnline_API.Controllers
 
             //SQL Query
             string query = @"
-                            stored procedure";
+                            exec proc_phase @id,'','','Select'";
             DataTable table = new DataTable();//Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
@@ -100,7 +100,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             stored procedure
+                             exec proc_phase @id,@name,@tournamentid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -113,7 +113,7 @@ namespace WorldCupOnline_API.Controllers
                 //Parameters added with values
                 myCommand.Parameters.AddWithValue("@id", phase.id);
                 myCommand.Parameters.AddWithValue("@name", phase.name);
-                myCommand.Parameters.AddWithValue("@tournamentID", phase.tournamentID);
+                myCommand.Parameters.AddWithValue("@tournamentid", phase.tournamentID);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -130,7 +130,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             stored procedures
+                             exec proc_phase @id,@name,@tournamentid,'Update'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -159,7 +159,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                            stored procedure
+                            exec proc_phase @id,'','','Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
