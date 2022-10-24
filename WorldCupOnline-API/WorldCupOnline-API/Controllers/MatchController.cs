@@ -136,7 +136,7 @@ namespace WorldCupOnline_API.Controllers
 
             ///SQL Query
             string query = @"
-                             exec proc_match @id,@startdate,@starttime,@score,@location,@state,@tournamentid,'Insert'
+                             exec proc_match @id,@startdate,@starttime,@score,@location,@stateid,@tournamentid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -152,7 +152,7 @@ namespace WorldCupOnline_API.Controllers
                 myCommand.Parameters.AddWithValue("@starttime", match.starttime);
                 myCommand.Parameters.AddWithValue("@score", match.score);
                 myCommand.Parameters.AddWithValue("@location", match.location);
-                myCommand.Parameters.AddWithValue("@state", match.state);
+                myCommand.Parameters.AddWithValue("@state", match.stateid);
                 myCommand.Parameters.AddWithValue("@tournamentid", match.tournamentid);
 
 
@@ -177,7 +177,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             exec proc_match @id,@startdate,@starttime,@score,@location,@state,@tournamentid,'Update'
+                             exec proc_match @id,@startdate,@starttime,@score,@location,@stateid,@tournamentid,'Update'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -193,7 +193,7 @@ namespace WorldCupOnline_API.Controllers
                     myCommand.Parameters.AddWithValue("@starttime", match.starttime);
                     myCommand.Parameters.AddWithValue("@score", match.score);
                     myCommand.Parameters.AddWithValue("@location", match.location);
-                    myCommand.Parameters.AddWithValue("@state", match.state);
+                    myCommand.Parameters.AddWithValue("@stateid", match.stateid);
                     myCommand.Parameters.AddWithValue("@tournamentid", match.tournamentid);
 
 

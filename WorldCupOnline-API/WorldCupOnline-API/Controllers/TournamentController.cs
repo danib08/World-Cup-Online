@@ -30,7 +30,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetTournaments()
         {
-            string query = @"exec proc_tournament '','','','',0,'','Select'"; ///sql query
+            string query = @"exec proc_tournament '','','','','',0,'Select WebApp'"; ///sql query
 
             DataTable table = new DataTable(); ///Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
@@ -56,6 +56,38 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); ///Return JSON Of the data table
         }
 
+        [HttpGet("Matches/{id}")]
+        public JsonResult GetMatchesByTournament(string id)
+        {
+            string query = @"exec proc_tournament @id,'','','','',0,'Get Matches By Tourn'"; ///sql query
+
+            DataTable table = new DataTable(); ///Create datatable
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open(); ///Open connection
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@id", id);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader); ///Data is loaded into table
+                    myReader.Close();
+                    myCon.Close(); ///Closed connection
+                }
+            }
+
+            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+            foreach (DataColumn column in table.Columns)
+            {
+                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
+            }
+
+            return new JsonResult(table); ///Return JSON Of the data table
+        }
+
+
+
         /// <summary>
         /// Method to get one Tournament by its id
         /// </summary>
@@ -74,7 +106,7 @@ namespace WorldCupOnline_API.Controllers
 
             ///SQL Query
             string query = @"
-                            exec proc_tournament @id,'','','',0,'','Select One'";
+                            exec proc_tournament @id,'','','','',0,'Select One'";
             DataTable table = new DataTable();///Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
@@ -103,13 +135,13 @@ namespace WorldCupOnline_API.Controllers
                 lbl_name = row["name"].ToString();
                 lbl_startdate = row["startDate"].ToString();
                 lbl_enddate = row["endDate"].ToString();
-                lbl_local = row["local"].ToString();
+                lbl_local = row["typeid"].ToString();
                 lbl_description= row["description"].ToString();
 
 
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
                    new JProperty("startDate", DateTime.Parse(lbl_startdate)), new JProperty("endDate", DateTime.Parse(lbl_enddate)),
-                   new JProperty("local", lbl_local), new JProperty("description", float.Parse(lbl_description)));
+                   new JProperty("description", lbl_description), new JProperty("typeid", float.Parse(lbl_local)));
 
                 return data.ToString(); ///Return created JSON
             }
@@ -132,7 +164,7 @@ namespace WorldCupOnline_API.Controllers
 
             ///SQL Query
             string query = @"
-                             exec proc_tournament @id,@name,@startdate,@enddate,@local,@description,'Insert'
+                             exec proc_tournament @id,@name,@startdate,@enddate,@description,@typeid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -147,7 +179,7 @@ namespace WorldCupOnline_API.Controllers
                 myCommand.Parameters.AddWithValue("@name", tournament.name);
                 myCommand.Parameters.AddWithValue("@startdate", tournament.startDate);
                 myCommand.Parameters.AddWithValue("@enddate", tournament.endDate);
-                myCommand.Parameters.AddWithValue("@local", tournament.local);
+                myCommand.Parameters.AddWithValue("@typeid", tournament.typeid);
                 myCommand.Parameters.AddWithValue("@description", tournament.description);
 
 
@@ -171,7 +203,7 @@ namespace WorldCupOnline_API.Controllers
         {
             ///SQL Query
             string query = @"
-                             exec proc_tournament @id,@name,@startdate,@enddate,@local,@description,'Update'
+                             exec proc_tournament @id,@name,@startdate,@enddate,@description,@typeid,'Update'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -186,7 +218,7 @@ namespace WorldCupOnline_API.Controllers
                     myCommand.Parameters.AddWithValue("@name", tournament.name);
                     myCommand.Parameters.AddWithValue("@startdate", tournament.startDate);
                     myCommand.Parameters.AddWithValue("@enddate", tournament.endDate);
-                    myCommand.Parameters.AddWithValue("@local", tournament.local);
+                    myCommand.Parameters.AddWithValue("@typeid", tournament.typeid);
                     myCommand.Parameters.AddWithValue("@description", tournament.description);
 
 

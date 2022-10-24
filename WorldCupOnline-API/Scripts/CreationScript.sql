@@ -3,12 +3,12 @@ ID varchar(6) NOT NULL,
 Name varchar(30) NOT NULL,
 StartDate datetime NOT NULL,
 EndDate datetime NOT NULL,
-Local bit NOT NULL,
-Description varchar(1000)
+Description varchar(1000),
+TypeID int NOT NULL
 )
 
 CREATE TABLE dbo.Phase(
-ID INT NOT NULL,
+ID int IDENTITY(1,1) NOT NULL,
 Name varchar(50) NOT NULL,
 TournamentID varchar(6) NOT NULL,
 )
@@ -17,27 +17,34 @@ CREATE TABLE dbo.Team(
 ID varchar(8) NOT NULL,
 Name varchar(30) NOT NULL,
 Confederation varchar(30) NOT NULL,
-Local bit NOT NULL
+TypeID int NOT NULL
 )
 
 CREATE TABLE dbo.Player(
 ID varchar(15) NOT NULL,
 Name varchar(30) NOT NULL,
-LastName varchar(30) NOT NULL,
+Lastname varchar(30) NOT NULL,
 Position varchar(30) NOT NULL
 )
 
 CREATE TABLE dbo.Match(
-ID int NOT NULL,
+ID int IDENTITY(1,1) NOT NULL,
 StartDate datetime NOT NULL,
 StartTime time NOT NULL,
 Score varchar(7) NOT NULL,
 Location varchar(50) NOT NULL,
-State varchar(30) NOT NULL,
-TournamentID varchar(6) NOT NULL
+StateID int NOT NULL,
+TournamentID varchar(6) NOT NULL,
+PhaseID int NOT NULL
 )
 
 CREATE TABLE dbo.State(
+ID int IDENTITY(1,1) NOT NULL,
+Name varchar(30) NOT NULL
+)
+
+CREATE TABLE dbo.Type(
+ID int IDENTITY(1,1) NOT NULL,
 Name varchar(30) NOT NULL
 )
 
@@ -75,7 +82,10 @@ ALTER TABLE dbo.Match
 ADD PRIMARY KEY (ID)
 
 ALTER TABLE dbo.State
-ADD PRIMARY KEY (Name)
+ADD PRIMARY KEY (ID)
+
+ALTER TABLE dbo.Type
+ADD PRIMARY KEY (ID)
 
 ALTER TABLE dbo.Team_In_Tournament
 ADD CONSTRAINT PK_TeamTourn PRIMARY KEY(TeamID, TournamentID)
@@ -88,17 +98,29 @@ ADD CONSTRAINT PK_TeamMatch PRIMARY KEY(TeamID, MatchID)
 
 --------------------------------------------------------------------------------------
 
+ALTER TABLE dbo.Tournament
+ADD CONSTRAINT FK_Tourn FOREIGN KEY(TypeID)
+REFERENCES dbo.Type(ID)
+
 ALTER TABLE dbo.Phase
 ADD CONSTRAINT FK_Phase FOREIGN KEY(TournamentID)
 REFERENCES dbo.Tournament(ID)
 
+ALTER TABLE dbo.Team
+ADD CONSTRAINT FK_Team FOREIGN KEY(TypeID)
+REFERENCES dbo.Type(ID)
+
 ALTER TABLE dbo.Match
-ADD CONSTRAINT FK_State FOREIGN KEY(State)
-REFERENCES dbo.State(Name)
+ADD CONSTRAINT FK_State FOREIGN KEY(StateID)
+REFERENCES dbo.State(ID)
 
 ALTER TABLE dbo.Match
 ADD CONSTRAINT FK_Match_TournID FOREIGN KEY(TournamentID)
 REFERENCES dbo.Tournament(ID)
+
+ALTER TABLE dbo.Match
+ADD CONSTRAINT FK_Match_PhaseID FOREIGN KEY(PhaseID)
+REFERENCES dbo.Phase(ID)
 
 ALTER TABLE dbo.Team_In_Tournament
 ADD CONSTRAINT FK_TIT_TeamID FOREIGN KEY(TeamID)

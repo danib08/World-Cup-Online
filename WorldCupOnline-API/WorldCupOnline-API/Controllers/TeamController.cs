@@ -29,7 +29,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetTeams()
         {
-            string query = @"exec proc_team '','','',0,'Select'";///sql query
+            string query = @"exec proc_team '','','',0,'Select WebApp'";///sql query
 
             DataTable table = new DataTable(); ///Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -99,12 +99,12 @@ namespace WorldCupOnline_API.Controllers
                 lbl_id = row["id"].ToString();
                 lbl_name = row["name"].ToString();
                 lbl_confederation = row["confederation"].ToString();
-                lbl_local = row["local"].ToString();
+                lbl_local = row["typeid"].ToString();
 
                 ///Creation of the JSON
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
                    new JProperty("confederation", float.Parse(lbl_confederation)),
-                   new JProperty("local", float.Parse(lbl_local)));
+                   new JProperty("typeid", float.Parse(lbl_local)));
 
                 return data.ToString();///Return created JSON
             }
@@ -125,7 +125,7 @@ namespace WorldCupOnline_API.Controllers
         {
             ///SQL Query
             string query = @"
-                             exec proc_team @id,@name,@confederation,@local,'Insert'
+                             exec proc_team @id,@name,@confederation,@typeid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -139,7 +139,7 @@ namespace WorldCupOnline_API.Controllers
                 myCommand.Parameters.AddWithValue("@id", team.id);
                 myCommand.Parameters.AddWithValue("@name", team.name);
                 myCommand.Parameters.AddWithValue("@confederation", team.confederation);
-                myCommand.Parameters.AddWithValue("@local", team.local);
+                myCommand.Parameters.AddWithValue("@typeid", team.typeid);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -161,7 +161,7 @@ namespace WorldCupOnline_API.Controllers
         {
             ///SQL Query
             string query = @"
-                             exec proc_team @id,@name,@confederation,@local,'Updates'
+                             exec proc_team @id,@name,@confederation,@typeid,'Updates'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -175,7 +175,7 @@ namespace WorldCupOnline_API.Controllers
                     myCommand.Parameters.AddWithValue("@id", team.id);
                     myCommand.Parameters.AddWithValue("@name", team.name);
                     myCommand.Parameters.AddWithValue("@confederation", team.confederation);
-                    myCommand.Parameters.AddWithValue("@local", team.local);
+                    myCommand.Parameters.AddWithValue("@typeid", team.typeid);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
