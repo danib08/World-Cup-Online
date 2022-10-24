@@ -21,7 +21,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetTeams()
         {
-            string query = @"stored procedure";
+            string query = @"exec proc_team '','','',0,'Select'";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -57,7 +57,7 @@ namespace WorldCupOnline_API.Controllers
 
             //SQL Query
             string query = @"
-                            stored procedure";
+                            exec proc_team @id,'','',0,'Select One'";
             DataTable table = new DataTable();//Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
@@ -103,7 +103,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             stored procedure
+                             exec proc_team @id,@name,@confederation,@local,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -134,7 +134,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             stored procedures
+                             exec proc_team @id,@name,@confederation,@local,'Updates'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -164,7 +164,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                            stored procedure
+                            exec proc_team @id,'','',0,'Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
