@@ -101,8 +101,9 @@ namespace WorldCupOnline_API.Controllers
             string lbl_name;
             string lbl_startdate;
             string lbl_enddate;
-            string lbl_local;
             string lbl_description;
+            string lbl_type;
+
 
             ///SQL Query
             string query = @"
@@ -135,13 +136,13 @@ namespace WorldCupOnline_API.Controllers
                 lbl_name = row["name"].ToString();
                 lbl_startdate = row["startDate"].ToString();
                 lbl_enddate = row["endDate"].ToString();
-                lbl_local = row["typeid"].ToString();
                 lbl_description= row["description"].ToString();
+                lbl_type = row["typeid"].ToString();
 
 
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
                    new JProperty("startDate", DateTime.Parse(lbl_startdate)), new JProperty("endDate", DateTime.Parse(lbl_enddate)),
-                   new JProperty("description", lbl_description), new JProperty("typeid", float.Parse(lbl_local)));
+                   new JProperty("description", lbl_description), new JProperty("typeid", lbl_type));
 
                 return data.ToString(); ///Return created JSON
             }
@@ -177,11 +178,10 @@ namespace WorldCupOnline_API.Controllers
                 ///Parameters added with values
                 myCommand.Parameters.AddWithValue("@id", tournament.id);
                 myCommand.Parameters.AddWithValue("@name", tournament.name);
-                myCommand.Parameters.AddWithValue("@startdate", tournament.startDate);
-                myCommand.Parameters.AddWithValue("@enddate", tournament.endDate);
-                myCommand.Parameters.AddWithValue("@typeid", tournament.typeid);
+                myCommand.Parameters.AddWithValue("@startdate", tournament.startdate);
+                myCommand.Parameters.AddWithValue("@enddate", tournament.enddate);
                 myCommand.Parameters.AddWithValue("@description", tournament.description);
-
+                myCommand.Parameters.AddWithValue("@typeid", tournament.typeid);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -216,10 +216,10 @@ namespace WorldCupOnline_API.Controllers
                     ///Added parameters
                     myCommand.Parameters.AddWithValue("@id", tournament.id);
                     myCommand.Parameters.AddWithValue("@name", tournament.name);
-                    myCommand.Parameters.AddWithValue("@startdate", tournament.startDate);
-                    myCommand.Parameters.AddWithValue("@enddate", tournament.endDate);
-                    myCommand.Parameters.AddWithValue("@typeid", tournament.typeid);
+                    myCommand.Parameters.AddWithValue("@startdate", tournament.startdate);
+                    myCommand.Parameters.AddWithValue("@enddate", tournament.enddate);
                     myCommand.Parameters.AddWithValue("@description", tournament.description);
+                    myCommand.Parameters.AddWithValue("@typeid", tournament.typeid);
 
 
                     myReader = myCommand.ExecuteReader();
@@ -241,7 +241,7 @@ namespace WorldCupOnline_API.Controllers
         {
             ///SQL Query
             string query = @"
-                            exec proc_tournament @id,'','','',0,'','Delete'
+                            exec proc_tournament @id,'','','','',0,'Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");

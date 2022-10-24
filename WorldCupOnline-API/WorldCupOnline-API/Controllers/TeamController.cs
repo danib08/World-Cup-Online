@@ -67,7 +67,7 @@ namespace WorldCupOnline_API.Controllers
             string lbl_id;
             string lbl_name;
             string lbl_confederation;
-            string lbl_local;
+            string lbl_type;
 
             ///SQL Query
             string query = @"
@@ -99,12 +99,12 @@ namespace WorldCupOnline_API.Controllers
                 lbl_id = row["id"].ToString();
                 lbl_name = row["name"].ToString();
                 lbl_confederation = row["confederation"].ToString();
-                lbl_local = row["typeid"].ToString();
+                lbl_type = row["typeid"].ToString();
 
                 ///Creation of the JSON
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
                    new JProperty("confederation", float.Parse(lbl_confederation)),
-                   new JProperty("typeid", float.Parse(lbl_local)));
+                   new JProperty("typeid", float.Parse(lbl_type)));
 
                 return data.ToString();///Return created JSON
             }
