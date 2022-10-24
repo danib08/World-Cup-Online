@@ -7,7 +7,8 @@
         public DateTime starttime { get; set; }
         public string score { get; set; }
         public string location { get; set; }
-        public string state { get; set; }
+        public string stateid { get; set; }
         public string tournamentid { get; set; }
+        public int phaseid { get; set; }
     }
 }
