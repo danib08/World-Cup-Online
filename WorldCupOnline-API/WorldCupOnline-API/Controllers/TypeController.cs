@@ -30,7 +30,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetTypes()
         {
-            string query = @"exec proc_type 0,'','Select'"; ///sql query
+            string query = @"exec proc_type 0,'','Select WebApp'"; ///sql query
 
             DataTable table = new DataTable(); //Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
