@@ -2,20 +2,34 @@ create procedure proc_tournament(@ID varchar(6),
 				@Name varchar(30),
 				@StartDate datetime,
 				@EndDate datetime,
-				@Local bit,
 				@Description varchar(1000),
+				@TypeID int,
 				@StatementType varchar(50) = '')
 as begin
 
 	if @StatementType = 'Insert'
 	begin
-		insert into dbo.Tournament(ID,Name,StartDate,EndDate,Local,Description)
-		values(@ID,@Name,@StartDate,@EndDate,@Local,@Description)
+		insert into dbo.Tournament(ID,Name,StartDate,EndDate,Description,TypeID)
+		values(@ID,@Name,@StartDate,@EndDate,@Description,@TypeID)
 	end
 
 	if @StatementType = 'Select'
 	begin
 		select * from dbo.Tournament
+	end
+
+	if @StatementType = 'Select WebApp'
+	begin
+		select dbo.Tournament.ID, dbo.Tournament.name, StartDate, EndDate, dbo.Type.Name as Type
+		from dbo.Tournament join dbo.Type on TypeID = dbo.Type.ID
+	end
+
+	if @StatementType = 'Get Matches by Tourn'
+	begin	
+		select dbo.Match.ID, dbo.Team.Name, StartDate, StartTime, Location, dbo.State.Name as State, Score
+		from ((dbo.Match join dbo.State on StateID = dbo.State.ID) join dbo.Team_In_Match on MatchID = dbo.Match.ID) join dbo.Team on TeamID = dbo.Team.ID
+		where TournamentID = @ID
+		order by dbo.Match.ID 
 	end
 
 	if @StatementType = 'Select One'
@@ -24,10 +38,9 @@ as begin
 		where Id = @Id
 	end
 
-
 	if @StatementType = 'Update'
 	begin
-		update dbo.Tournament set Name=@Name,StartDate=@StartDate,EndDate=@EndDate,Local=@Local,Description=@Description
+		update dbo.Tournament set Name=@Name,StartDate=@StartDate,EndDate=@EndDate,Description=@Description,TypeID=@TypeID
 		where ID=@ID 	
 	end
 
@@ -40,23 +53,28 @@ end
 go
 
 
-
 create procedure proc_team(@ID varchar(8),
-			   @Name varchar(30),
+			   	@Name varchar(30),
 				@Confederation varchar(30),
-				@Local bit,
+				@TypeID int,
 				@StatementType varchar(50) = '')
 as begin
 
 	if @StatementType = 'Insert'
 	begin
-		insert into dbo.Team(ID,Name,Confederation,Local)
-		values(@ID,@Name,@Confederation,@Local)
+		insert into dbo.Team(ID,Name,Confederation,TypeID)
+		values(@ID,@Name,@Confederation,@TypeID)
 	end
 
 	if @StatementType = 'Select'
 	begin
 		select * from dbo.Team
+	end
+
+	if @StatementType = 'Select WebApp'
+	begin
+		select ID, Name as label
+		from dbo.Team
 	end
 
 	if @StatementType = 'Select One'
@@ -68,7 +86,7 @@ as begin
 
 	if @StatementType = 'Update'
 	begin
-		update dbo.Team set Name=@Name,Confederation=@Confederation,Local=@Local
+		update dbo.Team set Name=@Name,Confederation=@Confederation,TypeID=@TypeID
 		where ID=@ID 	
 	end
 
@@ -103,13 +121,6 @@ as begin
 		where TeamID = @TeamID and TournamentID = @TournamentID
 	end
 
-/**
-	if @StatementType = 'Update'
-	begin
-		update dbo.Team set Name=@Name,Confederation=@Confederation,Local=@Local
-		where ID=@ID 	
-	end
-*/
 	if @StatementType = 'Delete'
 	begin
 		delete from dbo.Team_In_Tournament
@@ -141,7 +152,6 @@ as begin
 		select * from dbo.Player
 		where ID = @ID
 	end
-
 
 	if @StatementType = 'Update'
 	begin
@@ -205,8 +215,8 @@ as begin
 
 	if @StatementType = 'Insert'
 	begin
-		insert into dbo.Phase(ID,Name,TournamentID)
-		values(@ID,@Name,@TournamentID)
+		insert into dbo.Phase(Name,TournamentID)
+		values(@Name,@TournamentID)
 	end
 
 	if @StatementType = 'Select'
@@ -242,13 +252,14 @@ create procedure proc_match(@ID int,
 			    @Location varchar(50),
 			    @State varchar(30),
 			    @TournamentID varchar(6),
+				@PhaseID int,
 			    @StatementType varchar(50) = '')
 as begin
 
 	if @StatementType = 'Insert'
 	begin
-		insert into dbo.Match(ID,StartDate,StartTime,Location,State,TournamentID)
-		values(@ID,@StartDate,@StartTime,@Location,@State,@TournamentID)
+		insert into dbo.Match(StartDate,StartTime,Location,State,TournamentID,PhaseID)
+		values(@StartDate,@StartTime,@Location,@State,@TournamentID,@PhaseID)
 	end
 
 	if @StatementType = 'Select'
@@ -262,10 +273,9 @@ as begin
 		where ID = @ID
 	end
 
-
 	if @StatementType = 'Update'
 	begin
-		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,State=@State, TournamentID=@TournamentID
+		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,State=@State,TournamentID=@TournamentID,PhaseID=@PhaseID
 		where ID=@ID 	
 	end
 
@@ -278,7 +288,8 @@ end
 go
 
 
-create procedure proc_state(@Name varchar(30),
+create procedure proc_state(@ID int,
+				@Name varchar(30),
 			    @StatementType varchar(50) = '')
 as begin
 
@@ -296,16 +307,15 @@ as begin
 	if @StatementType = 'Select One'
 	begin
 		select * from dbo.State
-		where Name = @Name
+		where ID = @ID
 	end
 
-/**
 	if @StatementType = 'Update'
 	begin
-		update dbo.Match set startDate=@startDate,startTime=@startTime,location=@location,state=@state, tournamentId=@tournamentId
-		where Id=@Id 	
+		update dbo.State set Name=@Name
+		where ID=@ID 	
 	end
-*/
+
 	if @StatementType = 'Delete'
 	begin
 		delete from dbo.State
@@ -314,9 +324,8 @@ as begin
 end
 go
 
-
 create procedure proc_teamInMatch(@TeamID varchar(8),
-				  @MatchID int,
+				@MatchID int,
 			    @StatementType varchar(50) = '')
 as begin
 
@@ -337,13 +346,6 @@ as begin
 		where TeamID = @TeamID and MatchID = @MatchID
 	end
 
-/**
-	if @StatementType = 'Update'
-	begin
-		update dbo.Match set startDate=@startDate,startTime=@startTime,location=@location,state=@state, tournamentId=@tournamentId
-		where Id=@Id 	
-	end
-*/
 	if @StatementType = 'Delete'
 	begin
 		delete from dbo.Team_In_Match
