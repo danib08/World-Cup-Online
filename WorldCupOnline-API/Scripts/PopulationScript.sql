@@ -1,16 +1,25 @@
-exec proc_team 'ARG','Argentina','CONMEBOL',FALSE,'Insert'
-exec proc_team 'BRA','Brasil','CONMEBOL',FALSE,'Insert'
-exec proc_team 'CRC','Costa Rica','CONCACAF',FALSE,'Insert'
-exec proc_team 'ESP','España','UEFA',FALSE,'Insert'
-exec proc_team 'SEN','Senegal', 'CAF',FALSE,'Insert'
-exec proc_team 'ENG','Inglaterra','UEFA',FALSE,'Insert'
-exec proc_team 'URU','Uruguay','AFC',FALSE,'Insert'
-exec proc_team 'MEX','México','CONCACAF',FALSE,'Insert'
+insert into dbo.Type (Name)
+values ('Selecciones'),
+('Clubes')
 
-exec proc_team 'ATM','Club Atlético de Madrid','UEFA',TRUE,'Insert'
-exec proc_team 'ACM','AC Milan','UEFA',TRUE,'Insert'
-exec proc_team 'SAP','Deportivo Saprissa','CONMEBOL',TRUE,'Insert'
-exec proc_team 'PSG','Paris Saint Germain','UEFA',TRUE,'Insert'
+insert into dbo.State
+values ('Pendiente'),
+('En juego'),
+('Completado')
+
+exec proc_team 'ARG','Argentina','CONMEBOL',1,'Insert'
+exec proc_team 'BRA','Brasil','CONMEBOL',1,'Insert'
+exec proc_team 'CRC','Costa Rica','CONCACAF',1,'Insert'
+exec proc_team 'ESP','España','UEFA',1,'Insert'
+exec proc_team 'SEN','Senegal', 'CAF',1,'Insert'
+exec proc_team 'ENG','Inglaterra','UEFA',1,'Insert'
+exec proc_team 'URU','Uruguay','AFC',1,'Insert'
+exec proc_team 'MEX','México','CONCACAF',1,'Insert'
+
+exec proc_team 'ATM','Club Atlético de Madrid','UEFA',2,'Insert'
+exec proc_team 'ACM','AC Milan','UEFA',2,'Insert'
+exec proc_team 'SAP','Deportivo Saprissa','CONMEBOL',2,'Insert'
+exec proc_team 'PSG','Paris Saint Germain','UEFA',2,'Insert'
 
 
 exec proc_player 'arg1', 'Franco', 'Armani', 'Portero', 'Insert'

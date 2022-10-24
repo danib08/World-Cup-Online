@@ -250,7 +250,7 @@ create procedure proc_match(@ID int,
 			    @StartTime time,
 			    @Score varchar(7),
 			    @Location varchar(50),
-			    @State varchar(30),
+			    @StateID varchar(30),
 			    @TournamentID varchar(6),
 				@PhaseID int,
 			    @StatementType varchar(50) = '')
@@ -258,8 +258,8 @@ as begin
 
 	if @StatementType = 'Insert'
 	begin
-		insert into dbo.Match(StartDate,StartTime,Location,State,TournamentID,PhaseID)
-		values(@StartDate,@StartTime,@Location,@State,@TournamentID,@PhaseID)
+		insert into dbo.Match(StartDate,StartTime,Location,StateID,TournamentID,PhaseID)
+		values(@StartDate,@StartTime,@Location,@StateID,@TournamentID,@PhaseID)
 	end
 
 	if @StatementType = 'Select'
@@ -275,7 +275,7 @@ as begin
 
 	if @StatementType = 'Update'
 	begin
-		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,State=@State,TournamentID=@TournamentID,PhaseID=@PhaseID
+		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,StateID=@StateID,TournamentID=@TournamentID,PhaseID=@PhaseID
 		where ID=@ID 	
 	end
 
