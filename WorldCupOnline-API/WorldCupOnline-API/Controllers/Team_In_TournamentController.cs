@@ -23,7 +23,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetTeams_In_Tournament()
         {
-            string query = @"stored procedure";
+            string query = @"exec proc_teamInTournament '','','Select'";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -57,7 +57,7 @@ namespace WorldCupOnline_API.Controllers
 
             //SQL Query
             string query = @"
-                            stored procedure";
+                            exec proc_teamInTournament @teamid,@tournamentid,'Select One'";
             DataTable table = new DataTable();//Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
@@ -101,7 +101,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             stored procedure
+                             exec proc_teamInTournament @teamid,@tournamentid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -131,7 +131,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             stored procedures
+                             exec proc_teamInTournament @teamid,@tournamentid,'Update'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -159,7 +159,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                            stored procedure
+                            exec proc_teamInTournament @teamid,@tournamentid,'Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
