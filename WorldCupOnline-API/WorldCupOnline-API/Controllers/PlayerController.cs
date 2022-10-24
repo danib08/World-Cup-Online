@@ -23,7 +23,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetPlayers()
         {
-            string query = @"stored procedure";
+            string query = @"exec proc_player '','','','','Select'";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -60,7 +60,7 @@ namespace WorldCupOnline_API.Controllers
 
             //SQL Query
             string query = @"
-                            stored procedure";
+                            exec proc_player @id,'','','','Select One'";
             DataTable table = new DataTable();//Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
@@ -108,7 +108,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             stored procedure
+                             exec proc_player @id,@name,@lastname,@position,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -140,7 +140,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             stored procedures
+                             exec proc_player @id,@name,@lastname,@position,'Update'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -170,7 +170,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                            stored procedure
+                            exec proc_player @id,'','','','Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
