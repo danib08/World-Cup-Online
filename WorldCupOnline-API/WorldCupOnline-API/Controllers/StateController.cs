@@ -30,7 +30,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetStates()
         {
-            string query = @"exec proc_state '','Select'"; ///sql query
+            string query = @"exec proc_state 0,'','Select'"; ///sql query
 
             DataTable table = new DataTable(); //Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -57,20 +57,21 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to get one state by its name
+        /// Method to get one state by its id
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpGet("{name}")]
-        public string GetState(string name)
+        [HttpGet("{id}")]
+        public string GetState(int id)
         {
             ///Created label
             string lbl_name;
+            string lbl_id;
 
 
             ///SQL Query
             string query = @"
-                            exec proc_state @name,'Select One'";
+                            exec proc_state @id,'','Select One'";
 
             DataTable table = new DataTable();///Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -81,7 +82,7 @@ namespace WorldCupOnline_API.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))///Command with query and connection
                 {
                     ///Added parameters
-                    myCommand.Parameters.AddWithValue("@name", name);
+                    myCommand.Parameters.AddWithValue("@id", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader); ///Load data to table
                     myReader.Close();
@@ -96,10 +97,11 @@ namespace WorldCupOnline_API.Controllers
                 DataRow row = table.Rows[0];
 
                 ///Manipulation of every row of datatable and parse them to string
+                lbl_id = row["id"].ToString();
                 lbl_name = row["name"].ToString();
 
                 ///Creation of the JSON
-                var data = new JObject(new JProperty("name", lbl_name));
+                var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name));
 
                 return data.ToString(); ///Return created JSON
             }
@@ -121,7 +123,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             exec proc_state @name,'Insert'
+                             exec proc_state @id,@name,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -132,6 +134,7 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
+                myCommand.Parameters.AddWithValue("@id", state.id);
                 myCommand.Parameters.AddWithValue("@name", state.name);
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -145,16 +148,16 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to delete a state by its name
+        /// Method to delete a state by its id
         /// </summary>
-        /// <param name="name"></param>
+        /// <param id="id"></param>
         /// <returns></returns>
-        [HttpDelete("{name}")]
-        public ActionResult DeleteState(string name)
+        [HttpDelete("{id}")]
+        public ActionResult DeleteState(int id)
         {
             ///SQL Query
             string query = @"
-                            exec proc_state @name,'Delete'
+                            exec proc_state @id,'','Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -164,7 +167,7 @@ namespace WorldCupOnline_API.Controllers
                 myCon.Open();///Open connection
                 using (SqlCommand myCommand = new SqlCommand(query, myCon)) ///Command with query and connection
                 {
-                    myCommand.Parameters.AddWithValue("@name", name);
+                    myCommand.Parameters.AddWithValue("@id", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
