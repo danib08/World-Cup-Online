@@ -250,7 +250,7 @@ create procedure proc_match(@ID int,
 			    @StartTime time,
 			    @Score varchar(7),
 			    @Location varchar(50),
-			    @StateID varchar(30),
+			    @StateID int,
 			    @TournamentID varchar(6),
 				@PhaseID int,
 			    @StatementType varchar(50) = '')
@@ -319,7 +319,7 @@ as begin
 	if @StatementType = 'Delete'
 	begin
 		delete from dbo.State
-		where Name = @Name
+		where ID = @ID
 	end
 end
 go
@@ -350,6 +350,42 @@ as begin
 	begin
 		delete from dbo.Team_In_Match
 		where TeamID = @TeamID and MatchID = @MatchID
+	end
+end
+go
+
+create procedure proc_type(@ID int,
+				@Name varchar(30),
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.Type(Name)
+		values(@Name)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.Type
+	end
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.State
+		where ID = @ID
+	end
+
+	if @StatementType = 'Update'
+	begin
+		update dbo.Type set Name=@Name
+		where ID=@ID 	
+	end
+
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.Type
+		where ID = @ID
 	end
 end
 go
