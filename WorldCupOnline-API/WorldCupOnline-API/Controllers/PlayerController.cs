@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
 using System.Globalization;
 using WorldCupOnline_API.Models;
 
@@ -10,71 +10,70 @@ namespace WorldCupOnline_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TournamentController : ControllerBase
+    public class PlayerController : ControllerBase
     {
+
         private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Established configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
-        public TournamentController(IConfiguration configuration)
+        public PlayerController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         /// <summary>
-        /// Method to get all created tournaments
+        /// Method to get all created players
         /// </summary>
-        /// <returns>JSONResult with all tournaments</returns>
+        /// <returns>JSONResult with all players</returns>
         [HttpGet]
-        public JsonResult GetTournaments()
+        public JsonResult GetPlayers()
         {
-            string query = @"exec proc_tournament '','','','',0,'','Select'"; ///sql query
+            string query = @"exec proc_player '','','','','Select'";///sql query
 
             DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
-                myCon.Open(); ///Open connection
+                myCon.Open();///Open connection
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader); ///Data is loaded into table
                     myReader.Close();
-                    myCon.Close(); ///Closed connection
+                    myCon.Close();///Closed connection
                 }
             }
 
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach(DataColumn column in table.Columns)
+            foreach (DataColumn column in table.Columns)
             {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
+                column.ColumnName = ti.ToLower(column.ColumnName);///Make all lowercase to avoid conflicts with communication
             }
 
             return new JsonResult(table); ///Return JSON Of the data table
         }
 
         /// <summary>
-        /// Method to get one Tournament by its id
+        /// Method to get one player by its id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Json of the required tournaments</returns>
+        /// <returns>Json of the required phase</returns>
         [HttpGet("{id}")]
-        public string GetTournament(string id)
+        public string GetPlayer(string id)
         {
             ///Created labels
             string lbl_id;
             string lbl_name;
-            string lbl_startdate;
-            string lbl_enddate;
-            string lbl_local;
-            string lbl_description;
+            string lbl_lastname;
+            string lbl_position;
 
             ///SQL Query
             string query = @"
-                            exec proc_tournament @id,'','','',0,'','Select One'";
+                            exec proc_player @id,'','','','Select One'";
             DataTable table = new DataTable();///Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
@@ -101,38 +100,34 @@ namespace WorldCupOnline_API.Controllers
                 ///Manipulation of every row of datatable and parse them to string
                 lbl_id = row["id"].ToString();
                 lbl_name = row["name"].ToString();
-                lbl_startdate = row["startDate"].ToString();
-                lbl_enddate = row["endDate"].ToString();
-                lbl_local = row["local"].ToString();
-                lbl_description= row["description"].ToString();
+                lbl_lastname = row["lastname"].ToString();
+                lbl_position = row["position"].ToString();
 
-
+                ///Creation of the JSON
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
-                   new JProperty("startDate", DateTime.Parse(lbl_startdate)), new JProperty("endDate", DateTime.Parse(lbl_enddate)),
-                   new JProperty("local", lbl_local), new JProperty("description", float.Parse(lbl_description)));
+                    new JProperty("lastname", lbl_lastname), new JProperty("position", lbl_position));
 
-                return data.ToString(); ///Return created JSON
+                return data.ToString();///Return created JSON
             }
             else
             {
                 var data = new JObject(new JProperty("Existe", "no"));
-                return data.ToString(); ///Return message if table is empty
+                return data.ToString();///Return message if table is empty
             }
+
         }
 
         /// <summary>
-        /// Method to create tournament
+        /// Method to create players
         /// </summary>
-        /// <param name="tournament"></param>
-        /// <returns>JSON of the tournament created</returns>
+        /// <param name="player"></param>
+        /// <returns>JSON of the player created</returns>
         [HttpPost]
-        public JsonResult PostTournament(Tournament tournament)
+        public JsonResult PostPlayer(Player player)
         {
-            
-
             ///SQL Query
             string query = @"
-                             exec proc_tournament @id,@name,@startdate,@enddate,@local,@description,'Insert'
+                             exec proc_player @id,@name,@lastname,@position,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -143,13 +138,10 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", tournament.id);
-                myCommand.Parameters.AddWithValue("@name", tournament.name);
-                myCommand.Parameters.AddWithValue("@startdate", tournament.startDate);
-                myCommand.Parameters.AddWithValue("@enddate", tournament.endDate);
-                myCommand.Parameters.AddWithValue("@local", tournament.local);
-                myCommand.Parameters.AddWithValue("@description", tournament.description);
-
+                myCommand.Parameters.AddWithValue("@id", player.id);
+                myCommand.Parameters.AddWithValue("@name", player.name);
+                myCommand.Parameters.AddWithValue("@lastname", player.lastname);
+                myCommand.Parameters.AddWithValue("@position", player.position);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -162,16 +154,16 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to update a tournament
+        /// Method to update a player
         /// </summary>
-        /// <param name="tournament"></param>
+        /// <param name="player"></param>
         /// <returns>Action result of the query</returns>
         [HttpPut]
-        public ActionResult PutTournament(Tournament tournament)
+        public ActionResult PutPlayer(Player player)
         {
             ///SQL Query
             string query = @"
-                             exec proc_tournament @id,@name,@startdate,@enddate,@local,@description,'Update'
+                             exec proc_player @id,@name,@lastname,@position,'Update'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -182,13 +174,10 @@ namespace WorldCupOnline_API.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))///Sql command with query and connection
                 {
                     ///Added parameters
-                    myCommand.Parameters.AddWithValue("@id", tournament.id);
-                    myCommand.Parameters.AddWithValue("@name", tournament.name);
-                    myCommand.Parameters.AddWithValue("@startdate", tournament.startDate);
-                    myCommand.Parameters.AddWithValue("@enddate", tournament.endDate);
-                    myCommand.Parameters.AddWithValue("@local", tournament.local);
-                    myCommand.Parameters.AddWithValue("@description", tournament.description);
-
+                    myCommand.Parameters.AddWithValue("@id", player.id);
+                    myCommand.Parameters.AddWithValue("@name", player.name);
+                    myCommand.Parameters.AddWithValue("@lastname", player.lastname);
+                    myCommand.Parameters.AddWithValue("@position", player.position);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -200,16 +189,16 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to delete a tournaments by its id
+        /// Method to delete a phase by its id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>Action result of the query</returns>
         [HttpDelete("{id}")]
-        public ActionResult DeleteTournament(string id)
+        public ActionResult DeletePlayer(string id)
         {
             ///SQL Query
             string query = @"
-                            exec proc_tournament @id,'','','',0,'','Delete'
+                            exec proc_player @id,'','','','Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -228,5 +217,7 @@ namespace WorldCupOnline_API.Controllers
             }
             return Ok(); ///Returns acceptance
         }
+
+
     }
 }

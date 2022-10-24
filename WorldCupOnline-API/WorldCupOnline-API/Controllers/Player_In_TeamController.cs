@@ -10,20 +10,20 @@ namespace WorldCupOnline_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Team_In_MatchController : ControllerBase
+    public class Player_In_TeamController : ControllerBase
     {
 
         private readonly IConfiguration _configuration;
 
-        public Team_In_MatchController(IConfiguration configuration)
+        public Player_In_TeamController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         [HttpGet]
-        public JsonResult GetTeams_In_Matches()
+        public JsonResult GetPlayers_In_Teams()
         {
-            string query = @"stored procedure";
+            string query = @"exec proc_player_In_Team '','',0,'Select'";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -49,15 +49,15 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table);
         }
 
-        [HttpGet("{teamid}/{matchid}")]
-        public string GetTeam_In_Match(string teamid, int matchid)
+        [HttpGet("{playerid}/{teamid}")]
+        public string GetPlayer_In_Team(string playerid, string teamid)
         {
+            string lbl_playerid;
             string lbl_teamid;
-            string lbl_matchid;
 
             //SQL Query
             string query = @"
-                            stored procedure";
+                            exec proc_player_In_Team @teamid,@playerid,0,'Select One'";
             DataTable table = new DataTable();//Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
@@ -67,8 +67,8 @@ namespace WorldCupOnline_API.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))//Command with query and connection
                 {
                     //Added parameters
+                    myCommand.Parameters.AddWithValue("@playerid", playerid);
                     myCommand.Parameters.AddWithValue("@teamid", teamid);
-                    myCommand.Parameters.AddWithValue("@matchid", matchid);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader); //Load data to table
                     myReader.Close();
@@ -81,11 +81,10 @@ namespace WorldCupOnline_API.Controllers
 
                 DataRow row = table.Rows[0];
 
+                lbl_playerid = row["playerid"].ToString();
                 lbl_teamid = row["teamid"].ToString();
-                lbl_matchid = row["matchid"].ToString();
 
-                var data = new JObject(new JProperty("teamid", lbl_teamid), new JProperty("matchid", lbl_matchid));
-                
+                var data = new JObject(new JProperty("teamid", lbl_teamid), new JProperty("playerid", lbl_playerid));
 
                 return data.ToString();
             }
@@ -94,16 +93,15 @@ namespace WorldCupOnline_API.Controllers
                 var data = new JObject(new JProperty("Existe", "no"));
                 return data.ToString();
             }
-
         }
 
 
         [HttpPost]
-        public JsonResult PostTeam_In_Match(Team_In_Match team_In_Match)
+        public JsonResult PostPlayer_In_Team(Player_In_Team player_In_Team)
         {
             //SQL Query
             string query = @"
-                             stored procedure
+                             exec proc_player_In_Team @teamid,@playerid,@jerseynum,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -114,8 +112,9 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 //Parameters added with values
-                myCommand.Parameters.AddWithValue("@teamid", team_In_Match.teamid);
-                myCommand.Parameters.AddWithValue("@matchid", team_In_Match.matchid);
+                myCommand.Parameters.AddWithValue("@teamid", player_In_Team.teamid);
+                myCommand.Parameters.AddWithValue("@playerid", player_In_Team.playerid);
+                myCommand.Parameters.AddWithValue("@jerseynum", player_In_Team.jerseynum);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -124,16 +123,15 @@ namespace WorldCupOnline_API.Controllers
             }
 
             return new JsonResult(table); //Returns table with info
-
         }
 
 
         [HttpPut]
-        public ActionResult PutTeam_In_Match(Team_In_Match team_In_Match)
+        public ActionResult PutPlayer_In_Team(Player_In_Team player_In_Team)
         {
             //SQL Query
             string query = @"
-                             stored procedures
+                             exec proc_player_In_Team @teamid,@playerid,@jerseynum,'Update'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -144,10 +142,9 @@ namespace WorldCupOnline_API.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))//Sql command with query and connection
                 {
                     //Added parameters
-                    myCommand.Parameters.AddWithValue("@teamid", team_In_Match.teamid);
-                    myCommand.Parameters.AddWithValue("@matchid", team_In_Match.matchid);
-
-
+                    myCommand.Parameters.AddWithValue("@playerid", player_In_Team.playerid);
+                    myCommand.Parameters.AddWithValue("@teamid", player_In_Team.teamid);
+                    myCommand.Parameters.AddWithValue("@jerseynum", player_In_Team.jerseynum);
 
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
@@ -158,12 +155,12 @@ namespace WorldCupOnline_API.Controllers
             return Ok(); //Returns acceptance
         }
 
-        [HttpDelete("{teamid}/{matchid}")]
-        public ActionResult DeleteTeam_In_Match(string teamid, int matchid)
+        [HttpDelete("{playerid}/{teamid}")]
+        public ActionResult DeletePlayer_In_Team(string playerid, string teamid)
         {
             //SQL Query
             string query = @"
-                            stored procedure
+                            exec proc_player_In_Team @teamid,@playerid,0,'Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -173,8 +170,8 @@ namespace WorldCupOnline_API.Controllers
                 myCon.Open();//Open connection
                 using (SqlCommand myCommand = new SqlCommand(query, myCon)) //Command with query and connection
                 {
+                    myCommand.Parameters.AddWithValue("@playerid", playerid);
                     myCommand.Parameters.AddWithValue("@teamid", teamid);
-                    myCommand.Parameters.AddWithValue("@matchid", matchid);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
