@@ -280,8 +280,8 @@ as begin
 
 	if @StatementType = 'Insert'
 	begin
-		insert into dbo.Match(StartDate,StartTime,Location,StateID,TournamentID,PhaseID)
-		values(@StartDate,@StartTime,@Location,@StateID,@TournamentID,@PhaseID)
+		insert into dbo.Match(StartDate,StartTime,Score,Location,StateID,TournamentID,PhaseID)
+		values(@StartDate,@StartTime,@Score,@Location,@StateID,@TournamentID,@PhaseID)
 	end
 
 	if @StatementType = 'Select'

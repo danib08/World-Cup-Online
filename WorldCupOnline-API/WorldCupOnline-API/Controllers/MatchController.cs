@@ -133,12 +133,12 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="match"></param>
         /// <returns>JSON of the match created</returns>
         [HttpPost]
-        public JsonResult PostMatch(Match match)
+        public JsonResult CreateMatch(MatchCreator creator)
         {
 
             ///SQL Query
             string query = @"
-                             exec proc_match @id,@startdate,@starttime,@score,@location,@stateid,@tournamentid,@phaseid'Insert'
+                             exec proc_match '',@startdate,@starttime,@score,@location,@stateid,@tournamentid,@phaseid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -149,15 +149,13 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", match.id);
-                myCommand.Parameters.AddWithValue("@startdate", match.startdate);
-                myCommand.Parameters.AddWithValue("@starttime", match.starttime);
-                myCommand.Parameters.AddWithValue("@score", match.score);
-                myCommand.Parameters.AddWithValue("@location", match.location);
-                myCommand.Parameters.AddWithValue("@stateid", match.stateid);
-                myCommand.Parameters.AddWithValue("@tournamentid", match.tournamentid);
-                myCommand.Parameters.AddWithValue("@phaseid", match.phaseid);
-
+                myCommand.Parameters.AddWithValue("@startdate", creator.startdate);
+                myCommand.Parameters.AddWithValue("@starttime", creator.starttime);
+                myCommand.Parameters.AddWithValue("@score", "0-0");
+                myCommand.Parameters.AddWithValue("@location", creator.location);
+                myCommand.Parameters.AddWithValue("@stateid", 1);
+                myCommand.Parameters.AddWithValue("@tournamentid", creator.tournamentid);
+                myCommand.Parameters.AddWithValue("@phaseid", creator.phaseid);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -239,7 +237,6 @@ namespace WorldCupOnline_API.Controllers
             }
             return Ok(); ///Returns acceptance
         }
-
 
     }
 }
