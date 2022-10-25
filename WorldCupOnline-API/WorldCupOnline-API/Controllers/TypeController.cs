@@ -1,42 +1,43 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
 using System.Data;
 using System.Globalization;
-using Newtonsoft.Json.Linq;
-using WorldCupOnline_API.Models;
+using Type = WorldCupOnline_API.Models.Type;
 
 namespace WorldCupOnline_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TeamController : ControllerBase
+    public class TypeController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+
         /// <summary>
         /// Established configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
-        public TeamController(IConfiguration configuration)
+        public TypeController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         /// <summary>
-        /// Method to get all created reams
+        /// Method to get all created states
         /// </summary>
-        /// <returns>returns>JSONResult with all phases</returns>
+        /// <returns>JSONResult with all states</returns>
         [HttpGet]
-        public JsonResult GetTeams()
+        public JsonResult GetTypes()
         {
-            string query = @"exec proc_team '','','',0,'Select WebApp'";///sql query
+            string query = @"exec proc_type 0,'','Select WebApp'"; ///sql query
 
-            DataTable table = new DataTable(); ///Create datatable
+            DataTable table = new DataTable(); //Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
             {
-                myCon.Open();///Open connection
+                myCon.Open(); ///Open connection
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myReader = myCommand.ExecuteReader();
@@ -49,33 +50,33 @@ namespace WorldCupOnline_API.Controllers
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
             foreach (DataColumn column in table.Columns)
             {
-                column.ColumnName = ti.ToLower(column.ColumnName);///Make all lowercase to avoid conflicts with communication
+                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
             }
 
-            return new JsonResult(table);///Return JSON Of the data table
+            return new JsonResult(table); ///Return JSON Of the data table
         }
 
         /// <summary>
-        /// Method to get one team by its id
+        /// Method to get one state by its id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Json of the required team</returns>
+        /// <param name="name"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public string GetTeam(string id)
+        public string GetType(int id)
         {
-            ///Created labels
-            string lbl_id;
+            ///Created label
             string lbl_name;
-            string lbl_confederation;
-            string lbl_type;
+            string lbl_id;
+
 
             ///SQL Query
             string query = @"
-                            exec proc_team @id,'','',0,'Select One'";
+                            exec proc_type @id,'','Select One'";
+
             DataTable table = new DataTable();///Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection created
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection created
             {
                 myCon.Open();///Open connection
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))///Command with query and connection
@@ -98,34 +99,31 @@ namespace WorldCupOnline_API.Controllers
                 ///Manipulation of every row of datatable and parse them to string
                 lbl_id = row["id"].ToString();
                 lbl_name = row["name"].ToString();
-                lbl_confederation = row["confederation"].ToString();
-                lbl_type = row["typeid"].ToString();
 
                 ///Creation of the JSON
-                var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
-                   new JProperty("confederation", float.Parse(lbl_confederation)),
-                   new JProperty("typeid", float.Parse(lbl_type)));
+                var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name));
 
-                return data.ToString();///Return created JSON
+                return data.ToString(); ///Return created JSON
             }
             else
             {
                 var data = new JObject(new JProperty("Existe", "no"));
                 return data.ToString(); ///Return message if table is empty
             }
+
         }
 
         /// <summary>
-        /// Method to create teams
+        /// Method to create states
         /// </summary>
-        /// <param name="team"></param>
-        /// <returns>JSON of the team created</returns>
+        /// <param name="state"></param>
+        /// <returns>JSON of the state created</returns>
         [HttpPost]
-        public JsonResult PostTeam(Team team)
+        public JsonResult PostType(Type type)
         {
-            ///SQL Query
+            //SQL Query
             string query = @"
-                             exec proc_team @id,@name,@confederation,@typeid,'Insert'
+                             exec proc_type @id,@name,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -136,11 +134,8 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", team.id);
-                myCommand.Parameters.AddWithValue("@name", team.name);
-                myCommand.Parameters.AddWithValue("@confederation", team.confederation);
-                myCommand.Parameters.AddWithValue("@typeid", team.typeid);
-
+                myCommand.Parameters.AddWithValue("@id", type.id);
+                myCommand.Parameters.AddWithValue("@name", type.name);
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
                 myReader.Close();
@@ -149,54 +144,20 @@ namespace WorldCupOnline_API.Controllers
             }
 
             return new JsonResult(table); ///Returns table with info
+
         }
 
         /// <summary>
-        /// Method to update a team
+        /// Method to delete a state by its id
         /// </summary>
-        /// <param name="team"></param>
-        /// <returns>Action result of the query</returns>
-        [HttpPut]
-        public ActionResult PutTeam(Team team)
-        {
-            ///SQL Query
-            string query = @"
-                             exec proc_team @id,@name,@confederation,@typeid,'Updates'
-                            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection started
-            {
-                myCon.Open(); ///Connection closed
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))///Sql command with query and connection
-                {
-                    ///Added parameters
-                    myCommand.Parameters.AddWithValue("@id", team.id);
-                    myCommand.Parameters.AddWithValue("@name", team.name);
-                    myCommand.Parameters.AddWithValue("@confederation", team.confederation);
-                    myCommand.Parameters.AddWithValue("@typeid", team.typeid);
-
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();///Closed connection
-                }
-            }
-            return Ok(); ///Returns acceptance
-        }
-
-        /// <summary>
-        /// Method to delete a team by its id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Action result of the query</returns>
+        /// <param id="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
-        public ActionResult DeleteTeam(string id)
+        public ActionResult DeleteType(int id)
         {
             ///SQL Query
             string query = @"
-                            exec proc_team @id,'','',0,'Delete'
+                            exec proc_type @id,'','Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -217,4 +178,3 @@ namespace WorldCupOnline_API.Controllers
         }
     }
 }
-

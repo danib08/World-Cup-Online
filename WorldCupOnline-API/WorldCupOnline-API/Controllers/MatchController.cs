@@ -32,7 +32,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public JsonResult GetMatches()
         {
-            string query = @"exec proc_match 0,'','','','','','','Select'"; ///sql query
+            string query = @"exec proc_match 0,'','','','',0,'',0,'Select'"; ///sql query
 
             DataTable table = new DataTable(); ///Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline"); ///Establish connection
@@ -72,12 +72,13 @@ namespace WorldCupOnline_API.Controllers
             string lbl_startTime;
             string lbl_score;
             string lbl_location;
-            string lbl_state;
+            string lbl_stateId;
             string lbl_tournamentId;
+            string lbl_phaseId;
 
 
             ///SQL Query
-            string query = @"exec proc_match @id,'','','','','','','Select One'"; 
+            string query = @"exec proc_match @id,'','','','',0,'',0,'Select One'"; 
             DataTable table = new DataTable();///Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
             SqlDataReader myReader;
@@ -107,13 +108,14 @@ namespace WorldCupOnline_API.Controllers
                 lbl_startTime = row["starttime"].ToString();
                 lbl_score = row["score"].ToString();
                 lbl_location = row["location"].ToString();
-                lbl_state = row["state"].ToString();
+                lbl_stateId = row["stateid"].ToString();
                 lbl_tournamentId = row["tournamentid"].ToString();
+                lbl_phaseId = row["phaseid"].ToString();
 
                 ///Creation of the JSON
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("startdate", DateTime.Parse(lbl_startDate)), 
                    new JProperty("starttime", DateTime.Parse(lbl_startTime)), new JProperty("score", lbl_score),new JProperty("location", lbl_location),
-                   new JProperty("state",lbl_state), new JProperty("tournamentid", lbl_tournamentId));
+                   new JProperty("stateid", lbl_stateId), new JProperty("tournamentid", lbl_tournamentId), new JProperty("phaseid", lbl_phaseId));
 
                 return data.ToString(); ///Return created JSON
             }
@@ -131,12 +133,12 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="match"></param>
         /// <returns>JSON of the match created</returns>
         [HttpPost]
-        public JsonResult PostMatch(Match match)
+        public JsonResult CreateMatch(MatchCreator creator)
         {
 
             ///SQL Query
             string query = @"
-                             exec proc_match @id,@startdate,@starttime,@score,@location,@stateid,@tournamentid,'Insert'
+                             exec proc_match '',@startdate,@starttime,@score,@location,@stateid,@tournamentid,@phaseid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -147,14 +149,13 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", match.id);
-                myCommand.Parameters.AddWithValue("@startdate", match.startdate);
-                myCommand.Parameters.AddWithValue("@starttime", match.starttime);
-                myCommand.Parameters.AddWithValue("@score", match.score);
-                myCommand.Parameters.AddWithValue("@location", match.location);
-                myCommand.Parameters.AddWithValue("@state", match.stateid);
-                myCommand.Parameters.AddWithValue("@tournamentid", match.tournamentid);
-
+                myCommand.Parameters.AddWithValue("@startdate", creator.startdate);
+                myCommand.Parameters.AddWithValue("@starttime", creator.starttime);
+                myCommand.Parameters.AddWithValue("@score", "0-0");
+                myCommand.Parameters.AddWithValue("@location", creator.location);
+                myCommand.Parameters.AddWithValue("@stateid", 1);
+                myCommand.Parameters.AddWithValue("@tournamentid", creator.tournamentid);
+                myCommand.Parameters.AddWithValue("@phaseid", creator.phaseid);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -162,6 +163,25 @@ namespace WorldCupOnline_API.Controllers
                 myCon.Close();///Closed connection
 
             }
+            
+            DataRow row = table.Rows[0];
+            string lbl_id = row["ID"].ToString();
+            int newID = Int32.Parse(lbl_id);
+
+            Team_In_Match team_In_Match1 = new()
+            {
+                matchid = newID,
+                teamid = creator.team1
+            };
+
+            Team_In_Match team_In_Match2 = new()
+            {
+                matchid = newID,
+                teamid = creator.team2
+            };
+
+            PostTeam_In_Match(team_In_Match1);
+            PostTeam_In_Match(team_In_Match2);
 
             return new JsonResult(table); ///Returns table with info
 
@@ -177,7 +197,7 @@ namespace WorldCupOnline_API.Controllers
         {
             //SQL Query
             string query = @"
-                             exec proc_match @id,@startdate,@starttime,@score,@location,@stateid,@tournamentid,'Update'
+                             exec proc_match @id,@startdate,@starttime,@score,@location,@stateid,@tournamentid,@phaseid'Update'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -195,6 +215,7 @@ namespace WorldCupOnline_API.Controllers
                     myCommand.Parameters.AddWithValue("@location", match.location);
                     myCommand.Parameters.AddWithValue("@stateid", match.stateid);
                     myCommand.Parameters.AddWithValue("@tournamentid", match.tournamentid);
+                    myCommand.Parameters.AddWithValue("@phaseid", match.phaseid);
 
 
                     myReader = myCommand.ExecuteReader();
@@ -216,7 +237,7 @@ namespace WorldCupOnline_API.Controllers
         {
             ///SQL Query
             string query = @"
-                            exec proc_match @id,'','','','','','','Delete'
+                            exec proc_match @id,'','','','',0,'',0,'Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -236,6 +257,33 @@ namespace WorldCupOnline_API.Controllers
             return Ok(); ///Returns acceptance
         }
 
+        [HttpPost("postTeamInMatch")]
+        public JsonResult PostTeam_In_Match(Team_In_Match team_In_Match)
+        {
+            ///SQL Query
+            string query = @"
+                             exec proc_teamInMatch @teamid,@matchid,'Insert'
+                            ";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
+            {
+                myCon.Open(); ///Opened connection
+                SqlCommand myCommand = new SqlCommand(query, myCon);
 
+                ///Parameters added with values
+                myCommand.Parameters.AddWithValue("@teamid", team_In_Match.teamid);
+                myCommand.Parameters.AddWithValue("@matchid", team_In_Match.matchid);
+
+                myReader = myCommand.ExecuteReader();
+                table.Load(myReader);
+                myReader.Close();
+                myCon.Close();///Closed connection
+            }
+
+            return new JsonResult(table); ///Returns table with info
+
+        }
     }
 }
