@@ -282,6 +282,7 @@ as begin
 	begin
 		insert into dbo.Match(StartDate,StartTime,Score,Location,StateID,TournamentID,PhaseID)
 		values(@StartDate,@StartTime,@Score,@Location,@StateID,@TournamentID,@PhaseID)
+		select SCOPE_IDENTITY() as ID
 	end
 
 	if @StatementType = 'Select'

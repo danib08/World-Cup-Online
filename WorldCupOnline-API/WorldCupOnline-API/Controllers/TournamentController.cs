@@ -128,7 +128,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="tournament"></param>
         /// <returns>JSON of the tournament created</returns>
         [HttpPost]
-        public JsonResult PostTournament(Tournament tournament)
+        public JsonResult PostTournament(TournamentCreator creator)
         {
             
 
@@ -145,18 +145,39 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", tournament.id);
-                myCommand.Parameters.AddWithValue("@name", tournament.name);
-                myCommand.Parameters.AddWithValue("@startdate", tournament.startdate);
-                myCommand.Parameters.AddWithValue("@enddate", tournament.enddate);
-                myCommand.Parameters.AddWithValue("@description", tournament.description);
-                myCommand.Parameters.AddWithValue("@typeid", tournament.typeid);
+                myCommand.Parameters.AddWithValue("@id", creator.id);
+                myCommand.Parameters.AddWithValue("@name", creator.name);
+                myCommand.Parameters.AddWithValue("@startdate", creator.startdate);
+                myCommand.Parameters.AddWithValue("@enddate", creator.enddate);
+                myCommand.Parameters.AddWithValue("@description", creator.description);
+                myCommand.Parameters.AddWithValue("@typeid", creator.typeid);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
                 myReader.Close();
                 myCon.Close();///Closed connection
             }
+
+            foreach (string id in creator.teamsIds)
+            {
+                Team_In_Tournament team_In_Tournament = new()
+                {
+                    teamid = id,
+                    tournamentid = creator.id
+                };
+                PostTeam_In_Tournament(team_In_Tournament);
+            }
+
+            foreach (string phaseName in creator.phases)
+            {
+                Phase phase = new()
+                {
+                    name = phaseName,
+                    tournamentID = creator.id
+                };
+                PostPhase(phase);
+            }
+
 
             return new JsonResult(table); ///Returns table with info
 
@@ -318,6 +339,65 @@ namespace WorldCupOnline_API.Controllers
             }
 
             return new JsonResult(table); ///Return JSON Of the data table
+        }
+
+        [HttpPost("postTeamInTournament")]
+        public JsonResult PostTeam_In_Tournament(Team_In_Tournament team_In_Tournament)
+        {
+            ///SQL Query
+            string query = @"
+                             exec proc_teamInTournament @teamid,@tournamentid,'Insert'
+                            ";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection stablished
+            {
+                myCon.Open(); ///Opened connection
+                SqlCommand myCommand = new SqlCommand(query, myCon);
+
+                ///Parameters added with values
+                myCommand.Parameters.AddWithValue("@teamid", team_In_Tournament.teamid);
+                myCommand.Parameters.AddWithValue("@tournamentid", team_In_Tournament.tournamentid);
+
+                myReader = myCommand.ExecuteReader();
+                table.Load(myReader);
+                myReader.Close();
+                myCon.Close();///Closed connection
+            }
+
+            return new JsonResult(table); ///Returns table with info
+
+        }
+
+        [HttpPost("postPhase")]
+        public JsonResult PostPhase(Phase phase)
+        {
+            ///SQL Query
+            string query = @"
+                             exec proc_phase @id,@name,@tournamentid,'Insert'
+                            ";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
+            {
+                myCon.Open(); ///Opened connection
+                SqlCommand myCommand = new SqlCommand(query, myCon);
+
+                ///Parameters added with values
+                myCommand.Parameters.AddWithValue("@id", phase.id);
+                myCommand.Parameters.AddWithValue("@name", phase.name);
+                myCommand.Parameters.AddWithValue("@tournamentid", phase.tournamentID);
+
+                myReader = myCommand.ExecuteReader();
+                table.Load(myReader);
+                myReader.Close();
+                myCon.Close();///Closed connection
+
+            }
+
+            return new JsonResult(table); ///Returns table with info
         }
     }
 }

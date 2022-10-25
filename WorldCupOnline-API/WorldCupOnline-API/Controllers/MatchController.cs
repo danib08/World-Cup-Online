@@ -163,6 +163,25 @@ namespace WorldCupOnline_API.Controllers
                 myCon.Close();///Closed connection
 
             }
+            
+            DataRow row = table.Rows[0];
+            string lbl_id = row["ID"].ToString();
+            int newID = Int32.Parse(lbl_id);
+
+            Team_In_Match team_In_Match1 = new()
+            {
+                matchid = newID,
+                teamid = creator.team1
+            };
+
+            Team_In_Match team_In_Match2 = new()
+            {
+                matchid = newID,
+                teamid = creator.team2
+            };
+
+            PostTeam_In_Match(team_In_Match1);
+            PostTeam_In_Match(team_In_Match2);
 
             return new JsonResult(table); ///Returns table with info
 
@@ -238,5 +257,33 @@ namespace WorldCupOnline_API.Controllers
             return Ok(); ///Returns acceptance
         }
 
+        [HttpPost("postTeamInMatch")]
+        public JsonResult PostTeam_In_Match(Team_In_Match team_In_Match)
+        {
+            ///SQL Query
+            string query = @"
+                             exec proc_teamInMatch @teamid,@matchid,'Insert'
+                            ";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
+            {
+                myCon.Open(); ///Opened connection
+                SqlCommand myCommand = new SqlCommand(query, myCon);
+
+                ///Parameters added with values
+                myCommand.Parameters.AddWithValue("@teamid", team_In_Match.teamid);
+                myCommand.Parameters.AddWithValue("@matchid", team_In_Match.matchid);
+
+                myReader = myCommand.ExecuteReader();
+                table.Load(myReader);
+                myReader.Close();
+                myCon.Close();///Closed connection
+            }
+
+            return new JsonResult(table); ///Returns table with info
+
+        }
     }
 }
