@@ -251,10 +251,10 @@ namespace WorldCupOnline_API.Controllers
             return Ok(); ///Returns acceptance
         }
 
-        [HttpGet("Matches/{id}")]
-        public JsonResult GetMatchesByTournament(string id)
+        [HttpGet("{tournamentId}/Matches")]
+        public JsonResult GetMatchesByTournament(string tournamentId)
         {
-            string query = @"exec proc_tournament @id,'','','','',0,'Get Matches By Tourn'"; ///sql query
+            string query = @"exec proc_tournament @tournamentId,'','','','',0,'Get Matches By Tourn'"; ///sql query
 
             DataTable table = new DataTable(); ///Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
@@ -264,7 +264,7 @@ namespace WorldCupOnline_API.Controllers
                 myCon.Open(); ///Open connection
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@id", id);
+                    myCommand.Parameters.AddWithValue("@tournamentId", tournamentId);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader); ///Data is loaded into table
                     myReader.Close();

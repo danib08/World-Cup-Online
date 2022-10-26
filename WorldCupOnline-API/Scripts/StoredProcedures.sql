@@ -1,4 +1,4 @@
-create procedure proc_tournament(@ID varchar(6),
+exec procedure proc_tournament(@ID varchar(6),
 				@Name varchar(30),
 				@StartDate datetime,
 				@EndDate datetime,
@@ -59,7 +59,7 @@ as begin
 
 	if @StatementType = 'Get Phases by Tourn'
 	begin	
-		select ID, Name
+		select ID as value, Name as label
 		from Phase
 		where TournamentID = @ID
 	end
@@ -75,7 +75,7 @@ end
 go
 
 
-create procedure proc_team(@ID varchar(8),
+exec procedure proc_team(@ID varchar(8),
 			   	@Name varchar(30),
 				@Confederation varchar(30),
 				@TypeID int,
@@ -105,6 +105,11 @@ as begin
 		where ID = @ID
 	end
 
+	if @StatementType = 'Select Type'
+	begin
+		select * from dbo.Team
+		where TypeID = @TypeID
+	end
 
 	if @StatementType = 'Update'
 	begin
@@ -229,7 +234,7 @@ end
 go
 
 
-create procedure proc_phase(@ID int,
+exec procedure proc_phase(@ID int,
 				@Name varchar(50),
 				@TournamentID varchar(6),
 				@StatementType varchar(50) = '')
@@ -243,7 +248,7 @@ as begin
 
 	if @StatementType = 'Select'
 	begin
-		select * from dbo.Phase
+		select ID as value, Name as label from dbo.Phase
 	end
 
 	if @StatementType = 'Select One'
