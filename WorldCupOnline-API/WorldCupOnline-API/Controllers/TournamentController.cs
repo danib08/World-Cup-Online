@@ -63,7 +63,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns>Json of the required tournaments</returns>
         [HttpGet("{id}")]
-        public string GetTournament(string id)
+        public string GetTournament(int id)
         {
             ///Created labels
             string lbl_id;
@@ -134,7 +134,7 @@ namespace WorldCupOnline_API.Controllers
 
             ///SQL Query
             string query = @"
-                             exec proc_tournament @id,@name,@startdate,@enddate,@description,@typeid,'Insert'
+                             exec proc_tournament 0,@name,@startdate,@enddate,@description,@typeid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -157,13 +157,16 @@ namespace WorldCupOnline_API.Controllers
                 myReader.Close();
                 myCon.Close();///Closed connection
             }
+            DataRow row = table.Rows[0];
+            string lbl_id = row["ID"].ToString();
+            int newID = Int32.Parse(lbl_id);
 
-            foreach (string id in creator.teamsIds)
+            for (int i = 0; i < creator.teamsIds.Length; i++)
             {
                 Team_In_Tournament team_In_Tournament = new()
                 {
-                    teamid = id,
-                    tournamentid = creator.id
+                    teamid = creator.teamsIds[i],
+                    tournamentid = newID
                 };
                 PostTeam_In_Tournament(team_In_Tournament);
             }
@@ -173,7 +176,7 @@ namespace WorldCupOnline_API.Controllers
                 Phase phase = new()
                 {
                     name = phaseName,
-                    tournamentID = creator.id
+                    tournamentID = newID
                 };
                 PostPhase(phase);
             }
