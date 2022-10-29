@@ -103,8 +103,8 @@ namespace WorldCupOnline_API.Controllers
 
                 ///Creation of the JSON
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
-                   new JProperty("confederation", float.Parse(lbl_confederation)),
-                   new JProperty("typeid", float.Parse(lbl_type)));
+                   new JProperty("confederation", lbl_confederation),
+                   new JProperty("typeid", lbl_type));
 
                 return data.ToString();///Return created JSON
             }

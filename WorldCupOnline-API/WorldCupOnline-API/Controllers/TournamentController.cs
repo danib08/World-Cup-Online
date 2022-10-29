@@ -145,7 +145,6 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", creator.id);
                 myCommand.Parameters.AddWithValue("@name", creator.name);
                 myCommand.Parameters.AddWithValue("@startdate", creator.startdate);
                 myCommand.Parameters.AddWithValue("@enddate", creator.enddate);
@@ -157,6 +156,7 @@ namespace WorldCupOnline_API.Controllers
                 myReader.Close();
                 myCon.Close();///Closed connection
             }
+
             DataRow row = table.Rows[0];
             string lbl_id = row["ID"].ToString();
             int newID = Int32.Parse(lbl_id);
