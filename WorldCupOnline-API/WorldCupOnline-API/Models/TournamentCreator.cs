@@ -1,5 +1,8 @@
 ﻿namespace WorldCupOnline_API.Models
 {
+    /// <summary>
+    /// Tournament Creator Model
+    /// </summary>
     public class TournamentCreator
     {
         public string name { get; set; }

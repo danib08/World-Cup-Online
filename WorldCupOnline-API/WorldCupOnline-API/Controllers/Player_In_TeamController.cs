@@ -15,6 +15,10 @@ namespace WorldCupOnline_API.Controllers
 
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Established configuration for controller to get connection
+        /// </summary>
+        /// <param name="configuration"></param>
         public Player_In_TeamController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -49,6 +53,12 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table);
         }
 
+        /// <summary>
+        /// Method to get player in team
+        /// </summary>
+        /// <param name="playerid"></param>
+        /// <param name="teamid"></param>
+        /// <returns></returns>
         [HttpGet("{playerid}/{teamid}")]
         public string GetPlayer_In_Team(string playerid, string teamid)
         {
@@ -95,7 +105,11 @@ namespace WorldCupOnline_API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Method to create a player in team
+        /// </summary>
+        /// <param name="player_In_Team"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult PostPlayer_In_Team(Player_In_Team player_In_Team)
         {
@@ -125,7 +139,11 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); //Returns table with info
         }
 
-
+        /// <summary>
+        /// Method update a player in team
+        /// </summary>
+        /// <param name="player_In_Team"></param>
+        /// <returns></returns>
         [HttpPut]
         public ActionResult PutPlayer_In_Team(Player_In_Team player_In_Team)
         {
@@ -155,6 +173,12 @@ namespace WorldCupOnline_API.Controllers
             return Ok(); //Returns acceptance
         }
 
+        /// <summary>
+        /// Method to delete a player in team
+        /// </summary>
+        /// <param name="playerid"></param>
+        /// <param name="teamid"></param>
+        /// <returns></returns>
         [HttpDelete("{playerid}/{teamid}")]
         public ActionResult DeletePlayer_In_Team(string playerid, string teamid)
         {

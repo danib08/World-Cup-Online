@@ -23,9 +23,9 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to get all created reams
+        /// Method to get all created teams
         /// </summary>
-        /// <returns>returns>JSONResult with all phases</returns>
+        /// <returns>returns>JSONResult with all teams</returns>
         [HttpGet]
         public JsonResult GetTeams()
         {
@@ -218,9 +218,9 @@ namespace WorldCupOnline_API.Controllers
 
 
         /// <summary>
-        /// Method to get all created reams
+        /// Method to get all created types of teams
         /// </summary>
-        /// <returns>returns>JSONResult with all phases</returns>
+        /// <returns>returns>JSONResult with type of teams</returns>
         [HttpGet("Type/{type}")]
         public JsonResult GetTeamsByType(int type)
         {

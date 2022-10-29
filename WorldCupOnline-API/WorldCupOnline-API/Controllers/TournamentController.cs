@@ -254,6 +254,11 @@ namespace WorldCupOnline_API.Controllers
             return Ok(); ///Returns acceptance
         }
 
+        /// <summary>
+        /// Method to get the matches of a tournament
+        /// </summary>
+        /// <param name="tournamentId"></param>
+        /// <returns></returns>
         [HttpGet("{tournamentId}/Matches")]
         public JsonResult GetMatchesByTournament(string tournamentId)
         {
@@ -284,6 +289,11 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); ///Return JSON Of the data table
         }
 
+        /// <summary>
+        /// Method get the phases of a tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("Phases/{id}")]
         public JsonResult GetPhasesByTournament(string id)
         {
@@ -314,6 +324,11 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); ///Return JSON Of the data table
         }
 
+        /// <summary>
+        /// Method to get the teams of a tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("Teams/{id}")]
         public JsonResult GetTeamsByTournament(string id)
         {
@@ -344,6 +359,11 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); ///Return JSON Of the data table
         }
 
+        /// <summary>
+        /// Create a team in tournament
+        /// </summary>
+        /// <param name="team_In_Tournament"></param>
+        /// <returns></returns>
         [HttpPost("postTeamInTournament")]
         public JsonResult PostTeam_In_Tournament(Team_In_Tournament team_In_Tournament)
         {
@@ -373,6 +393,11 @@ namespace WorldCupOnline_API.Controllers
 
         }
 
+        /// <summary>
+        /// Method to create a phase in a tournament
+        /// </summary>
+        /// <param name="phase"></param>
+        /// <returns></returns>
         [HttpPost("postPhase")]
         public JsonResult PostPhase(Phase phase)
         {

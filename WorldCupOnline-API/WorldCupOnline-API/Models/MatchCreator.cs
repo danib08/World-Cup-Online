@@ -1,5 +1,8 @@
 ﻿namespace WorldCupOnline_API.Models
 {
+    /// <summary>
+    /// MatchCreator Model
+    /// </summary>
     public class MatchCreator
     {
         public string team1 { get; set; }

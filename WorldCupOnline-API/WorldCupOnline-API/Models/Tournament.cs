@@ -1,5 +1,8 @@
 ﻿namespace WorldCupOnline_API.Models
 {
+    /// <summary>
+    /// Tournament Model
+    /// </summary>
     public class Tournament
     {
         public int id { get; set; }
