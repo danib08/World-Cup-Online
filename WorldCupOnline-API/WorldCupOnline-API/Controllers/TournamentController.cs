@@ -230,7 +230,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public ActionResult DeleteTournament(string id)
+        public ActionResult DeleteTournament(int id)
         {
             ///SQL Query
             string query = @"
@@ -260,7 +260,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="tournamentId"></param>
         /// <returns></returns>
         [HttpGet("{tournamentId}/Matches")]
-        public JsonResult GetMatchesByTournament(string tournamentId)
+        public JsonResult GetMatchesByTournament(int tournamentId)
         {
             string query = @"exec proc_tournament @tournamentId,'','','','',0,'Get Matches By Tourn'"; ///sql query
 
@@ -295,7 +295,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("Phases/{id}")]
-        public JsonResult GetPhasesByTournament(string id)
+        public JsonResult GetPhasesByTournament(int id)
         {
             string query = @"exec proc_tournament @id,'','','','',0,'Get Phases By Tourn'"; ///sql query
 
@@ -330,7 +330,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("Teams/{id}")]
-        public JsonResult GetTeamsByTournament(string id)
+        public JsonResult GetTeamsByTournament(int id)
         {
             string query = @"exec proc_tournament @id,'','','','',0,'Get Teams By Tourn'"; ///sql query
 

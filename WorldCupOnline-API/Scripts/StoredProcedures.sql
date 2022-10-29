@@ -108,7 +108,7 @@ as begin
 
 	if @StatementType = 'Select Type'
 	begin
-		select * from dbo.Team
+		select ID, Name as label from dbo.Team
 		where TypeID = @TypeID
 	end
 
