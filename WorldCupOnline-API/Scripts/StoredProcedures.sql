@@ -418,3 +418,150 @@ as begin
 	end
 end
 go
+
+create procedure proc_users(@Username varchar(12),
+				@Name varchar(30),
+				@Lastname varchar(30),
+				@Email varchar(45),
+				@CountryID varchar(3),
+				@Birthdate datetime,
+				@Password varchar(40),
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.Users(Username, Name, Lastname, Email, CountryID, Birthdate, Password)
+		values(@Username, @Name, @Lastname, @Email, @CountryID, @Birthdate, @Password)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.Users
+	end
+
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.Users
+		where Username = @Username
+	end
+
+	if @StatementType = 'Update'
+	begin
+		update dbo.Users set Name=@Name, Lastname=@Lastname, Email=@Email, CountryID=@CountryID, Birthdate=@Birthdate, Password=@Password
+		where Username = @Username 	
+	end
+
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.Users
+		where Username = @Username
+	end
+end
+go
+
+create procedure proc_bet(@ID int,
+				@GoalsTeam1 int,
+				@GoalsTeam2 int
+				@Score int ,
+				@MVP varchar(15),
+				@UserID varchar(12),
+				@MatchID int,
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.Bet(GoalsTeam1, GoalsTeam2, Score, MVP, UserID, MatchID)
+		values(@GoalsTeam1, @GoalsTeam2, @Score, @MVP, @UserID, @MatchID)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.Bet
+	end
+
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.Bet
+		where ID = @ID
+	end
+
+	if @StatementType = 'Update'
+	begin
+		update dbo.Bet set GoalsTeam1=@GoalsTeam1, GoalsTeam2=@GoalsTeam2, Score=@Score, MVP=@MVP, UserID=@UserID, MatchID=@MatchID
+		where ID = @ID 	
+	end
+
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.Bet
+		where ID = @ID
+	end
+end
+go
+
+
+create procedure proc_scorerInBet(BetID int,
+				@BetID int,
+				@PlayerID varchar(15),
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.Scorer_In_Bet(ID,BetID,PlayerID)
+		values(@ID, @BetID,@PlayerID)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.Scorer_In_Bet
+	end
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.Scorer_In_Bet
+		where BetID = @BetID and PlayerID = @PlayerID
+	end
+
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.Scorer_In_Bet
+		where BetID = @BetID and PlayerID = @PlayerID
+	end
+end
+go
+
+create procedure proc_assistInBet(BetID int,
+				@BetID int,
+				@PlayerID varchar(15),
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.Assist_In_Bet(ID,BetID,PlayerID)
+		values(@ID, @BetID,@PlayerID)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.Assist_In_Bet
+	end
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.Assist_In_Bet
+		where BetID = @BetID and PlayerID = @PlayerID
+	end
+
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.Assist_In_Bet
+		where BetID = @BetID and PlayerID = @PlayerID
+	end
+end
+go
