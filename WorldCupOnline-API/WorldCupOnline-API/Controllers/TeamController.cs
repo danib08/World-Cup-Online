@@ -5,13 +5,16 @@ using System.Data;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
 using WorldCupOnline_API.Models;
+using WorldCupOnline_API.Data;
+using System.Reflection.Metadata.Ecma335;
 
 namespace WorldCupOnline_API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class TeamController : ControllerBase
     {
+
         private readonly IConfiguration _configuration;
         /// <summary>
         /// Established configuration for controller to get connection
@@ -22,169 +25,221 @@ namespace WorldCupOnline_API.Controllers
             _configuration = configuration;
         }
 
-        /// <summary>
-        /// Method to get all created teams
-        /// </summary>
-        /// <returns>returns>JSONResult with all teams</returns>
+
         [HttpGet]
-        public JsonResult GetTeams()
+        public async Task<ActionResult<List<Team>>> Get()
         {
-            string query = @"exec proc_team '','','',0,'Select WebApp'";///sql query
+            var function = new TeamData();
 
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName);///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table);///Return JSON Of the data table
+            var list = await function.GetTeams();
+            return list;
         }
 
-        /// <summary>
-        /// Method to get one team by its id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Json of the required team</returns>
         [HttpGet("{id}")]
-        public string GetTeam(string id)
+        public async Task<ActionResult<List<Team>>> GetOne(string id)
         {
-            ///Created labels
-            string lbl_id;
-            string lbl_name;
-            string lbl_confederation;
-            string lbl_type;
-
-            ///SQL Query
-            string query = @"
-                            exec proc_team @id,'','',0,'Select One'";
-            DataTable table = new DataTable();///Created table to store data
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection created
-            {
-                myCon.Open();///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))///Command with query and connection
-                {
-                    ///Added parameters
-                    myCommand.Parameters.AddWithValue("@id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Load data to table
-                    myReader.Close();
-                    myCon.Close(); ///Close connection
-                }
-            }
-
-            ///Verify if table is empty
-            if (table.Rows.Count > 0)
-            {
-
-                DataRow row = table.Rows[0];
-
-                ///Manipulation of every row of datatable and parse them to string
-                lbl_id = row["id"].ToString();
-                lbl_name = row["name"].ToString();
-                lbl_confederation = row["confederation"].ToString();
-                lbl_type = row["typeid"].ToString();
-
-                ///Creation of the JSON
-                var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
-                   new JProperty("confederation", lbl_confederation),
-                   new JProperty("typeid", lbl_type));
-
-                return data.ToString();///Return created JSON
-            }
-            else
-            {
-                var data = new JObject(new JProperty("Existe", "no"));
-                return data.ToString(); ///Return message if table is empty
-            }
+            var function = new TeamData();
+            var team = new Team();
+            team.id = id;
+            var list = await function.GetOneTeam(team);
+            return list;
         }
 
-        /// <summary>
-        /// Method to create teams
-        /// </summary>
-        /// <param name="team"></param>
-        /// <returns>JSON of the team created</returns>
         [HttpPost]
-        public JsonResult PostTeam(Team team)
+        public async Task Post([FromBody] Team team)
         {
-            ///SQL Query
-            string query = @"
-                             exec proc_team @id,@name,@confederation,@typeid,'Insert'
-                            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
-            {
-                myCon.Open(); ///Opened connection
-                SqlCommand myCommand = new SqlCommand(query, myCon);
-
-                ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", team.id);
-                myCommand.Parameters.AddWithValue("@name", team.name);
-                myCommand.Parameters.AddWithValue("@confederation", team.confederation);
-                myCommand.Parameters.AddWithValue("@typeid", team.typeid);
-
-                myReader = myCommand.ExecuteReader();
-                table.Load(myReader);
-                myReader.Close();
-                myCon.Close();///Closed connection
-
-            }
-
-            return new JsonResult(table); ///Returns table with info
+            var function = new TeamData();
+            await function.PostTeams(team);
         }
 
-        /// <summary>
-        /// Method to update a team
-        /// </summary>
-        /// <param name="team"></param>
-        /// <returns>Action result of the query</returns>
-        [HttpPut]
-        public ActionResult PutTeam(Team team)
+        [HttpPut("{id}")]
+        public async Task Put(string id, [FromBody] Team team)
         {
-            ///SQL Query
-            string query = @"
-                             exec proc_team @id,@name,@confederation,@typeid,'Updates'
-                            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection started
-            {
-                myCon.Open(); ///Connection closed
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))///Sql command with query and connection
+            var function = new TeamData();
+            team.id = id;
+            await function.PutTeam(team);
+            
+        }
+
+        [HttpDelete("{id}")]
+        public async Task Delete(string id)
+        {
+            var function = new TeamData();
+            var team = new Team();
+            team.id = id;
+            await function.DeleteTeam(team);  
+        }
+
+        /**
+                /// <summary>
+                /// Method to get all created teams
+                /// </summary>
+                /// <returns>returns>JSONResult with all teams</returns>
+                [HttpGet]
+                public JsonResult GetTeams()
                 {
-                    ///Added parameters
-                    myCommand.Parameters.AddWithValue("@id", team.id);
-                    myCommand.Parameters.AddWithValue("@name", team.name);
-                    myCommand.Parameters.AddWithValue("@confederation", team.confederation);
-                    myCommand.Parameters.AddWithValue("@typeid", team.typeid);
+                    string query = @"exec proc_team '','','',0,'Select WebApp'";///sql query
 
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();///Closed connection
+                    DataTable table = new DataTable(); ///Create datatable
+                    string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+                    SqlDataReader myReader;
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                    {
+                        myCon.Open();///Open connection
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader); ///Data is loaded into table
+                            myReader.Close();
+                            myCon.Close(); ///Closed connection
+                        }
+                    }
+
+                    TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        column.ColumnName = ti.ToLower(column.ColumnName);///Make all lowercase to avoid conflicts with communication
+                    }
+
+                    return new JsonResult(table);///Return JSON Of the data table
                 }
-            }
-            return Ok(); ///Returns acceptance
-        }
+
+
+                /// <summary>
+                /// Method to get one team by its id
+                /// </summary>
+                /// <param name="id"></param>
+                /// <returns>Json of the required team</returns>
+                [HttpGet("{id}")]
+                public string GetTeam(string id)
+                {
+                    ///Created labels
+                    string lbl_id;
+                    string lbl_name;
+                    string lbl_confederation;
+                    string lbl_type;
+
+                    ///SQL Query
+                    string query = @"
+                                    exec proc_team @id,'','',0,'Select One'";
+                    DataTable table = new DataTable();///Created table to store data
+                    string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+                    SqlDataReader myReader;
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection created
+                    {
+                        myCon.Open();///Open connection
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))///Command with query and connection
+                        {
+                            ///Added parameters
+                            myCommand.Parameters.AddWithValue("@id", id);
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader); ///Load data to table
+                            myReader.Close();
+                            myCon.Close(); ///Close connection
+                        }
+                    }
+
+                    ///Verify if table is empty
+                    if (table.Rows.Count > 0)
+                    {
+
+                        DataRow row = table.Rows[0];
+
+                        ///Manipulation of every row of datatable and parse them to string
+                        lbl_id = row["id"].ToString();
+                        lbl_name = row["name"].ToString();
+                        lbl_confederation = row["confederation"].ToString();
+                        lbl_type = row["typeid"].ToString();
+
+                        ///Creation of the JSON
+                        var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
+                           new JProperty("confederation", lbl_confederation),
+                           new JProperty("typeid", lbl_type));
+
+                        return data.ToString();///Return created JSON
+                    }
+                    else
+                    {
+                        var data = new JObject(new JProperty("Existe", "no"));
+                        return data.ToString(); ///Return message if table is empty
+                    }
+                }
+        **/
+        /**
+
+                /// <summary>
+                /// Method to create teams
+                /// </summary>
+                /// <param name="team"></param>
+                /// <returns>JSON of the team created</returns>
+                [HttpPost]
+                public JsonResult PostTeam(Team team)
+                {
+                    ///SQL Query
+                    string query = @"
+                                     exec proc_team @id,@name,@confederation,@typeid,'Insert'
+                                    ";
+                    DataTable table = new DataTable();
+                    string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+                    SqlDataReader myReader;
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
+                    {
+                        myCon.Open(); ///Opened connection
+                        SqlCommand myCommand = new SqlCommand(query, myCon);
+
+                        ///Parameters added with values
+                        myCommand.Parameters.AddWithValue("@id", team.id);
+                        myCommand.Parameters.AddWithValue("@name", team.name);
+                        myCommand.Parameters.AddWithValue("@confederation", team.confederation);
+                        myCommand.Parameters.AddWithValue("@typeid", team.typeid);
+
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();///Closed connection
+
+                    }
+
+                    return new JsonResult(table); ///Returns table with info
+                }
+
+
+
+                /// <summary>
+                /// Method to update a team
+                /// </summary>
+                /// <param name="team"></param>
+                /// <returns>Action result of the query</returns>
+                [HttpPut]
+                public ActionResult PutTeam(Team team)
+                {
+                    ///SQL Query
+                    string query = @"
+                                     exec proc_team @id,@name,@confederation,@typeid,'Updates'
+                                    ";
+                    DataTable table = new DataTable();
+                    string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+                    SqlDataReader myReader;
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection started
+                    {
+                        myCon.Open(); ///Connection closed
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))///Sql command with query and connection
+                        {
+                            ///Added parameters
+                            myCommand.Parameters.AddWithValue("@id", team.id);
+                            myCommand.Parameters.AddWithValue("@name", team.name);
+                            myCommand.Parameters.AddWithValue("@confederation", team.confederation);
+                            myCommand.Parameters.AddWithValue("@typeid", team.typeid);
+
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+                            myReader.Close();
+                            myCon.Close();///Closed connection
+                        }
+                    }
+                    return Ok(); ///Returns acceptance
+                }
+        
 
         /// <summary>
         /// Method to delete a team by its id
@@ -216,6 +271,7 @@ namespace WorldCupOnline_API.Controllers
             return Ok(); ///Returns acceptance
         }
 
+**/
 
         /// <summary>
         /// Method to get all created types of teams

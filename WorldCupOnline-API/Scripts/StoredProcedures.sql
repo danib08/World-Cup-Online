@@ -75,6 +75,49 @@ as begin
 end
 go
 
+----Nuevos procedimientos para arreglos del API
+
+create procedure get_teams
+as begin
+select * from dbo.Team
+end
+go
+
+create procedure getOneTeam(@ID varchar(8))
+as begin
+select * from dbo.Team
+		where ID = @ID
+end
+go
+
+create procedure insertTeam(@ID varchar(8),
+			   	@Name varchar(30),
+				@Confederation varchar(30),
+				@TypeID int)
+as begin
+insert into dbo.Team(ID,Name,Confederation,TypeID)
+		values(@ID,@Name,@Confederation,@TypeID)
+end
+go
+
+create procedure editTeam(@ID varchar(8),
+			   	@Name varchar(30),
+				@Confederation varchar(30),
+				@TypeID int)
+as begin
+update dbo.Team set Name=@Name,Confederation=@Confederation,TypeID=@TypeID
+		where ID=@ID 	
+end
+go
+
+create procedure delete_team(@ID varchar(8))
+as begin
+delete from dbo.Team
+		where ID = @ID
+end
+go
+
+-------------------------
 
 create procedure proc_team(@ID varchar(8),
 			   	@Name varchar(30),
@@ -469,7 +512,7 @@ go
 
 create procedure proc_bet(@ID int,
 				@GoalsTeam1 int,
-				@GoalsTeam2 int
+				@GoalsTeam2 int,
 				@Score int ,
 				@MVP varchar(15),
 				@UserID varchar(12),
@@ -510,7 +553,7 @@ end
 go
 
 
-create procedure proc_scorerInBet(BetID int,
+create procedure proc_scorerInBet(@ID int,
 				@BetID int,
 				@PlayerID varchar(15),
 			    @StatementType varchar(50) = '')
@@ -541,7 +584,7 @@ as begin
 end
 go
 
-create procedure proc_assistInBet(BetID int,
+create procedure proc_assistInBet(@ID int,
 				@BetID int,
 				@PlayerID varchar(15),
 			    @StatementType varchar(50) = '')
