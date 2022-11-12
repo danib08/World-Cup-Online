@@ -5,12 +5,13 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Globalization;
 using Type = WorldCupOnline_API.Models.Type;
+using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TypeController : ControllerBase
+    public class CountryController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
@@ -18,19 +19,19 @@ namespace WorldCupOnline_API.Controllers
         /// Established configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
-        public TypeController(IConfiguration configuration)
+        public CountryController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         /// <summary>
-        /// Method to get all created types
+        /// Method to get all created countries
         /// </summary>
-        /// <returns>JSONResult with all types</returns>
+        /// <returns>JSONResult with all countries</returns>
         [HttpGet]
-        public JsonResult GetTypes()
+        public JsonResult GetCountries()
         {
-            string query = @"exec proc_type 0,'','Select WebApp'"; ///sql query
+            string query = @"exec proc_country '','','Select WebApp'"; ///sql query
 
             DataTable table = new DataTable(); //Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -57,12 +58,12 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to get one type by its id
+        /// Method to get one country by its id
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public string GetType(int id)
+        public string GetType(string id)
         {
             ///Created label
             string lbl_name;
@@ -71,7 +72,7 @@ namespace WorldCupOnline_API.Controllers
 
             ///SQL Query
             string query = @"
-                            exec proc_type @id,'','Select One'";
+                            exec proc_country @id,'','Select One'";
 
             DataTable table = new DataTable();///Created table to store data
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -114,16 +115,16 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to create types
+        /// Method to create countries
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name=""></param>
         /// <returns>JSON of the type created</returns>
         [HttpPost]
-        public JsonResult PostType(Type type)
+        public JsonResult PostCountry(Country country)
         {
             //SQL Query
             string query = @"
-                             exec proc_type @id,@name,'Insert'
+                             exec proc_country @id,@name,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -134,8 +135,8 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", type.id);
-                myCommand.Parameters.AddWithValue("@name", type.name);
+                myCommand.Parameters.AddWithValue("@id", country.id);
+                myCommand.Parameters.AddWithValue("@name", country.name);
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
                 myReader.Close();
@@ -148,16 +149,16 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to delete a type by its id
+        /// Method to delete a country by its id
         /// </summary>
         /// <param id="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public ActionResult DeleteType(int id)
+        public ActionResult DeleteType(string id)
         {
             ///SQL Query
             string query = @"
-                            exec proc_type @id,'','Delete'
+                            exec proc_country @id,'','Delete'
             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
