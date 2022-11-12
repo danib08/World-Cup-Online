@@ -431,7 +431,7 @@ create procedure proc_users(@Username varchar(12),
 				@Email varchar(45),
 				@CountryID varchar(3),
 				@Birthdate datetime,
-				@Password varchar(40),
+				@Password varchar(MAX),
 			    @StatementType varchar(50) = '')
 as begin
 
