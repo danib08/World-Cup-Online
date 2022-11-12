@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
 using System.Data;
 using System.Globalization;
-using Type = WorldCupOnline_API.Models.Type;
 using WorldCupOnline_API.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -14,6 +14,7 @@ namespace WorldCupOnline_API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private SHA512 _hashAlgorithm;
 
         /// <summary>
         /// Established configuration for controller to get connection
@@ -22,6 +23,7 @@ namespace WorldCupOnline_API.Controllers
         public UsersController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _hashAlgorithm = SHA512.Create();
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace WorldCupOnline_API.Controllers
         /// </summary>
         /// <param username="username"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("{username}")]
         public string GetUser(string username)
         {
             ///Created label
@@ -127,11 +129,22 @@ namespace WorldCupOnline_API.Controllers
         /// <summary>
         /// Method to create users
         /// </summary>
-        /// <param user=""></param>
+        /// <param users=""></param>
         /// <returns>JSON of the type created</returns>
         [HttpPost]
         public JsonResult PostUser(Users user)
         {
+            byte[] bytesPassword = Encoding.ASCII.GetBytes(user.password);
+            byte[] hash;
+
+            using (SHA512 shaM = SHA512.Create())
+            {
+                hash = shaM.ComputeHash(bytesPassword);
+            }
+
+            string encrypted = Convert.ToBase64String(hash);
+
+
             //SQL Query
             string query = @"
                              exec proc_users @username,@name,@lastname,@email,@countryid,@birthdate,@password,'Insert'
@@ -151,7 +164,7 @@ namespace WorldCupOnline_API.Controllers
                 myCommand.Parameters.AddWithValue("@email", user.email);
                 myCommand.Parameters.AddWithValue("@countryid", user.countryid);
                 myCommand.Parameters.AddWithValue("@birthdate", user.birthdate);
-                myCommand.Parameters.AddWithValue("@password", user.password); //encrypt
+                myCommand.Parameters.AddWithValue("@password", encrypted);
 
                 myReader = myCommand.ExecuteReader();
                 table.Load(myReader);
@@ -161,7 +174,6 @@ namespace WorldCupOnline_API.Controllers
             }
 
             return new JsonResult(table); ///Returns table with info
-
         }
 
         /// <summary>
@@ -169,7 +181,7 @@ namespace WorldCupOnline_API.Controllers
         /// </summary>
         /// <param username="username"></param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("{username}")]
         public ActionResult DeleteUser(string username)
         {
             ///SQL Query
