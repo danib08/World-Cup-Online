@@ -16,6 +16,10 @@ namespace WorldCupOnline_API.Controllers
 
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Established configuration for controller to get connection
+        /// </summary>
+        /// <param name="configuration"></param>
         public Team_In_MatchController(IConfiguration configuration)
         {
             _configuration = configuration;

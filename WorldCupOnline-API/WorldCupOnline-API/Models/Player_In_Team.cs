@@ -1,5 +1,8 @@
 ﻿namespace WorldCupOnline_API.Models
 {
+    /// <summary>
+    /// Plaayer in Team Model
+    /// </summary>
     public class Player_In_Team
     {
         public string teamid { get; set; }

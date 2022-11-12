@@ -189,7 +189,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to delete a phase by its id
+        /// Method to delete a player by its id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Action result of the query</returns>

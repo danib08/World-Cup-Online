@@ -63,7 +63,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns>Json of the required tournaments</returns>
         [HttpGet("{id}")]
-        public string GetTournament(string id)
+        public string GetTournament(int id)
         {
             ///Created labels
             string lbl_id;
@@ -134,7 +134,7 @@ namespace WorldCupOnline_API.Controllers
 
             ///SQL Query
             string query = @"
-                             exec proc_tournament @id,@name,@startdate,@enddate,@description,@typeid,'Insert'
+                             exec proc_tournament 0,@name,@startdate,@enddate,@description,@typeid,'Insert'
                             ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
@@ -145,7 +145,6 @@ namespace WorldCupOnline_API.Controllers
                 SqlCommand myCommand = new SqlCommand(query, myCon);
 
                 ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", creator.id);
                 myCommand.Parameters.AddWithValue("@name", creator.name);
                 myCommand.Parameters.AddWithValue("@startdate", creator.startdate);
                 myCommand.Parameters.AddWithValue("@enddate", creator.enddate);
@@ -158,12 +157,16 @@ namespace WorldCupOnline_API.Controllers
                 myCon.Close();///Closed connection
             }
 
-            foreach (string id in creator.teamsIds)
+            DataRow row = table.Rows[0];
+            string lbl_id = row["ID"].ToString();
+            int newID = Int32.Parse(lbl_id);
+
+            for (int i = 0; i < creator.teamsIds.Length; i++)
             {
                 Team_In_Tournament team_In_Tournament = new()
                 {
-                    teamid = id,
-                    tournamentid = creator.id
+                    teamid = creator.teamsIds[i],
+                    tournamentid = newID
                 };
                 PostTeam_In_Tournament(team_In_Tournament);
             }
@@ -173,7 +176,7 @@ namespace WorldCupOnline_API.Controllers
                 Phase phase = new()
                 {
                     name = phaseName,
-                    tournamentID = creator.id
+                    tournamentID = newID
                 };
                 PostPhase(phase);
             }
@@ -227,7 +230,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public ActionResult DeleteTournament(string id)
+        public ActionResult DeleteTournament(int id)
         {
             ///SQL Query
             string query = @"
@@ -251,10 +254,15 @@ namespace WorldCupOnline_API.Controllers
             return Ok(); ///Returns acceptance
         }
 
-        [HttpGet("Matches/{id}")]
-        public JsonResult GetMatchesByTournament(string id)
+        /// <summary>
+        /// Method to get the matches of a tournament
+        /// </summary>
+        /// <param name="tournamentId"></param>
+        /// <returns></returns>
+        [HttpGet("{tournamentId}/Matches")]
+        public JsonResult GetMatchesByTournament(int tournamentId)
         {
-            string query = @"exec proc_tournament @id,'','','','',0,'Get Matches By Tourn'"; ///sql query
+            string query = @"exec proc_tournament @tournamentId,'','','','',0,'Get Matches By Tourn'"; ///sql query
 
             DataTable table = new DataTable(); ///Create datatable
             string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
@@ -264,7 +272,7 @@ namespace WorldCupOnline_API.Controllers
                 myCon.Open(); ///Open connection
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@id", id);
+                    myCommand.Parameters.AddWithValue("@tournamentId", tournamentId);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader); ///Data is loaded into table
                     myReader.Close();
@@ -281,8 +289,13 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); ///Return JSON Of the data table
         }
 
+        /// <summary>
+        /// Method get the phases of a tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("Phases/{id}")]
-        public JsonResult GetPhasesByTournament(string id)
+        public JsonResult GetPhasesByTournament(int id)
         {
             string query = @"exec proc_tournament @id,'','','','',0,'Get Phases By Tourn'"; ///sql query
 
@@ -311,8 +324,13 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); ///Return JSON Of the data table
         }
 
+        /// <summary>
+        /// Method to get the teams of a tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("Teams/{id}")]
-        public JsonResult GetTeamsByTournament(string id)
+        public JsonResult GetTeamsByTournament(int id)
         {
             string query = @"exec proc_tournament @id,'','','','',0,'Get Teams By Tourn'"; ///sql query
 
@@ -341,6 +359,11 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); ///Return JSON Of the data table
         }
 
+        /// <summary>
+        /// Create a team in tournament
+        /// </summary>
+        /// <param name="team_In_Tournament"></param>
+        /// <returns></returns>
         [HttpPost("postTeamInTournament")]
         public JsonResult PostTeam_In_Tournament(Team_In_Tournament team_In_Tournament)
         {
@@ -370,6 +393,11 @@ namespace WorldCupOnline_API.Controllers
 
         }
 
+        /// <summary>
+        /// Method to create a phase in a tournament
+        /// </summary>
+        /// <param name="phase"></param>
+        /// <returns></returns>
         [HttpPost("postPhase")]
         public JsonResult PostPhase(Phase phase)
         {
