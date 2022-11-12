@@ -1,4 +1,4 @@
-create procedure proc_tournament(@ID varchar(6),
+create procedure proc_tournament(@ID int,
 				@Name varchar(30),
 				@StartDate datetime,
 				@EndDate datetime,
@@ -9,8 +9,9 @@ as begin
 
 	if @StatementType = 'Insert'
 	begin
-		insert into dbo.Tournament(ID,Name,StartDate,EndDate,Description,TypeID)
-		values(@ID,@Name,@StartDate,@EndDate,@Description,@TypeID)
+		insert into dbo.Tournament(Name,StartDate,EndDate,Description,TypeID)
+		values(@Name,@StartDate,@EndDate,@Description,@TypeID)
+		select SCOPE_IDENTITY() as ID
 	end
 
 	if @StatementType = 'Select'
@@ -59,7 +60,7 @@ as begin
 
 	if @StatementType = 'Get Phases by Tourn'
 	begin	
-		select ID, Name
+		select ID as value, Name as label
 		from Phase
 		where TournamentID = @ID
 	end
@@ -105,6 +106,11 @@ as begin
 		where ID = @ID
 	end
 
+	if @StatementType = 'Select Type'
+	begin
+		select ID, Name as label from dbo.Team
+		where TypeID = @TypeID
+	end
 
 	if @StatementType = 'Update'
 	begin
@@ -122,7 +128,7 @@ go
 
 
 create procedure proc_teamInTournament(@TeamID varchar(8),
-				@TournamentID varchar(6),
+				@TournamentID int,
 				@StatementType varchar(50) = '')
 as begin
 
@@ -231,7 +237,7 @@ go
 
 create procedure proc_phase(@ID int,
 				@Name varchar(50),
-				@TournamentID varchar(6),
+				@TournamentID int,
 				@StatementType varchar(50) = '')
 as begin
 
@@ -243,7 +249,7 @@ as begin
 
 	if @StatementType = 'Select'
 	begin
-		select * from dbo.Phase
+		select ID as value, Name as label from dbo.Phase
 	end
 
 	if @StatementType = 'Select One'
@@ -273,7 +279,7 @@ create procedure proc_match(@ID int,
 			    @Score varchar(7),
 			    @Location varchar(50),
 			    @StateID int,
-			    @TournamentID varchar(6),
+			    @TournamentID int,
 				@PhaseID int,
 			    @StatementType varchar(50) = '')
 as begin

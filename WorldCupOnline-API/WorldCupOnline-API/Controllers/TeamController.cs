@@ -23,9 +23,9 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to get all created reams
+        /// Method to get all created teams
         /// </summary>
-        /// <returns>returns>JSONResult with all phases</returns>
+        /// <returns>returns>JSONResult with all teams</returns>
         [HttpGet]
         public JsonResult GetTeams()
         {
@@ -103,8 +103,8 @@ namespace WorldCupOnline_API.Controllers
 
                 ///Creation of the JSON
                 var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
-                   new JProperty("confederation", float.Parse(lbl_confederation)),
-                   new JProperty("typeid", float.Parse(lbl_type)));
+                   new JProperty("confederation", lbl_confederation),
+                   new JProperty("typeid", lbl_type));
 
                 return data.ToString();///Return created JSON
             }
@@ -214,6 +214,41 @@ namespace WorldCupOnline_API.Controllers
                 }
             }
             return Ok(); ///Returns acceptance
+        }
+
+
+        /// <summary>
+        /// Method to get all created types of teams
+        /// </summary>
+        /// <returns>returns>JSONResult with type of teams</returns>
+        [HttpGet("Type/{type}")]
+        public JsonResult GetTeamsByType(int type)
+        {
+            string query = @"exec proc_team '','','',@type,'Select Type'";///sql query
+
+            DataTable table = new DataTable(); ///Create datatable
+            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();///Open connection
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@type", type);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader); ///Data is loaded into table
+                    myReader.Close();
+                    myCon.Close(); ///Closed connection
+                }
+            }
+
+            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+            foreach (DataColumn column in table.Columns)
+            {
+                column.ColumnName = ti.ToLower(column.ColumnName);///Make all lowercase to avoid conflicts with communication
+            }
+
+            return new JsonResult(table);///Return JSON Of the data table
         }
     }
 }

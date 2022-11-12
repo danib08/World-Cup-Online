@@ -24,9 +24,9 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to get all created states
+        /// Method to get all created types
         /// </summary>
-        /// <returns>JSONResult with all states</returns>
+        /// <returns>JSONResult with all types</returns>
         [HttpGet]
         public JsonResult GetTypes()
         {
@@ -57,7 +57,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to get one state by its id
+        /// Method to get one type by its id
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -114,10 +114,10 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to create states
+        /// Method to create types
         /// </summary>
         /// <param name="state"></param>
-        /// <returns>JSON of the state created</returns>
+        /// <returns>JSON of the type created</returns>
         [HttpPost]
         public JsonResult PostType(Type type)
         {
@@ -148,7 +148,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to delete a state by its id
+        /// Method to delete a type by its id
         /// </summary>
         /// <param id="id"></param>
         /// <returns></returns>

@@ -2,6 +2,9 @@
 
 namespace WorldCupOnline_API.Models
 {
+    /// <summary>
+    /// Player Model
+    /// </summary>
     public class Player
     {
         public string id { get; set; }
