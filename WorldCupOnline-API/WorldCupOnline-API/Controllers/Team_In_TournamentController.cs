@@ -176,7 +176,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Method to delete a phase by its id
+        /// Method to delete a team in a tournament by its id
         /// </summary>
         /// <param name="teamid"></param>
         /// <param name="tournamentid"></param>
