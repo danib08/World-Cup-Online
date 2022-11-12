@@ -463,7 +463,7 @@ go
 
 create procedure proc_bet(@ID int,
 				@GoalsTeam1 int,
-				@GoalsTeam2 int
+				@GoalsTeam2 int,
 				@Score int ,
 				@MVP varchar(15),
 				@UserID varchar(12),
@@ -504,7 +504,7 @@ end
 go
 
 
-create procedure proc_scorerInBet(BetID int,
+create procedure proc_scorerInBet(@ID int,
 				@BetID int,
 				@PlayerID varchar(15),
 			    @StatementType varchar(50) = '')
@@ -535,7 +535,7 @@ as begin
 end
 go
 
-create procedure proc_assistInBet(BetID int,
+create procedure proc_assistInBet(@ID int,
 				@BetID int,
 				@PlayerID varchar(15),
 			    @StatementType varchar(50) = '')
