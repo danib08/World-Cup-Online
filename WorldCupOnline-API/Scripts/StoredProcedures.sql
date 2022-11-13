@@ -464,6 +464,12 @@ as begin
 		delete from dbo.Users
 		where Username = @Username
 	end
+
+	if @StatementType = 'Auth'
+	begin
+		select password from dbo.Users
+		where Email = @Email
+	end
 end
 go
 
