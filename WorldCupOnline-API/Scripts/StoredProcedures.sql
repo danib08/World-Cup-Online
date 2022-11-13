@@ -467,7 +467,7 @@ as begin
 
 	if @StatementType = 'Auth'
 	begin
-		select password from dbo.Users
+		select Password from dbo.Users
 		where Email = @Email
 	end
 end
