@@ -22,7 +22,7 @@ namespace WorldCupOnline_API.Data
                         while(await item.ReadAsync())
                         {
                             var match = new Match();
-                            match.id = (string)item["id"];
+                            match.id = (int)item["id"];
                             match.startdate = (DateTime)item["startdate"];
                             match.starttime = (DateTime)item["starttime"];
                             match.score = (string)item["score"];
@@ -54,7 +54,7 @@ namespace WorldCupOnline_API.Data
                         while(await item.ReadAsync())
                         {
                             var match = new Match();
-                            match.id = (string)item["id"];
+                            match.id = (int)item["id"];
                             match.startdate = (DateTime)item["startdate"];
                             match.starttime = (DateTime)item["starttime"];
                             match.score = (string)item["score"];

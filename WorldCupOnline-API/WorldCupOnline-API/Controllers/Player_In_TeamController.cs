@@ -35,7 +35,7 @@ namespace WorldCupOnline_API.Controllers
             return list;
         }
 
-        [HttpGet("{teamid/playerid}")]
+        [HttpGet("{teamid}/{playerid}")]
         public async Task<ActionResult<List<Player_In_Team>>> GetOne(string teamid, string playerid)
         {
             var function = new Player_In_TeamData();
@@ -53,7 +53,7 @@ namespace WorldCupOnline_API.Controllers
             await function.PostPlayer_In_Team(player_In_Team);
         }
 
-        [HttpPut("{teamid/playerid}")]
+        [HttpPut("{teamid}/{playerid}")]
         public async Task Put(string teamid, string playerid, [FromBody] Player_In_Team player_In_Team)
         {
             var function = new Player_In_TeamData();
@@ -63,7 +63,7 @@ namespace WorldCupOnline_API.Controllers
             
         }
 
-        [HttpDelete("{teamid/playerid}")]
+        [HttpDelete("{teamid}/{playerid}")]
         public async Task Delete(string teamid, string playerid)
         {
             var function = new Player_In_TeamData();

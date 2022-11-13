@@ -42,7 +42,8 @@ namespace WorldCupOnline_API.Data
                 {
                     await sql.OpenAsync();
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", data.id);
+                    cmd.Parameters.AddWithValue("@teamid", data.teamid);
+                    cmd.Parameters.AddWithValue("@playerid", data.playerid);
 
                     using (var item = await cmd.ExecuteReaderAsync())
                     {

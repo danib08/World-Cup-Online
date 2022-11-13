@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Globalization;
 using Type = WorldCupOnline_API.Models.Type;
+using WorldCupOnline_API.Data;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -58,7 +59,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task Delete(string id)
+        public async Task Delete(int id)
         {
             var function = new TypeData();
             var type = new Type();

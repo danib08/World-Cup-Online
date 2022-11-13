@@ -83,7 +83,7 @@ namespace WorldCupOnline_API.Data
         {
             using (var sql = new SqlConnection(con.SQLCon()))
             {
-                using (var cmd = new SqlCommand("editTim", sql))
+                using (var cmd = new SqlCommand("editTIM", sql))
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@teamid", team_In_Match.teamid);

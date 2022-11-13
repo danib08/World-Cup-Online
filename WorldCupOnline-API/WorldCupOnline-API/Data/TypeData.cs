@@ -7,9 +7,9 @@ using WorldCupOnline_API.Models;
 namespace WorldCupOnline_API.Data{
     public class TypeData{
     DbConection con = new DbConection();
-        public async Task <List<Type>> GetTypes()
+        public async Task <List<Models.Type>> GetTypes()
         {
-            var list = new List<Type>();
+            var list = new List<Models.Type>();
             using(var sql = new SqlConnection(con.SQLCon()))
             {
                 using(var cmd = new SqlCommand("get_types",sql))
@@ -20,7 +20,7 @@ namespace WorldCupOnline_API.Data{
                     {
                         while(await item.ReadAsync())
                         {
-                            var type = new Type();
+                            var type = new Models.Type();
                             type.id = (int)item["id"];
                             type.name = (string)item["name"];
                             list.Add(type);
@@ -31,12 +31,12 @@ namespace WorldCupOnline_API.Data{
             return list;
         }
 
-        public async Task<List<Type>> GetOneType(Type data)
+        public async Task<List<Models.Type>> GetOneType(Models.Type data)
         {
-            var list = new List<Type>();
+            var list = new List<Models.Type>();
             using(var sql = new SqlConnection(con.SQLCon()))
             {
-                using(var cms = new SqlCommand("getOneType",sql))
+                using(var cmd = new SqlCommand("getOneType",sql))
                 {
                     await sql.OpenAsync();
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -46,7 +46,7 @@ namespace WorldCupOnline_API.Data{
                     {
                         while(await item.ReadAsync())
                         {
-                            var type = new Type();
+                            var type = new Models.Type();
                             type.id = (int)item["id"];
                             type.name = (string)item["name"];
                             list.Add(type);
@@ -57,7 +57,7 @@ namespace WorldCupOnline_API.Data{
             }
         }
 
-        public async Task PostType(Type type)
+        public async Task PostType(Models.Type type)
         {
             using(var sql = new SqlConnection(con.SQLCon()))
             {
@@ -72,7 +72,7 @@ namespace WorldCupOnline_API.Data{
             }
         }
 
-        public async Task PutType(Type type)
+        public async Task PutType(Models.Type type)
         {
             using (var sql = new SqlConnection(con.SQLCon()))
             {
@@ -80,14 +80,14 @@ namespace WorldCupOnline_API.Data{
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("id", type.id);
-                    cmd.Parameters.AddWithValue("name". type.name);
+                    cmd.Parameters.AddWithValue("name", type.name);
                     await sql.OpenAsync();
                     await cmd.ExecuteReaderAsync();
                 }
             }
         }
 
-        public async Task DeleteType(Type type)
+        public async Task DeleteType(Models.Type type)
         {
             using(var sql = new SqlConnection(con.SQLCon()))
             {

@@ -14,7 +14,7 @@ namespace WorldCupOnline_API.Data
             var list = new List<Team_In_Tournament>();
             using (var sql = new SqlConnection(con.SQLCon()))
             {
-                using (var cmd = new SqlCommand("get_ITI", sql))
+                using (var cmd = new SqlCommand("get_TIT", sql))
                 {
                     await sql.OpenAsync();
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
