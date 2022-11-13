@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using WorldCupOnline_API.Conection;
 using WorldCupOnline_API.Models;
@@ -64,6 +65,33 @@ namespace WorldCupOnline_API.Data
                 return list;
             }
         }
+
+        public async Task<DataTable> GetType(Team data)
+        {
+            var list = new List<Team>();
+            DataTable table = new DataTable(); ///Create datatable
+            using (var sql = new SqlConnection(con.SQLCon()))
+            {
+                using (var cmd = new SqlCommand("getTypeTeam", sql))
+                {
+                    await sql.OpenAsync();
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@typeid", data.typeid);
+
+                    using (var item = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await item.ReadAsync())
+                        {
+                            table.Load(item);
+
+                        }
+                    }
+                }
+
+                return table;
+            }
+        }
+
 
         public async Task PostTeams(Team team)
         {

@@ -90,6 +90,13 @@ select * from dbo.Team
 end
 go
 
+create procedure getTypeTeam(@TypeID int)
+as begin
+select ID, Name as label from dbo.Team
+		where TypeID = @TypeID
+end
+go
+
 create procedure insertTeam(@ID varchar(8),
 			   	@Name varchar(30),
 				@Confederation varchar(30),
