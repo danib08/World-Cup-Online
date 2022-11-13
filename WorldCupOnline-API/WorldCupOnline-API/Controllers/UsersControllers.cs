@@ -180,7 +180,7 @@ namespace WorldCupOnline_API.Controllers
         /// </summary>
         /// <param auth=""></param>
         /// <returns></returns>
-        [HttpPost("auth")]
+        [HttpPost("Auth")]
         public IActionResult AuthUser(Auth auth)
         {
             byte[] bytesPassword = Encoding.ASCII.GetBytes(auth.password);
@@ -216,10 +216,12 @@ namespace WorldCupOnline_API.Controllers
             }
             DataRow row = table.Rows[0];
             string lbl_pwd = row["password"].ToString();
+            string lbl_username = row["username"].ToString();
 
             if (lbl_pwd == encrypted)
             {
-                return Ok();
+                var data = new JObject(new JProperty("username", lbl_username));
+                return Ok(data);
             }
             else
             {
