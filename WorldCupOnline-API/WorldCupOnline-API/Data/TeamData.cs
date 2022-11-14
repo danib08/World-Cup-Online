@@ -10,9 +10,9 @@ namespace WorldCupOnline_API.Data
     {
         private readonly DbConection _con = new();
 
-        public async Task <List<LabelString>> GetTeams()
+        public async Task <List<IdStringBody>> GetTeams()
         {
-            var list = new List<LabelString>();
+            var list = new List<IdStringBody>();
 
             using (var sql = new SqlConnection(_con.SQLCon()))
             {
@@ -23,7 +23,7 @@ namespace WorldCupOnline_API.Data
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    var team = new LabelString
+                    var team = new IdStringBody
                     {
                         id = (string)reader["id"],
                         label = (string)reader["label"]
@@ -61,9 +61,9 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
-        public async Task<List<LabelString>> GetTeamsByType(int type)
+        public async Task<List<IdStringBody>> GetTeamsByType(int type)
         {
-            var list = new List<LabelString>();
+            var list = new List<IdStringBody>();
 
             using var sql = new SqlConnection(_con.SQLCon());
             using (var cmd = new SqlCommand("getTeamsByType", sql))
@@ -75,7 +75,7 @@ namespace WorldCupOnline_API.Data
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    var item = new LabelString
+                    var item = new IdStringBody
                     {
                         id = (string)reader["id"],
                         label = (string)reader["label"]
@@ -119,9 +119,11 @@ namespace WorldCupOnline_API.Data
         public async Task DeleteTeam(string id)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("delete_team", sql);
+            using var cmd = new SqlCommand("deleteTeam", sql);
+
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@id", id);
+
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();
         }

@@ -1,8 +1,8 @@
 ﻿namespace WorldCupOnline_API.Bodies
 {
-    public class LabelString
+    public class ValueIntBody
     {
-        public string id { get; set; }
+        public int value { get; set; }
         public string label { get; set; }
     }
 }

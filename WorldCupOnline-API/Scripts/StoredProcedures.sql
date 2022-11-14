@@ -62,7 +62,13 @@ as begin
 end
 go
 
-create procedure getTeamsTournament(@ID int)
+create procedure getTypesTournament
+as begin
+		select * from dbo.Type
+end
+go
+
+create procedure getTeamsTournamentTournament(@ID int)
 as begin
 		select ID, Name, Confederation
 		from (Team_In_Tournament join Team on TeamID = ID)
@@ -149,26 +155,26 @@ as begin
 end
 go
 
-----Nuevos procedimientos TEAMS para arreglos del API----
+---- TEAMS Procedures ----
 
 create procedure getTeams
 as begin
-	select ID, Name as label
-	from dbo.Team
+		select ID, Name as label
+		from dbo.Team
 end
 go
 
 create procedure getOneTeam(@ID varchar(8))
 as begin
-	select * from dbo.Team
-	where ID = @ID
+		select * from dbo.Team
+		where ID = @ID
 end
 go
 
 create procedure getTeamsByType(@TypeID int)
 as begin
-	select ID, Name as label from dbo.Team
-	where TypeID = @TypeID
+		select ID, Name as label from dbo.Team
+		where TypeID = @TypeID
 end
 go
 
@@ -177,8 +183,8 @@ create procedure insertTeam(@ID varchar(8),
 				@Confederation varchar(30),
 				@TypeID int)
 as begin
-	insert into dbo.Team(ID,Name,Confederation,TypeID)
-	values(@ID,@Name,@Confederation,@TypeID)
+		insert into dbo.Team(ID,Name,Confederation,TypeID)
+		values(@ID,@Name,@Confederation,@TypeID)
 end
 go
 
@@ -187,70 +193,17 @@ create procedure editTeam(@ID varchar(8),
 				@Confederation varchar(30),
 				@TypeID int)
 as begin
-	update dbo.Team set Name=@Name,Confederation=@Confederation,TypeID=@TypeID
-	where ID=@ID 	
-end
-go
-
-create procedure delete_team(@ID varchar(8))
-as begin
-	delete from dbo.Team
-	where ID = @ID
-end
-go
-
---------------------------------------------------------------------------------
-
-create procedure proc_team(@ID varchar(8),
-			   	@Name varchar(30),
-				@Confederation varchar(30),
-				@TypeID int,
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Team(ID,Name,Confederation,TypeID)
-		values(@ID,@Name,@Confederation,@TypeID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Team
-	end
-
-	if @StatementType = 'Select WebApp'
-	begin
-		select ID, Name as label
-		from dbo.Team
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Team
-		where ID = @ID
-	end
-
-	if @StatementType = 'Select Type'
-	begin
-		select ID, Name as label from dbo.Team
-		where TypeID = @TypeID
-	end
-
-	if @StatementType = 'Update'
-	begin
 		update dbo.Team set Name=@Name,Confederation=@Confederation,TypeID=@TypeID
 		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Team
-		where ID = @ID
-	end
 end
 go
 
+create procedure deleteTeam(@ID varchar(8))
+as begin
+		delete from dbo.Team
+		where ID = @ID
+end
+go
 
 ----Nuevos procedimientos Team_In_Tournament para arreglos del API----
 
@@ -812,11 +765,12 @@ as begin
 end
 go
 
-----Nuevos procedimientos TYPE para arreglos del API----
+---- TYPE Procedures ----
 
-create procedure get_types
+create procedure getTypes
 as begin
-select * from dbo.Type
+		select ID as value, Name as label
+		from dbo.Type
 end
 go
 
@@ -843,54 +797,10 @@ as begin
 end
 go
 
-create procedure delete_type(@ID int)
+create procedure deleteType(@ID int)
 as begin
 		delete from dbo.Type 
 		where ID = @ID
-end
-go
-
---------------------------------------------------------
-
-create procedure proc_type(@ID int,
-				@Name varchar(30),
-			    @StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Type(Name)
-		values(@Name)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Type
-	end
-
-	if @StatementType = 'Select WebApp'
-	begin
-		select ID as value, Name as label
-		from dbo.Type
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.State
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Type set Name=@Name
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Type
-		where ID = @ID
-	end
 end
 go
 

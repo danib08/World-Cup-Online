@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Bodies;
@@ -28,7 +23,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<LabelString>>> Get()
+        public async Task<ActionResult<List<IdStringBody>>> Get()
         {
             return await _funct.GetTeams();
         }
@@ -40,7 +35,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpGet("Type/{type}")]
-        public async Task<ActionResult<List<LabelString>>> GetTeamsByType(int type)
+        public async Task<ActionResult<List<IdStringBody>>> GetTeamsByType(int type)
         {
             return await _funct.GetTeamsByType(type);
         }

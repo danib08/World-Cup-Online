@@ -1,104 +1,100 @@
-using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using WorldCupOnline_API.Conection;
-using WorldCupOnline_API.Models;
+using WorldCupOnline_API.Bodies;
+using Type = WorldCupOnline_API.Models.Type;
 
+namespace WorldCupOnline_API.Data
+{
+    public class TypeData 
+    {
+        private readonly DbConection _con = new();
 
-namespace WorldCupOnline_API.Data{
-    public class TypeData{
-    DbConection con = new DbConection();
-        public async Task <List<Models.Type>> GetTypes()
+        public async Task <List<ValueIntBody>> GetTypes()
         {
-            var list = new List<Models.Type>();
-            using(var sql = new SqlConnection(con.SQLCon()))
+            var list = new List<ValueIntBody>();
+
+            using(var sql = new SqlConnection(_con.SQLCon()))
             {
-                using(var cmd = new SqlCommand("get_types",sql))
+                using var cmd = new SqlCommand("getTypes", sql);
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    using(var item = await cmd.ExecuteReaderAsync())
+                    var type = new ValueIntBody
                     {
-                        while(await item.ReadAsync())
-                        {
-                            var type = new Models.Type();
-                            type.id = (int)item["id"];
-                            type.name = (string)item["name"];
-                            list.Add(type);
-                        }
-                    }
+                        value = (int)reader["value"],
+                        label = (string)reader["label"]
+                    };
+                    list.Add(type);
                 }
             }
             return list;
         }
 
-        public async Task<List<Models.Type>> GetOneType(Models.Type data)
+        public async Task<List<Type>> GetOneType(int id)
         {
-            var list = new List<Models.Type>();
-            using(var sql = new SqlConnection(con.SQLCon()))
-            {
-                using(var cmd = new SqlCommand("getOneType",sql))
-                {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id",data.id);
+            var list = new List<Type>();
+            using var sql = new SqlConnection(_con.SQLCon());
 
-                    using(var item = await cmd.ExecuteReaderAsync())
+            using (var cmd = new SqlCommand("getOneType", sql))
+            {
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var type = new Type
                     {
-                        while(await item.ReadAsync())
-                        {
-                            var type = new Models.Type();
-                            type.id = (int)item["id"];
-                            type.name = (string)item["name"];
-                            list.Add(type);
-                        }
-                    }
+                        id = (int)reader["id"],
+                        name = (string)reader["name"]
+                    };
+                    list.Add(type);
                 }
-                return list;
             }
+            return list;
         }
 
-        public async Task PostType(Models.Type type)
+        public async Task CreateType(Type type)
         {
-            using(var sql = new SqlConnection(con.SQLCon()))
-            {
-                using(var cmd = new SqlCommand("insertType",sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("id", type.id);
-                    cmd.Parameters.AddWithValue("name", type.name);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
-                }
-            }
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("insertType", sql);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("id", type.id);
+            cmd.Parameters.AddWithValue("name", type.name);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
 
-        public async Task PutType(Models.Type type)
+        public async Task EditType(int id, Type type)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using(var cmd = new SqlCommand("editType",sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("id", type.id);
-                    cmd.Parameters.AddWithValue("name", type.name);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
-                }
-            }
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("editType", sql);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("name", type.name);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
 
-        public async Task DeleteType(Models.Type type)
+        public async Task DeleteType(int id)
         {
-            using(var sql = new SqlConnection(con.SQLCon()))
-            {
-                using(var cmd = new SqlCommand("delete_type",sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("id", type.id);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
-                }
-            }
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("deleteType", sql);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("id", id);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
     }
 }

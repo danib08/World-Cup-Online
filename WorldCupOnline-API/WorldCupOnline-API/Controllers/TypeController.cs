@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
+﻿using Microsoft.AspNetCore.Mvc;
 using Type = WorldCupOnline_API.Models.Type;
 using WorldCupOnline_API.Data;
+using WorldCupOnline_API.Bodies;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -14,63 +10,46 @@ namespace WorldCupOnline_API.Controllers
     public class TypeController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly TypeData _funct;
+
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public TypeController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _funct = new TypeData();
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Type>>> Get()
+        public async Task<ActionResult<List<ValueIntBody>>> Get()
         {
-            var function = new TypeData();
-            var list = await function.GetTypes();
-            return list;
-            
+            return await _funct.GetTypes(); ;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Type>>> GetOne(int id)
         {
-            var function = new TypeData();
-            var type = new Type();
-            type.id = id;
-            var list = await function.GetOneType(type);
-            return list;
+            return await _funct.GetOneType(id); ;
         }
 
-        /// <summary>
-        /// Method to create types
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns>JSON of the type created</returns>
-        [HttpPost]
+       [HttpPost]
         public async Task Post([FromBody] Type type)
         {
-            var function = new TypeData();
-            await function.PostType(type);
+            await _funct.CreateType(type);
         }
 
         [HttpPut("{id}")]
         public async Task Put(int id, [FromBody] Type type)
         {
-            var function = new TypeData();
-            type.id = id;
-            await function.PutType(type);
-            
+            await _funct.EditType(id, type);
         }
 
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            var function = new TypeData();
-            var type = new Type();
-            type.id = id;
-            await function.DeleteType(type);  
+            await _funct.DeleteType(id);  
         }
-
     }
 }
