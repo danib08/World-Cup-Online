@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
 using WorldCupOnline_API.Models;
-using System.Security.Cryptography;
-using System.Text;
 using WorldCupOnline_API.Data;
 
 namespace WorldCupOnline_API.Controllers
@@ -15,67 +9,49 @@ namespace WorldCupOnline_API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private SHA512 _hashAlgorithm;
+        private readonly UserData _funct;
 
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public UsersController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _hashAlgorithm = SHA512.Create();
+            _funct = new UserData();
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Users>>> Get()
         {
-            var function = new UserData();
-
-            var list = await function.GetUsers();
-            return list;
+            return await _funct.GetUsers();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Users>>> GetOne(string id)
+        public async Task<ActionResult<Users>> GetOne(string id)
         {
-            var function = new UserData();
-            var user = new Users();
-            user.username = id;
-            var list = await function.GetOneUser(user);
-            return list;
+            return await _funct.GetOneUser(id);
         }
 
         [HttpPost]
         public async Task Post([FromBody] Users user)
         {
-            var function = new UserData();
-            await function.PostUsers(user);
+            await _funct.CreateUsers(user);
         }
 
         [HttpPut("{id}")]
         public async Task Put(string id, [FromBody] Users user)
         {
-            var function = new UserData();
-            user.username = id;
-            await function.PutUser(user);
-
+            await _funct.EditUser(id, user);
         }
 
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            var function = new UserData();
-            var user = new Users();
-            user.username = id;
-            await function.DeleteUser(user);
+            await _funct.DeleteUser(id);
         }
 
-        /// Method to authenticate users
-        /// </summary>
-        /// <param auth=""></param>
-        /// <returns></returns>
-        [HttpPost("Auth")]
+        /*[HttpPost("Auth")]
         public IActionResult AuthUser(Auth auth)
         {
             byte[] bytesPassword = Encoding.ASCII.GetBytes(auth.password);
@@ -122,7 +98,7 @@ namespace WorldCupOnline_API.Controllers
             {
                 return BadRequest();
             }
-        }
+        }*/
 
     }
 }

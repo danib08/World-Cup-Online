@@ -1,13 +1,13 @@
 using System.Data;
 using System.Data.SqlClient;
-using WorldCupOnline_API.Conection;
+using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
     public class Player_In_TeamData
     {
-        private readonly DbConection _con = new();
+        private readonly DbConnection _con = new();
         public async Task <List<Player_In_Team>> GetPlayer_In_Team()
         {
             var list = new List<Player_In_Team>();

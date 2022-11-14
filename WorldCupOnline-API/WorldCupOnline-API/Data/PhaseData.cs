@@ -1,13 +1,13 @@
 using System.Data.SqlClient;
 using System.Data;
-using WorldCupOnline_API.Conection;
+using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
     public class PhaseData
     {
-        private readonly DbConection _con = new();
+        private readonly DbConnection _con = new();
 
         public async Task <List<Phase>> GetPhases()
         {

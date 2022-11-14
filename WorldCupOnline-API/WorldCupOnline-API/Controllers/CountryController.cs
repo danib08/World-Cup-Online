@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
-using Type = WorldCupOnline_API.Models.Type;
+﻿using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
+using WorldCupOnline_API.Bodies;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -15,58 +10,46 @@ namespace WorldCupOnline_API.Controllers
     public class CountryController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly CountryData _funct;
 
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public CountryController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _funct = new CountryData(); 
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Country>>> Get()
+        public async Task<ActionResult<List<ValueStringBody>>> Get()
         {
-            var function = new CountryData();
-
-            var list = await function.GetCountry();
-            return list;
+            return await _funct.GetCountries();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Country>>> GetOne(string id)
+        public async Task<ActionResult<Country>> GetOne(string id)
         {
-            var function = new CountryData();
-            var country = new Country();
-            country.id = id;
-            var list = await function.GetOneCountry(country);
-            return list;
+            return await _funct.GetOneCountry(id);
         }
 
         [HttpPost]
         public async Task Post([FromBody] Country country)
         {
-            var function = new CountryData();
-            await function.PostCountry(country);
+            await _funct.CreateCountry(country);
         }
 
         [HttpPut("{id}")]
         public async Task Put(string id, [FromBody] Country country)
         {
-            var function = new CountryData();
-            country.id = id;
-            await function.PutCountry(country);
-
+            await _funct.EditCountry(id, country);
         }
 
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            var function = new CountryData();
-            var country = new Country();
-            country.id = id;
-            await function.DeleteCountry(country);
+            await _funct.DeleteCountry(id);
         }
     }
 }

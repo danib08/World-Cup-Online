@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
-using WorldCupOnline_API.Conection;
+using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Bodies;
 
@@ -8,7 +8,7 @@ namespace WorldCupOnline_API.Data
 {
     public class TournamentData
     {
-        private readonly DbConection _con = new();
+        private readonly DbConnection _con = new();
 
         public async Task<List<GetTournamentBody>> GetTournament()
         {

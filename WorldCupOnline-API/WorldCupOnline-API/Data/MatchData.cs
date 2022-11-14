@@ -1,14 +1,13 @@
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection.PortableExecutable;
-using WorldCupOnline_API.Conection;
+using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
     public class MatchData
     {
-        private readonly DbConection _con = new();
+        private readonly DbConnection _con = new();
 
         public async Task <List<Match>> GetMatches()
         {

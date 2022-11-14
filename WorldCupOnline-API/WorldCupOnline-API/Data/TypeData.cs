@@ -1,6 +1,6 @@
 using System.Data;
 using System.Data.SqlClient;
-using WorldCupOnline_API.Conection;
+using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Bodies;
 using Type = WorldCupOnline_API.Models.Type;
 
@@ -8,7 +8,7 @@ namespace WorldCupOnline_API.Data
 {
     public class TypeData 
     {
-        private readonly DbConection _con = new();
+        private readonly DbConnection _con = new();
 
         public async Task<List<ValueIntBody>> GetTypes()
         {
