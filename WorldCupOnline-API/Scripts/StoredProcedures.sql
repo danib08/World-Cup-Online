@@ -151,9 +151,10 @@ go
 
 ----Nuevos procedimientos TEAMS para arreglos del API----
 
-create procedure get_teams
+create procedure getTeams
 as begin
-	select * from dbo.Team
+	select ID, Name as label
+	from dbo.Team
 end
 go
 
@@ -164,7 +165,7 @@ as begin
 end
 go
 
-create procedure getTypeTeam(@TypeID int)
+create procedure getTeamsByType(@TypeID int)
 as begin
 	select ID, Name as label from dbo.Team
 	where TypeID = @TypeID
