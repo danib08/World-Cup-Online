@@ -1,112 +1,98 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
-using WorldCupOnline_API.Conection;
+using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
     public class StateData
     {
+        private readonly DbConnection _con = new();
 
-        DbConection con = new DbConection();
         public async Task<List<State>> GetStates()
         {
             var list = new List<State>();
-            using (var sql = new SqlConnection(con.SQLCon()))
+
+            using (var sql = new SqlConnection(_con.SQLCon()))
             {
-                using (var cmd = new SqlCommand("get_state", sql))
+                using var cmd = new SqlCommand("getStates", sql);
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    using (var item = await cmd.ExecuteReaderAsync())
+                    var state = new State
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var state = new State();
-                            state.id = (int)item["id"];
-                            state.name = (string)item["name"];
-                            list.Add(state);
-                        }
-                    }
+                        id = (int)reader["id"],
+                        name = (string)reader["name"]
+                    };
+                    list.Add(state);
                 }
             }
             return list;
         }
 
-        public async Task<List<State>> GetOneState(State data)
+        public async Task<State> GetOneState(int id)
         {
-            var list = new List<State>();
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("getOneState", sql))
-                {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", data.id);
+            var state = new State();
+            using var sql = new SqlConnection(_con.SQLCon());
 
-                    using (var item = await cmd.ExecuteReaderAsync())
+            using (var cmd = new SqlCommand("getOneState", sql))
+            {
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    state = new State
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var state = new State();
-                            state.id = (int)item["id"];
-                            state.name = (string)item["name"];
-                            list.Add(state);
-
-                        }
-                    }
+                        id = (int)reader["id"],
+                        name = (string)reader["name"]
+                    };
                 }
-
-                return list;
             }
+            return state;
         }
 
-
-        public async Task PostState(State state)
+        public async Task CreateState(State state)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("insertState", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", state.id);
-                    cmd.Parameters.AddWithValue("@name", state.name);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("insertState", sql);
 
-                }
-            }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", state.id);
+            cmd.Parameters.AddWithValue("@name", state.name);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
 
-        public async Task PutState(State state)
+        public async Task EditState(int id, State state)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("editState", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", state.id);
-                    cmd.Parameters.AddWithValue("@name", state.name);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("editState", sql);
 
-                }
-            }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@name", state.name);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
 
-        public async Task DeleteState(State state)
+        public async Task DeleteState(int id)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("delete_state", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", state.id);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("delete_state", sql);
 
-                }
-            }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", id);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
     }
 }

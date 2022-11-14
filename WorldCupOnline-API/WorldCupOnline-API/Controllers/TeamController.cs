@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
-using System.Reflection.Metadata.Ecma335;
 using WorldCupOnline_API.Bodies;
 
 namespace WorldCupOnline_API.Controllers
@@ -15,71 +9,54 @@ namespace WorldCupOnline_API.Controllers
     [Route("api/[controller]")]
     public class TeamController : ControllerBase
     {
-
         private readonly IConfiguration _configuration;
+        private TeamData _funct; 
+
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public TeamController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _funct = new TeamData();
         }
 
-
         [HttpGet]
-        public async Task<ActionResult<List<Team>>> Get()
+        public async Task<ActionResult<List<IdStringBody>>> Get()
         {
-            var function = new TeamData();
-
-            var list = await function.GetTeams();
-            return list;
+            return await _funct.GetTeams();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Team>>> GetOne(string id)
+        public async Task<ActionResult<Team>> GetOne(string id)
         {
-            var function = new TeamData();
-            var team = new Team();
-            team.id = id;
-            var list = await function.GetOneTeam(team);
-            return list;
+            return await _funct.GetOneTeam(id);
         }
 
         [HttpGet("Type/{type}")]
-        public async Task<ActionResult<List<TeamTypeBody>>> GetType(int type)
+        public async Task<ActionResult<List<IdStringBody>>> GetTeamsByType(int type)
         {
-            var function = new TeamData();
-            var team = new Team();
-            team.typeid = type;
-            var list = await function.GetType(team);
-            return list;
+            return await _funct.GetTeamsByType(type);
         }
-
 
         [HttpPost]
         public async Task Post([FromBody] Team team)
         {
-            var function = new TeamData();
-            await function.PostTeams(team);
+            await _funct.CreateTeam(team);
         }
 
         [HttpPut("{id}")]
         public async Task Put(string id, [FromBody] Team team)
         {
-            var function = new TeamData();
-            team.id = id;
-            await function.PutTeam(team);
+            await _funct.EditTeam(id, team);
             
         }
 
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            var function = new TeamData();
-            var team = new Team();
-            team.id = id;
-            await function.DeleteTeam(team);  
+            await _funct.DeleteTeam(id);  
         }
     }
 }
