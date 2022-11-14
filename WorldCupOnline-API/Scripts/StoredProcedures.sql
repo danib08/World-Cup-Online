@@ -596,7 +596,7 @@ as begin
 
 	if @StatementType = 'Select WebApp'
 	begin
-		select ID as label, Name as value
+		select ID as value, Name as label
 		from dbo.Country
 	end
 
