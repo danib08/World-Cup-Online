@@ -10,7 +10,7 @@ namespace WorldCupOnline_API.Data
     {
         private readonly DbConection _con = new();
 
-        public async Task <List<ValueIntBody>> GetTypes()
+        public async Task<List<ValueIntBody>> GetTypes()
         {
             var list = new List<ValueIntBody>();
 

@@ -25,7 +25,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ValueIntBody>>> Get()
         {
-            return await _funct.GetTypes(); ;
+            return await _funct.GetTypes();
         }
 
         [HttpGet("{id}")]
