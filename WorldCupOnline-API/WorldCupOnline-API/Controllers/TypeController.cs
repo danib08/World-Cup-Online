@@ -29,7 +29,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Type>>> GetOne(int id)
+        public async Task<ActionResult<Type>> GetOne(int id)
         {
             return await _funct.GetOneType(id); ;
         }

@@ -277,11 +277,11 @@ as begin
 end
 go
 
-----Nuevos procedimientos MATCH para arreglos del API----
+---- MATCH procedures ----
 
-create procedure get_matches
+create procedure getMatches
 as begin
-select * from dbo.Match
+		select * from dbo.Match
 end
 go
 
@@ -292,8 +292,7 @@ as begin
 end
 go
 
-create procedure insertMatch(@ID int,
-			    @StartDate datetime,
+create procedure insertMatch(@StartDate datetime,
 			    @StartTime time,
 			    @Score varchar(7),
 			    @Location varchar(50),
@@ -321,7 +320,7 @@ as begin
 end
 go
 
-create procedure delete_match(@ID int)
+create procedure deleteMatch(@ID int)
 as begin
 		delete from dbo.Match 
 		where ID = @ID
