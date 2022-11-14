@@ -71,7 +71,7 @@ Lastname varchar(30) NOT NULL,
 Email varchar(45) NOT NULL,
 CountryID varchar(3) NOT NULL,
 Birthdate datetime NOT NULL,
-Password varchar(40) NOT NULL
+Password varchar(MAX) NOT NULL
 )
 
 CREATE TABLE dbo.Country(

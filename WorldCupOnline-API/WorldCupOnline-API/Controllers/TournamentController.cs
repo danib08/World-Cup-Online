@@ -60,7 +60,7 @@ namespace WorldCupOnline_API.Controllers
         /// <summary>
         /// Method to get one Tournament by its id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param id="id"></param>
         /// <returns>Json of the required tournaments</returns>
         [HttpGet("{id}")]
         public string GetTournament(int id)

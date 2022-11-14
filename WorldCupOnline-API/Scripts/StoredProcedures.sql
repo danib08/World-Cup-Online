@@ -431,7 +431,7 @@ create procedure proc_users(@Username varchar(12),
 				@Email varchar(45),
 				@CountryID varchar(3),
 				@Birthdate datetime,
-				@Password varchar(40),
+				@Password varchar(MAX),
 			    @StatementType varchar(50) = '')
 as begin
 
@@ -464,12 +464,18 @@ as begin
 		delete from dbo.Users
 		where Username = @Username
 	end
+
+	if @StatementType = 'Auth'
+	begin
+		select password from dbo.Users
+		where Username = @Username
+	end
 end
 go
 
 create procedure proc_bet(@ID int,
 				@GoalsTeam1 int,
-				@GoalsTeam2 int
+				@GoalsTeam2 int,
 				@Score int ,
 				@MVP varchar(15),
 				@UserID varchar(12),
@@ -510,7 +516,7 @@ end
 go
 
 
-create procedure proc_scorerInBet(BetID int,
+create procedure proc_scorerInBet(@ID int,
 				@BetID int,
 				@PlayerID varchar(15),
 			    @StatementType varchar(50) = '')
@@ -541,7 +547,7 @@ as begin
 end
 go
 
-create procedure proc_assistInBet(BetID int,
+create procedure proc_assistInBet(@ID int,
 				@BetID int,
 				@PlayerID varchar(15),
 			    @StatementType varchar(50) = '')
@@ -568,6 +574,48 @@ as begin
 	begin
 		delete from dbo.Assist_In_Bet
 		where BetID = @BetID and PlayerID = @PlayerID
+	end
+end
+go
+
+create procedure proc_country(@ID varchar(3),
+				@Name varchar(31),
+			    @StatementType varchar(50) = '')
+as begin
+
+	if @StatementType = 'Insert'
+	begin
+		insert into dbo.Country(ID, Name)
+		values(@ID, @Name)
+	end
+
+	if @StatementType = 'Select'
+	begin
+		select * from dbo.Country
+	end
+
+	if @StatementType = 'Select WebApp'
+	begin
+		select ID as value, Name as label
+		from dbo.Country
+	end
+
+	if @StatementType = 'Select One'
+	begin
+		select * from dbo.Country
+		where ID = @ID
+	end
+
+	if @StatementType = 'Update'
+	begin
+		update dbo.Country set Name=@Name
+		where ID=@ID 	
+	end
+
+	if @StatementType = 'Delete'
+	begin
+		delete from dbo.Country
+		where ID = @ID
 	end
 end
 go
