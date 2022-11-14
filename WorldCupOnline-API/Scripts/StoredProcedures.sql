@@ -355,11 +355,11 @@ as begin
 end
 go
 
-----Nuevos procedimientos PHASE para arreglos del API----
+---- PHASE procedures ----
 
-create procedure get_phase
+create procedure getPhase
 as begin
-select * from dbo.Phase
+		select * from dbo.Phase
 end
 go
 
@@ -369,8 +369,6 @@ as begin
 		where ID = @ID
 end
 go
-
-
 
 create procedure insertPhase(@ID int,
 				@Name varchar(50),
@@ -385,59 +383,18 @@ create procedure editPhase(@ID int,
 				@Name varchar(50),
 				@TournamentID int)
 as begin
-insert into dbo.Phase(Name,TournamentID)
-		values(@Name,@TournamentID)	
-end
-go
-
-create procedure delete_phase(@ID int)
-as begin
-delete from dbo.Phase 
-		where ID = @ID
-end
-go
-
--------------------------------------------------------------------------
-
-create procedure proc_phase(@ID int,
-				@Name varchar(50),
-				@TournamentID int,
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
 		insert into dbo.Phase(Name,TournamentID)
-		values(@Name,@TournamentID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select ID as value, Name as label from dbo.Phase
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Phase
+		values(@Name,@TournamentID)	
 		where ID = @ID
-	end
+end
+go
 
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Phase set Name=@Name, TournamentID=@TournamentID
-		where ID = @ID	
-	end
-
-	if @StatementType = 'Delete'
-	begin
+create procedure deletePhase(@ID int)
+as begin
 		delete from dbo.Phase 
 		where ID = @ID
-	end
 end
 go
-
---------------------------------------------------------------
 
 ----Nuevos procedimientos MATCH para arreglos del API----
 
