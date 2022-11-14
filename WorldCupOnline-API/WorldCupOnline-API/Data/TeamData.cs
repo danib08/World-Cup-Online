@@ -85,6 +85,31 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
+        public async Task<List<IdStringBody>> GetPlayersByTeam(string id)
+        {
+            var list = new List<IdStringBody>();
+
+            using var sql = new SqlConnection(_con.SQLCon());
+            using (var cmd = new SqlCommand("getPlayersByTeam", sql))
+            {
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var item = new IdStringBody
+                    {
+                        id = (string)reader["id"],
+                        label = (string)reader["label"]
+                    };
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+
         public async Task CreateTeam(Team team)
         {
             using var sql = new SqlConnection(_con.SQLCon());

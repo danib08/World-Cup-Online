@@ -116,8 +116,17 @@ go
 
 create procedure deleteTeam(@ID varchar(8))
 as begin
-		delete from dbo.Team
-		where ID = @ID
+		select ID, Name, Confederation
+		from (Team join Player on Team.ID = TeamID)
+		where TournamentID = @ID
+end
+go
+
+create procedure getPlayersByTeam(@ID varchar(8))
+as begin
+		select Player.ID as id, Player.Name + ' ' + Lastname as label
+		from Player join (Team join Player_In_Team on ID = TeamID) on Player.ID = PlayerID
+		where Team.ID = @ID
 end
 go
 
@@ -442,6 +451,7 @@ as begin
 end
 go
 
+
 ---- TYPE Procedures ----
 
 create procedure getTypes
@@ -481,9 +491,50 @@ as begin
 end
 go
 
---------------------New procedures for USERS ----------------------------------
 
-create procedure get_users
+---  COUNTRY Procedures ---
+
+create procedure getCountries
+as begin
+		select ID as value, Name as label
+		from dbo.Country
+end
+go
+
+create procedure getOneCountry(@ID varchar(3))
+as begin
+		select * from dbo.Country
+		where ID = @ID
+end
+go
+
+create procedure insertCountry(@ID varchar(3),
+				@Name varchar(31))
+as begin
+		insert into dbo.Country(ID, Name)
+		values(@ID, @Name)
+end
+go
+
+create procedure editCountry(@ID varchar(3),
+				@Name varchar(31))
+as begin
+		update dbo.Country set Name=@Name
+		where ID=@ID 
+end
+go
+
+create procedure deleteCountry(@ID varchar(3))
+as begin
+		delete from dbo.Country
+		where ID = @ID
+end
+go
+
+
+--- USERS Procedures ---
+
+create procedure getUsers
 as begin
 		select * from dbo.Users
 end
@@ -522,61 +573,21 @@ as begin
 end
 go
 
-create procedure delete_user(@Username varchar(12))
+create procedure deleteUser(@Username varchar(12))
 as begin
 		delete from dbo.Users
 		where @Username = @Username
 end
 go
 
-
-create procedure proc_users(@Username varchar(12),
-				@Name varchar(30),
-				@Lastname varchar(30),
-				@Email varchar(45),
-				@CountryID varchar(3),
-				@Birthdate datetime,
-				@Password varchar(MAX),
-			    @StatementType varchar(50) = '')
+create procedure authUser(@Email varchar(45))
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Users(Username, Name, Lastname, Email, CountryID, Birthdate, Password)
-		values(@Username, @Name, @Lastname, @Email, @CountryID, @Birthdate, @Password)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Users
-	end
-
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Users
-		where Username = @Username
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Users set Name=@Name, Lastname=@Lastname, Email=@Email, CountryID=@CountryID, Birthdate=@Birthdate, Password=@Password
-		where Username = @Username 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Users
-		where Username = @Username
-	end
-
-	if @StatementType = 'Auth'
-	begin
 		select Username, Password from dbo.Users
 		where Email = @Email
-	end
 end
 go
+
+&----------------------------------------------------------------------------------
 
 create procedure proc_bet(@ID int,
 				@GoalsTeam1 int,
@@ -679,88 +690,6 @@ as begin
 	begin
 		delete from dbo.Assist_In_Bet
 		where BetID = @BetID and PlayerID = @PlayerID
-	end
-end
-go
-
-
---------------------New procedures for COUNTRY ----------------------------------
-
-create procedure get_countries
-as begin
-		select * from dbo.Country
-end
-go
-
-create procedure getOneCountry(@ID varchar(3))
-as begin
-		select * from dbo.Country
-		where ID = @ID
-end
-go
-
-create procedure insertCountry(@ID varchar(3),
-				@Name varchar(31))
-as begin
-		insert into dbo.Country(ID, Name)
-		values(@ID, @Name)
-end
-go
-
-create procedure editCountry(@ID varchar(3),
-				@Name varchar(31))
-as begin
-		update dbo.Country set Name=@Name
-		where ID=@ID 
-end
-go
-
-create procedure delete_country(@ID varchar(3))
-as begin
-		delete from dbo.Country
-		where ID = @ID
-end
-go
-
-
-create procedure proc_country(@ID varchar(3),
-				@Name varchar(31),
-			    @StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Country(ID, Name)
-		values(@ID, @Name)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Country
-	end
-
-	if @StatementType = 'Select WebApp'
-	begin
-		select ID as value, Name as label
-		from dbo.Country
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Country
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Country set Name=@Name
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Country
-		where ID = @ID
 	end
 end
 go
