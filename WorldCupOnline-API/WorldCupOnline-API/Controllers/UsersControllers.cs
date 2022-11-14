@@ -6,6 +6,7 @@ using System.Globalization;
 using WorldCupOnline_API.Models;
 using System.Security.Cryptography;
 using System.Text;
+using WorldCupOnline_API.Data;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -26,38 +27,87 @@ namespace WorldCupOnline_API.Controllers
             _hashAlgorithm = SHA512.Create();
         }
 
-        /// <summary>
-        /// Method to get all created users
-        /// </summary>
-        /// <returns>JSONResult with all users</returns>
         [HttpGet]
-        public JsonResult GetUsers()
+        public async Task<ActionResult<List<Users>>> Get()
         {
-            string query = @"exec proc_users '','','','','','','','Select'"; ///sql query
+            var function = new UserData();
 
-            DataTable table = new DataTable(); //Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
+            var list = await function.GetUsers();
+            return list;
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<List<Users>>> GetOne(string id)
+        {
+            var function = new UserData();
+            var user = new Users();
+            user.username = id;
+            var list = await function.GetOneUser(user);
+            return list;
+        }
+
+        [HttpPost]
+        public async Task Post([FromBody] Users user)
+        {
+            var function = new UserData();
+            await function.PostUsers(user);
+        }
+
+        [HttpPut("{id}")]
+        public async Task Put(string id, [FromBody] Users user)
+        {
+            var function = new UserData();
+            user.username = id;
+            await function.PutUser(user);
+
+        }
+
+        [HttpDelete("{id}")]
+        public async Task Delete(string id)
+        {
+            var function = new UserData();
+            var user = new Users();
+            user.username = id;
+            await function.DeleteUser(user);
+        }
+
+
+        /**
+
+                /// <summary>
+                /// Method to get all created users
+                /// </summary>
+                /// <returns>JSONResult with all users</returns>
+                [HttpGet]
+                public JsonResult GetUsers()
+                {
+                    string query = @"exec proc_users '','','','','','','','Select'"; ///sql query
+
+                    DataTable table = new DataTable(); //Create datatable
+                    string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+                    SqlDataReader myReader;
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                    {
+                        myCon.Open(); ///Open connection
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader); ///Data is loaded into table
+                            myReader.Close();
+                            myCon.Close(); ///Closed connection
+                        }
+                    }
+
+                    TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
+                    }
+
+                    return new JsonResult(table); ///Return JSON Of the data table
+                }
+
+           
 
         /// <summary>
         /// Method to get one user by its username
@@ -175,6 +225,7 @@ namespace WorldCupOnline_API.Controllers
 
             return new JsonResult(table); ///Returns table with info
         }
+        **/
 
         /// Method to authenticate users
         /// </summary>
@@ -229,33 +280,38 @@ namespace WorldCupOnline_API.Controllers
             }
         }
 
-        /// <summary>
-        /// Method to delete a user by its username
-        /// </summary>
-        /// <param username="username"></param>
-        /// <returns></returns>
-        [HttpDelete("{username}")]
-        public ActionResult DeleteUser(string username)
-        {
-            ///SQL Query
-            string query = @"
-                            exec proc_users @username,'','','','','','','Delete'";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection created
-            {
-                myCon.Open();///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon)) ///Command with query and connection
-                {
-                    myCommand.Parameters.AddWithValue("@username", username);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();///Closed connection
-                }
-            }
-            return Ok(); ///Returns acceptance
-        }
     }
 }
+
+/**
+
+/// <summary>
+/// Method to delete a user by its username
+/// </summary>
+/// <param username="username"></param>
+/// <returns></returns>
+[HttpDelete("{username}")]
+public ActionResult DeleteUser(string username)
+{
+    ///SQL Query
+    string query = @"
+                    exec proc_users @username,'','','','','','','Delete'";
+    DataTable table = new DataTable();
+    string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
+    SqlDataReader myReader;
+    using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection created
+    {
+        myCon.Open();///Open connection
+        using (SqlCommand myCommand = new SqlCommand(query, myCon)) ///Command with query and connection
+        {
+            myCommand.Parameters.AddWithValue("@username", username);
+            myReader = myCommand.ExecuteReader();
+            table.Load(myReader);
+            myReader.Close();
+            myCon.Close();///Closed connection
+        }
+    }
+    return Ok(); ///Returns acceptance
+}
+**/
+

@@ -96,7 +96,7 @@ namespace WorldCupOnline_API.Data
             }
 
 
-            public async Task PostTeams(Team team)
+        public async Task PostTeams(Team team)
         {
             using (var sql = new SqlConnection(con.SQLCon()))
             {
@@ -132,7 +132,7 @@ namespace WorldCupOnline_API.Data
             }
         }
 
-       
+  
 
         public async Task DeleteTeam(Team team)
         {

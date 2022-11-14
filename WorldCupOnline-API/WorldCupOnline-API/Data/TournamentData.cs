@@ -2,6 +2,7 @@
 using System.Data;
 using WorldCupOnline_API.Conection;
 using WorldCupOnline_API.Models;
+using WorldCupOnline_API.Bodies;
 
 namespace WorldCupOnline_API.Data
 {
@@ -64,6 +65,95 @@ namespace WorldCupOnline_API.Data
                     }
                 }
 
+                return list;
+            }
+        }
+
+        public async Task<List<MatchTournamentBody>> GetMatchesTournament(Tournament data)
+        {
+            var list = new List<MatchTournamentBody>();
+            using (var sql = new SqlConnection(con.SQLCon()))
+            {
+                using (var cmd = new SqlCommand("getMatchesTournament", sql))
+                {
+                    await sql.OpenAsync();
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", data.id);
+
+                    using (var item = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await item.ReadAsync())
+                        {
+                            var tournamentMatches = new MatchTournamentBody();
+                            tournamentMatches.id = (int)item["id"];
+                            tournamentMatches.name = (string)item["name"];
+                            tournamentMatches.startdate = (DateTime)item["startdate"];
+                            tournamentMatches.starttime = (TimeSpan)item["starttime"];
+                            tournamentMatches.location = (string)item["location"];
+                            tournamentMatches.state = (string)item["state"];
+                            tournamentMatches.score = (string)item["score"];
+                            list.Add(tournamentMatches);
+
+                        }
+                    }
+                }
+
+                return list;
+            }
+        }
+
+        public async Task<List<PhasesBody>> GetPhasesTournament(Tournament data)
+        {
+            var list = new List<PhasesBody>();
+            using (var sql = new SqlConnection(con.SQLCon()))
+            {
+                using (var cmd = new SqlCommand("getPhasesTournament", sql))
+                {
+                    await sql.OpenAsync();
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", data.id);
+
+                    using (var item = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await item.ReadAsync())
+                        {
+                            var tournament = new PhasesBody();
+                            tournament.value = (int)item["value"];
+                            tournament.label = (string)item["label"];
+                            list.Add(tournament);
+
+                        }
+                    }
+                }
+
+                return list;
+            }
+        }
+
+        public async Task<List<TeamTournamentBody>> GetTeamsTournament(Tournament data)
+        {
+            var list = new List<TeamTournamentBody>();
+            using (var sql = new SqlConnection(con.SQLCon()))
+            {
+                using (var cmd = new SqlCommand("getTeamsTournament", sql))
+                {
+                    await sql.OpenAsync();
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", data.id);
+
+                    using (var item = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await item.ReadAsync())
+                        {
+                            var tournament = new TeamTournamentBody();
+                            tournament.id = (string)item["id"];
+                            tournament.name = (string)item["name"];
+                            tournament.confederation = (string)item["confederation"];
+                            list.Add(tournament);
+
+                        }
+                    }
+                }
                 return list;
             }
         }

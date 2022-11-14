@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
 
@@ -32,7 +33,7 @@ namespace WorldCupOnline_API.Controllers
             var list = await function.GetTournament();
             return list;
         }
- 
+
         /// <summary>
         /// Method to get one Tournament by its id
         /// </summary>
@@ -73,77 +74,39 @@ namespace WorldCupOnline_API.Controllers
             tournament.id = id;
             await function.DeleteTournament(tournament);
         }
-    
 
-/// <summary>
-/// Method to get the matches of a tournament
-/// </summary>
-/// <param name="tournamentId"></param>
-/// <returns></returns>
-[HttpGet("{tournamentId}/Matches")]
-        public JsonResult GetMatchesByTournament(int tournamentId)
+        [HttpGet("{tournamentId}/Matches")]
+        public async Task<ActionResult<List<MatchTournamentBody>>> GetMatchesTournament(int tournamentId)
         {
-            string query = @"exec proc_tournament @tournamentId,'','','','',0,'Get Matches By Tourn'"; ///sql query
-
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@tournamentId", tournamentId);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
+            var function = new TournamentData();
+            var tournament = new Tournament();
+            tournament.id = tournamentId;
+            var list = await function.GetMatchesTournament(tournament);
+            return list;
         }
 
-        /// <summary>
-        /// Method get the phases of a tournament
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+
+
         [HttpGet("Phases/{id}")]
-        public JsonResult GetPhasesByTournament(int id)
+        public async Task<ActionResult<List<PhasesBody>>> GetPhasesTournament(int id)
         {
-            string query = @"exec proc_tournament @id,'','','','',0,'Get Phases By Tourn'"; ///sql query
-
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
+            var function = new TournamentData();
+            var tournament = new Tournament();
+            tournament.id = id;
+            var list = await function.GetPhasesTournament(tournament);
+            return list;
         }
+
+        [HttpGet("Teams/{tournamentId}")]
+        public async Task<ActionResult<List<TeamTournamentBody>>> GetTeamsTournament(int tournamentId)
+        {
+            var function = new TournamentData();
+            var tournament = new Tournament();
+            tournament.id = tournamentId;
+            var list = await function.GetTeamsTournament(tournament);
+            return list;
+        }
+
 
         /// <summary>
         /// Method to get the teams of a tournament
@@ -179,6 +142,10 @@ namespace WorldCupOnline_API.Controllers
 
             return new JsonResult(table); ///Return JSON Of the data table
         }
+    }
+}
+
+          /**
 
         /// <summary>
         /// Create a team in tournament
@@ -213,6 +180,8 @@ namespace WorldCupOnline_API.Controllers
             return new JsonResult(table); ///Returns table with info
 
         }
+
+
 
         /// <summary>
         /// Method to create a phase in a tournament
@@ -251,3 +220,4 @@ namespace WorldCupOnline_API.Controllers
     }
 }
 
+**/

@@ -24,7 +24,7 @@ namespace WorldCupOnline_API.Data
                             var match = new Match();
                             match.id = (int)item["id"];
                             match.startdate = (DateTime)item["startdate"];
-                            match.starttime = (DateTime)item["starttime"];
+                            match.starttime = (TimeSpan)item["starttime"];
                             match.score = (string)item["score"];
                             match.location = (string)item["location"];
                             match.stateid = (int)item["stateid"];
@@ -56,14 +56,13 @@ namespace WorldCupOnline_API.Data
                             var match = new Match();
                             match.id = (int)item["id"];
                             match.startdate = (DateTime)item["startdate"];
-                            match.starttime = (DateTime)item["starttime"];
+                            match.starttime = (TimeSpan)item["starttime"];
                             match.score = (string)item["score"];
                             match.location = (string)item["location"];
                             match.stateid = (int)item["stateid"];
                             match.tournamentid = (int)item["tournamentid"];
                             match.phaseid = (int)item["phaseid"];
                             list.Add(match);
-
                         }
                     }
                 }
