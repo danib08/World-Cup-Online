@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
 using System.Reflection.Metadata.Ecma335;
+using WorldCupOnline_API.Bodies;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -45,7 +46,15 @@ namespace WorldCupOnline_API.Controllers
             return list;
         }
 
-        //Get types falta
+        [HttpGet("Type/{type}")]
+        public async Task<ActionResult<List<TeamTypeBody>>> GetType(int type)
+        {
+            var function = new TeamData();
+            var team = new Team();
+            team.typeid = type;
+            var list = await function.GetType(team);
+            return list;
+        }
 
 
         [HttpPost]
@@ -72,40 +81,7 @@ namespace WorldCupOnline_API.Controllers
             team.id = id;
             await function.DeleteTeam(team);  
         }
-
-        /// <summary>
-        /// Method to get all created types of teams
-        /// </summary>
-        /// <returns>returns>JSONResult with type of teams</returns>
-        [HttpGet("Type/{type}")]
-        public JsonResult GetTeamsByType(int type)
-        {
-            string query = @"exec proc_team '','','',@type,'Select Type'";///sql query
-
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@type", type);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName);///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table);///Return JSON Of the data table
-        }
     }
 }
+
 

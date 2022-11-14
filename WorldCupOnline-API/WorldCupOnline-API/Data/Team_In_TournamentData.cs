@@ -68,8 +68,8 @@ namespace WorldCupOnline_API.Data
                 using (var cmd = new SqlCommand("insertTIT", sql))
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", team_In_Tournament.teamid);
-                    cmd.Parameters.AddWithValue("@name", team_In_Tournament.tournamentid);
+                    cmd.Parameters.AddWithValue("@teamid", team_In_Tournament.teamid);
+                    cmd.Parameters.AddWithValue("@tournamentid", team_In_Tournament.tournamentid);
 
                     await sql.OpenAsync();
                     await cmd.ExecuteReaderAsync();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Conection;
 using WorldCupOnline_API.Models;
 
@@ -66,34 +67,36 @@ namespace WorldCupOnline_API.Data
             }
         }
 
-        public async Task<DataTable> GetType(Team data)
+        public async Task<List<TeamTypeBody>> GetType(Team data)
         {
-            var list = new List<Team>();
-            DataTable table = new DataTable(); ///Create datatable
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("getTypeTeam", sql))
+                var list = new List<TeamTypeBody>();
+                using (var sql = new SqlConnection(con.SQLCon()))
                 {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@typeid", data.typeid);
-
-                    using (var item = await cmd.ExecuteReaderAsync())
+                    using (var cmd = new SqlCommand("getTypeTeam", sql))
                     {
-                        while (await item.ReadAsync())
-                        {
-                            table.Load(item);
+                        await sql.OpenAsync();
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@typeid", data.typeid);
 
+                        using (var item = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await item.ReadAsync())
+                            {
+                                var team = new TeamTypeBody();
+                                team.id = (string)item["id"];
+                                team.label = (string)item["label"];
+                                list.Add(team);
+
+                            }
                         }
                     }
+
+                    return list;
                 }
-
-                return table;
             }
-        }
 
 
-        public async Task PostTeams(Team team)
+            public async Task PostTeams(Team team)
         {
             using (var sql = new SqlConnection(con.SQLCon()))
             {

@@ -300,7 +300,7 @@ go
 
 create procedure get_players
 as begin
-select * from dbo.Tournament
+select * from dbo.Player
 end
 go
 
