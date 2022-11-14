@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Controllers
@@ -23,243 +24,63 @@ namespace WorldCupOnline_API.Controllers
             _configuration = configuration;
         }
 
-        /// <summary>
-        /// Method to get all created tournaments
-        /// </summary>
-        /// <returns>JSONResult with all tournaments</returns>
         [HttpGet]
-        public JsonResult GetTournaments()
+        public async Task<ActionResult<List<Tournament>>> Get()
         {
-            string query = @"exec proc_tournament '','','','','',0,'Select WebApp'"; ///sql query
+            var function = new TournamentData();
 
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach(DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
+            var list = await function.GetTournament();
+            return list;
         }
-
-        
+ 
         /// <summary>
         /// Method to get one Tournament by its id
         /// </summary>
         /// <param id="id"></param>
         /// <returns>Json of the required tournaments</returns>
         [HttpGet("{id}")]
-        public string GetTournament(int id)
+        public async Task<ActionResult<List<Tournament>>> GetOne(int id)
         {
-            ///Created labels
-            string lbl_id;
-            string lbl_name;
-            string lbl_startdate;
-            string lbl_enddate;
-            string lbl_description;
-            string lbl_type;
-
-
-            ///SQL Query
-            string query = @"
-                            exec proc_tournament @id,'','','','',0,'Select One WebApp'";
-            DataTable table = new DataTable();///Created table to store data
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection created
-            {
-                myCon.Open();///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))///Command with query and connection
-                {
-                    ///Added parameters
-                    myCommand.Parameters.AddWithValue("@id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Load data to table
-                    myReader.Close();
-                    myCon.Close(); ///Close connection
-                }
-            }
-
-            ///Verify if table is empty
-            if (table.Rows.Count > 0)
-            {
-
-                DataRow row = table.Rows[0];
-
-                ///Manipulation of every row of datatable and parse them to string
-                lbl_id = row["id"].ToString();
-                lbl_name = row["name"].ToString();
-                lbl_startdate = row["startDate"].ToString();
-                lbl_enddate = row["endDate"].ToString();
-                lbl_description= row["description"].ToString();
-                lbl_type = row["type"].ToString();
-
-
-                var data = new JObject(new JProperty("id", lbl_id), new JProperty("name", lbl_name),
-                   new JProperty("startDate", DateTime.Parse(lbl_startdate)), new JProperty("endDate", DateTime.Parse(lbl_enddate)),
-                   new JProperty("description", lbl_description), new JProperty("type", lbl_type));
-
-                return data.ToString(); ///Return created JSON
-            }
-            else
-            {
-                var data = new JObject(new JProperty("Existe", "no"));
-                return data.ToString(); ///Return message if table is empty
-            }
+            var function = new TournamentData();
+            var tournament = new Tournament();
+            tournament.id = id;
+            var list = await function.GetOneTournament(tournament);
+            return list;
         }
 
-        /// <summary>
-        /// Method to create tournament
-        /// </summary>
-        /// <param name="tournament"></param>
-        /// <returns>JSON of the tournament created</returns>
+
         [HttpPost]
-        public JsonResult PostTournament(TournamentCreator creator)
+        public async Task Post([FromBody] Tournament tournament)
         {
-            
+            var function = new TournamentData();
+            await function.PostTournament(tournament);
+        }
 
-            ///SQL Query
-            string query = @"
-                             exec proc_tournament 0,@name,@startdate,@enddate,@description,@typeid,'Insert'
-                            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
-            {
-                myCon.Open(); ///Opened connection
-                SqlCommand myCommand = new SqlCommand(query, myCon);
-
-                ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@name", creator.name);
-                myCommand.Parameters.AddWithValue("@startdate", creator.startdate);
-                myCommand.Parameters.AddWithValue("@enddate", creator.enddate);
-                myCommand.Parameters.AddWithValue("@description", creator.description);
-                myCommand.Parameters.AddWithValue("@typeid", creator.typeid);
-
-                myReader = myCommand.ExecuteReader();
-                table.Load(myReader);
-                myReader.Close();
-                myCon.Close();///Closed connection
-            }
-
-            DataRow row = table.Rows[0];
-            string lbl_id = row["ID"].ToString();
-            int newID = Int32.Parse(lbl_id);
-
-            for (int i = 0; i < creator.teamsIds.Length; i++)
-            {
-                Team_In_Tournament team_In_Tournament = new()
-                {
-                    teamid = creator.teamsIds[i],
-                    tournamentid = newID
-                };
-                PostTeam_In_Tournament(team_In_Tournament);
-            }
-
-            foreach (string phaseName in creator.phases)
-            {
-                Phase phase = new()
-                {
-                    name = phaseName,
-                    tournamentID = newID
-                };
-                PostPhase(phase);
-            }
-
-
-            return new JsonResult(table); ///Returns table with info
+        [HttpPut("{id}")]
+        public async Task Put(int id, [FromBody] Tournament tournament)
+        {
+            var function = new TournamentData();
+            tournament.id = id;
+            await function.PutTournament(tournament);
 
         }
 
-        /// <summary>
-        /// Method to update a tournament
-        /// </summary>
-        /// <param name="tournament"></param>
-        /// <returns>Action result of the query</returns>
-        [HttpPut]
-        public ActionResult PutTournament(Tournament tournament)
-        {
-            ///SQL Query
-            string query = @"
-                             exec proc_tournament @id,@name,@startdate,@enddate,@description,@typeid,'Update'
-                            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection started
-            {
-                myCon.Open(); ///Connection closed
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))///Sql command with query and connection
-                {
-                    ///Added parameters
-                    myCommand.Parameters.AddWithValue("@id", tournament.id);
-                    myCommand.Parameters.AddWithValue("@name", tournament.name);
-                    myCommand.Parameters.AddWithValue("@startdate", tournament.startdate);
-                    myCommand.Parameters.AddWithValue("@enddate", tournament.enddate);
-                    myCommand.Parameters.AddWithValue("@description", tournament.description);
-                    myCommand.Parameters.AddWithValue("@typeid", tournament.typeid);
-
-
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();///Closed connection
-                }
-            }
-            return Ok(); ///Returns acceptance
-        }
-
-        /// <summary>
-        /// Method to delete a tournaments by its id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpDelete("{id}")]
-        public ActionResult DeleteTournament(int id)
+        public async Task Delete(int id)
         {
-            ///SQL Query
-            string query = @"
-                            exec proc_tournament @id,'','','','',0,'Delete'
-            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection created
-            {
-                myCon.Open();///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon)) ///Command with query and connection
-                {
-                    myCommand.Parameters.AddWithValue("@id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();///Closed connection
-                }
-            }
-            return Ok(); ///Returns acceptance
+            var function = new TournamentData();
+            var tournament = new Tournament();
+            tournament.id = id;
+            await function.DeleteTournament(tournament);
         }
+    
 
-        /// <summary>
-        /// Method to get the matches of a tournament
-        /// </summary>
-        /// <param name="tournamentId"></param>
-        /// <returns></returns>
-        [HttpGet("{tournamentId}/Matches")]
+/// <summary>
+/// Method to get the matches of a tournament
+/// </summary>
+/// <param name="tournamentId"></param>
+/// <returns></returns>
+[HttpGet("{tournamentId}/Matches")]
         public JsonResult GetMatchesByTournament(int tournamentId)
         {
             string query = @"exec proc_tournament @tournamentId,'','','','',0,'Get Matches By Tourn'"; ///sql query
@@ -429,3 +250,4 @@ namespace WorldCupOnline_API.Controllers
         }
     }
 }
+
