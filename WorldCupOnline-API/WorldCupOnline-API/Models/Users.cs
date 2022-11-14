@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace WorldCupOnline_API.Models
+﻿namespace WorldCupOnline_API.Models
 {
     public class Users
     {
