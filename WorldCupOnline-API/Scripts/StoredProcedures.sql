@@ -45,6 +45,31 @@ as begin
 end
 go
 
+create procedure getMatchesTournament(@ID int)
+as begin
+		select dbo.Match.ID, dbo.Team.Name, StartDate, StartTime, Location, dbo.State.Name as State, Score
+		from ((dbo.Match join dbo.State on StateID = dbo.State.ID) join dbo.Team_In_Match on MatchID = dbo.Match.ID) join dbo.Team on TeamID = dbo.Team.ID
+		where TournamentID = @ID
+		order by dbo.Match.ID 
+end
+go
+
+create procedure getPhasesTournament(@ID int)
+as begin
+		select ID as value, Name as label
+		from Phase
+		where TournamentID = @ID
+end
+go
+
+create procedure getTeamsTournament(@ID int)
+as begin
+		select ID, Name, Confederation
+		from (Team_In_Tournament join Team on TeamID = ID)
+		where TournamentID = @ID
+end
+go
+
 ---------------------------------------------------------------------------------
 
 create procedure proc_tournament(@ID int,
@@ -868,6 +893,55 @@ as begin
 end
 go
 
+--------------------New procedures for USERS ----------------------------------
+
+create procedure get_users
+as begin
+		select * from dbo.Users
+end
+go
+
+create procedure getOneUser(@Username varchar(12))
+as begin
+		select * from dbo.Users
+		where @Username = @Username
+end
+go
+
+create procedure insertUser(@Username varchar(12),
+				@Name varchar(30),
+				@Lastname varchar(30),
+				@Email varchar(45),
+				@CountryID varchar(3),
+				@Birthdate datetime,
+				@Password varchar(MAX))
+as begin
+		insert into dbo.Users(Username, Name, Lastname, Email, CountryID, Birthdate, Password)
+		values(@Username, @Name, @Lastname, @Email, @CountryID, @Birthdate, @Password)
+end
+go
+
+create procedure editUser(@Username varchar(12),
+				@Name varchar(30),
+				@Lastname varchar(30),
+				@Email varchar(45),
+				@CountryID varchar(3),
+				@Birthdate datetime,
+				@Password varchar(MAX))
+as begin
+		update dbo.Users set Name=@Name, Lastname=@Lastname, Email=@Email, CountryID=@CountryID, Birthdate=@Birthdate, Password=@Password
+		where Username = @Username 
+end
+go
+
+create procedure delete_user(@Username varchar(12))
+as begin
+		delete from dbo.Users
+		where @Username = @Username
+end
+go
+
+
 create procedure proc_users(@Username varchar(12),
 				@Name varchar(30),
 				@Lastname varchar(30),
@@ -1020,6 +1094,46 @@ as begin
 	end
 end
 go
+
+
+--------------------New procedures for COUNTRY ----------------------------------
+
+create procedure get_countries
+as begin
+		select * from dbo.Country
+end
+go
+
+create procedure getOneCountry(@ID varchar(3))
+as begin
+		select * from dbo.Country
+		where ID = @ID
+end
+go
+
+create procedure insertCountry(@ID varchar(3),
+				@Name varchar(31))
+as begin
+		insert into dbo.Country(ID, Name)
+		values(@ID, @Name)
+end
+go
+
+create procedure editCountry(@ID varchar(3),
+				@Name varchar(31))
+as begin
+		update dbo.Country set Name=@Name
+		where ID=@ID 
+end
+go
+
+create procedure delete_country(@ID varchar(3))
+as begin
+		delete from dbo.Country
+		where ID = @ID
+end
+go
+
 
 create procedure proc_country(@ID varchar(3),
 				@Name varchar(31),
