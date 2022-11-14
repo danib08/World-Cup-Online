@@ -121,7 +121,7 @@ as begin
 end
 go
 
-----Nuevos procedimientos Team_In_Tournament para arreglos del API----
+---- TEAM_IN_TOURNAMENT Procedures ---
 
 create procedure getTIT
 as begin
@@ -152,40 +152,6 @@ as begin
 		where TeamID = @TeamID and TournamentID = @TournamentID
 end
 go
-
--------------------------------------------------------------------------
-
-create procedure proc_teamInTournament(@TeamID varchar(8),
-				@TournamentID int,
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Team_In_Tournament(TeamID,TournamentID)
-		values(@TeamID,@TournamentID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Team_In_Tournament
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Team_In_Tournament
-		where TeamID = @TeamID and TournamentID = @TournamentID
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Team_In_Tournament
-		where TeamID = @TeamID and TournamentID = @TournamentID
-	end
-end
-go
-
-
 
 ---- PLAYERS Procedures ----
 
@@ -229,7 +195,7 @@ as begin
 end
 go
 
----- Player_In_Team Procedures ----
+---- PLAYER_IN_TEAM Procedures ----
 
 create procedure getPIT
 as begin
@@ -286,8 +252,7 @@ as begin
 end
 go
 
-create procedure insertPhase(@ID int,
-				@Name varchar(50),
+create procedure insertPhase(@Name varchar(50),
 				@TournamentID int)
 as begin
 		insert into dbo.Phase(Name,TournamentID)
@@ -326,8 +291,6 @@ as begin
 		where ID = @ID
 end
 go
-
-
 
 create procedure insertMatch(@ID int,
 			    @StartDate datetime,
