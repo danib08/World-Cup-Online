@@ -15,62 +15,40 @@ namespace WorldCupOnline_API.Controllers
     {
 
         private readonly IConfiguration _configuration;
+        private readonly Team_In_MatchData _funct;
 
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public Team_In_MatchController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _funct = new Team_In_MatchData();
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Team_In_Match>>> Get()
         {
-            var function = new Team_In_MatchData();
-
-            var list = await function.GetTeam_In_Match();
-            return list;
+            return await _funct.GetTeam_In_Match();
         }
 
         [HttpGet("{teamid}/{matchid}")]
         public async Task<ActionResult<List<Team_In_Match>>> GetOne(string teamid, int matchid)
         {
-            var function = new Team_In_MatchData();
-            var team_In_Match = new Team_In_Match();
-            team_In_Match.teamid = teamid;
-            team_In_Match.matchid = matchid;
-            var list = await function.GetOneTeam_In_Match(team_In_Match);
-            return list;
+            return await _funct.GetOneTeam_In_Match(teamid, matchid); ;
         }
-
 
         [HttpPost]
         public async Task Post([FromBody] Team_In_Match team_In_Match)
         {
-            var function = new Team_In_MatchData();
-            await function.PostTeam_In_Match(team_In_Match);
-        }
-
-        [HttpPut("{teamid}/{matchid}")]
-        public async Task Put(string teamid, int matchid, [FromBody] Team_In_Match team_In_Match)
-        {
-            var function = new Team_In_MatchData();
-            team_In_Match.teamid = teamid;
-            team_In_Match.matchid = matchid;
-            await function.PutTeam_In_Match(team_In_Match);
-
+            await _funct.CreateTeam_In_Match(team_In_Match);
         }
 
         [HttpDelete("{teamid}/{matchid}")]
         public async Task Delete(string teamid, int matchid)
         {
-            var function = new Team_In_MatchData();
-            var team_In_Match = new Team_In_Match();
-            team_In_Match.teamid = teamid;
-            team_In_Match.matchid = matchid;
-            await function.DeleteTeam_In_Match(team_In_Match);
+            await _funct.DeleteTeam_In_Match(teamid, matchid);
         }
     }
 }
