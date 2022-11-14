@@ -32,7 +32,12 @@ namespace WorldCupOnline_API.Controllers
             var list = await function.GetTournament();
             return list;
         }
-
+ 
+        /// <summary>
+        /// Method to get one Tournament by its id
+        /// </summary>
+        /// <param id="id"></param>
+        /// <returns>Json of the required tournaments</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Tournament>>> GetOne(int id)
         {

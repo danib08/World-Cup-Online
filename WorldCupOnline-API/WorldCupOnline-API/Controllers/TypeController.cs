@@ -42,6 +42,11 @@ namespace WorldCupOnline_API.Controllers
             return list;
         }
 
+        /// <summary>
+        /// Method to create types
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>JSON of the type created</returns>
         [HttpPost]
         public async Task Post([FromBody] Type type)
         {
