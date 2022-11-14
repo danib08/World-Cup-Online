@@ -76,7 +76,7 @@ Password varchar(MAX) NOT NULL
 
 CREATE TABLE dbo.Country(
 ID varchar(3) NOT NULL,
-Name varchar(31) NOT NULL
+Name varchar(50) NOT NULL
 )
 
 CREATE TABLE dbo.Bet(

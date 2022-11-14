@@ -2,18 +2,16 @@
 
 create procedure get_tournaments
 as begin
-select * from dbo.Tournament
+	select * from dbo.Tournament
 end
 go
 
 create procedure getOneTournament(@ID int)
 as begin
-select * from dbo.Tournament
+	select * from dbo.Tournament
 		where ID = @ID
 end
 go
-
-
 
 create procedure insertTournament(@ID int,
 				@Name varchar(30),
@@ -35,15 +33,15 @@ create procedure editTournament(@ID int,
 				@Description varchar(1000),
 				@TypeID int)
 as begin
-update dbo.Tournament set Name=@Name,StartDate=@StartDate,EndDate=@EndDate,Description=@Description,TypeID=@TypeID
+		update dbo.Tournament set Name=@Name,StartDate=@StartDate,EndDate=@EndDate,Description=@Description,TypeID=@TypeID
 		where ID=@ID 	
 end
 go
 
 create procedure delete_tournament(@ID int)
 as begin
-delete from dbo.Tournament
-		where ID = @ID
+	delete from dbo.Tournament
+	where ID = @ID
 end
 go
 
@@ -130,21 +128,21 @@ go
 
 create procedure get_teams
 as begin
-select * from dbo.Team
+	select * from dbo.Team
 end
 go
 
 create procedure getOneTeam(@ID varchar(8))
 as begin
-select * from dbo.Team
-		where ID = @ID
+	select * from dbo.Team
+	where ID = @ID
 end
 go
 
 create procedure getTypeTeam(@TypeID int)
 as begin
-select ID, Name as label from dbo.Team
-		where TypeID = @TypeID
+	select ID, Name as label from dbo.Team
+	where TypeID = @TypeID
 end
 go
 
@@ -153,8 +151,8 @@ create procedure insertTeam(@ID varchar(8),
 				@Confederation varchar(30),
 				@TypeID int)
 as begin
-insert into dbo.Team(ID,Name,Confederation,TypeID)
-		values(@ID,@Name,@Confederation,@TypeID)
+	insert into dbo.Team(ID,Name,Confederation,TypeID)
+	values(@ID,@Name,@Confederation,@TypeID)
 end
 go
 
@@ -163,15 +161,15 @@ create procedure editTeam(@ID varchar(8),
 				@Confederation varchar(30),
 				@TypeID int)
 as begin
-update dbo.Team set Name=@Name,Confederation=@Confederation,TypeID=@TypeID
-		where ID=@ID 	
+	update dbo.Team set Name=@Name,Confederation=@Confederation,TypeID=@TypeID
+	where ID=@ID 	
 end
 go
 
 create procedure delete_team(@ID varchar(8))
 as begin
-delete from dbo.Team
-		where ID = @ID
+	delete from dbo.Team
+	where ID = @ID
 end
 go
 
@@ -232,19 +230,17 @@ go
 
 create procedure get_TIT
 as begin
-select * from dbo.Team_In_Tournament
+	select * from dbo.Team_In_Tournament
 end
 go
 
 create procedure getOneTIT(@TeamID varchar(8),
 				@TournamentID int)
 as begin
-select * from dbo.Team_In_Tournament
-		where TeamID = @TeamID and TournamentID = @TournamentID
+	select * from dbo.Team_In_Tournament
+	where TeamID = @TeamID and TournamentID = @TournamentID
 end
 go
-
-
 
 create procedure insertTIT(@TeamID varchar(8),
 				@TournamentID int)
@@ -300,18 +296,16 @@ go
 
 create procedure get_players
 as begin
-select * from dbo.Player
+	select * from dbo.Player
 end
 go
 
 create procedure getOnePlayer(@ID varchar(15))
 as begin
-select * from dbo.Player
-		where ID = @ID
+	select * from dbo.Player
+	where ID = @ID
 end
 go
-
-
 
 create procedure insertPlayer(@ID varchar(15),
 				@Name varchar(30),
@@ -328,15 +322,15 @@ create procedure editPlayer(@ID varchar(15),
 				@Lastname varchar(30),
 				@Position varchar(30))
 as begin
-update dbo.Player set Name=@Name,Lastname=@Lastname,Position=@Position
-		where ID=@ID	
+	update dbo.Player set Name=@Name,Lastname=@Lastname,Position=@Position
+	where ID=@ID	
 end
 go
 
 create procedure delete_player(@ID varchar(15))
 as begin
-delete from dbo.Player
-		where ID = @ID
+	delete from dbo.Player
+	where ID = @ID
 end
 go
 
@@ -386,15 +380,15 @@ go
 
 create procedure get_PIT
 as begin
-select * from dbo.Player_In_Team
+	select * from dbo.Player_In_Team
 end
 go
 
 create procedure getOnePIT(@TeamID varchar(6),
 				@PlayerID varchar(15))
 as begin
-		select * from dbo.Player_In_Team
-		where TeamID = @TeamID and PlayerID= @PlayerID
+	select * from dbo.Player_In_Team
+	where TeamID = @TeamID and PlayerID= @PlayerID
 end
 go
 
@@ -404,8 +398,8 @@ create procedure insertPIT(@TeamID varchar(6),
 				@PlayerID varchar(15),
 				@JerseyNum int)
 as begin
-		insert into dbo.Player_In_Team(TeamID,PlayerID,JerseyNum)
-		values(@TeamID,@PlayerID,@JerseyNum)
+	insert into dbo.Player_In_Team(TeamID,PlayerID,JerseyNum)
+	values(@TeamID,@PlayerID,@JerseyNum)
 end
 go
 
@@ -413,16 +407,16 @@ create procedure editPIT(@TeamID varchar(6),
 				@PlayerID varchar(15),
 				@JerseyNum int)
 as begin
-update dbo.Player_In_Team set JerseyNum=@JerseyNum
-		where TeamID = @TeamID and PlayerID= @PlayerID	
+	update dbo.Player_In_Team set JerseyNum=@JerseyNum
+	where TeamID = @TeamID and PlayerID= @PlayerID	
 end
 go
 
 create procedure delete_PIT(@TeamID varchar(6),
 				@PlayerID varchar(15))
 as begin
-delete from dbo.Player_In_Team 
-		where TeamID = @TeamID and PlayerID= @PlayerID
+	delete from dbo.Player_In_Team 
+	where TeamID = @TeamID and PlayerID= @PlayerID
 end
 go
 

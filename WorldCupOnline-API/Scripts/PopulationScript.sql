@@ -7,526 +7,740 @@ values ('Pendiente'),
 ('En juego'),
 ('Completado')
 
-exec proc_team 'ARG','Argentina','CONMEBOL',1,'Insert'
-exec proc_team 'BRA','Brasil','CONMEBOL',1,'Insert'
-exec proc_team 'CRC','Costa Rica','CONCACAF',1,'Insert'
-exec proc_team 'ESP','España','UEFA',1,'Insert'
-exec proc_team 'SEN','Senegal', 'CAF',1,'Insert'
-exec proc_team 'ENG','Inglaterra','UEFA',1,'Insert'
-exec proc_team 'URU','Uruguay','AFC',1,'Insert'
-exec proc_team 'MEX','México','CONCACAF',1,'Insert'
-
-exec proc_team 'ATM','Club Atlético de Madrid','UEFA',2,'Insert'
-exec proc_team 'ACM','AC Milan','UEFA',2,'Insert'
-exec proc_team 'SAP','Deportivo Saprissa','CONMEBOL',2,'Insert'
-exec proc_team 'PSG','Paris Saint Germain','UEFA',2,'Insert'
-
-
-exec proc_player 'arg1', 'Franco', 'Armani', 'Portero', 'Insert'
-exec proc_player 'arg2', 'Emiliano', 'Martinez', 'Portero', 'Insert'
-exec proc_player 'arg3', 'Nahuel', 'Molina', 'Lateral Derecho', 'Insert'
-exec proc_player 'arg4', 'Crisitan', 'Romero', 'Defensa Central', 'Insert'
-exec proc_player 'arg5', 'Lisandro', 'Martinez', 'Defensa Central', 'Insert'
-exec proc_player 'arg6', 'Nicolás', 'Otamendi', 'Defensa Central', 'Insert'
-exec proc_player 'arg7', 'Rodrigo', 'DePaul', 'Mediocampista', 'Insert'
-exec proc_player 'arg8', 'Leandro', 'Paredes', 'Mediocampista', 'Insert'
-exec proc_player 'arg9', 'Giovanni', 'Lo Celso', 'Mediocampista', 'Insert'
-exec proc_player 'arg10', 'Lionel', 'Messi', 'Mediocampista', 'Insert'
-exec proc_player 'arg11', 'Ángel', 'Di María', 'Extremo', 'Insert'
-exec proc_player 'arg12', 'Joaquín', 'Correa', 'Extremo', 'Insert'
-exec proc_player 'arg13', 'Ángel', 'Correa', 'Extremo', 'Insert'
-exec proc_player 'arg14', 'Paulo', 'Dybala', 'Mediocampista', 'Insert'
-exec proc_player 'arg15', 'Exequiel', 'Palacios', 'Extremo', 'Insert'
-exec proc_player 'arg16', 'Lautaro', 'Martinez', 'Delantero', 'Insert'
-exec proc_player 'arg17', 'Julián', 'Álvarez', 'Delantero', 'Insert'
-exec proc_player 'arg18', 'Alexis', 'McAllister', 'Mediocampista', 'Insert'
-exec proc_player 'arg19', 'Juan', 'Foyth', 'Defensa Central', 'Insert'
-exec proc_player 'arg20', 'Nicolás', 'Tagliafico', 'Lateral Izquierdo', 'Insert'
-
-
-exec proc_player 'bra1', 'Ederson', 'Moraes', 'Portero', 'Insert'
-exec proc_player 'bra2', 'Allison', 'Becker', 'Portero', 'Insert'
-exec proc_player 'bra3', 'Renan', 'Lodi', 'Lateral Izquierdo', 'Insert'
-exec proc_player 'bra4', 'Alex', 'Sandro', 'Defensa Central', 'Insert'
-exec proc_player 'bra5', 'Thiago', 'Silva', 'Defensa Central', 'Insert'
-exec proc_player 'bra6', 'Eder', 'Militao', 'Defensa Central', 'Insert'
-exec proc_player 'bra7', 'Carlos Hernique', 'Casemiro', 'Mediocampista', 'Insert'
-exec proc_player 'bra8', 'Fabinho', 'Tavares', 'Mediocampista', 'Insert'
-exec proc_player 'bra9', 'Neymar', 'Jr', 'Mediocampista', 'Insert'
-exec proc_player 'bra10', 'Philip', 'Coutinho', 'Mediocampista', 'Insert'
-exec proc_player 'bra11', 'Vinicius', 'Jr', 'Extremo', 'Insert'
-exec proc_player 'bra12', 'Rodrigo', 'Goes', 'Extremo', 'Insert'
-exec proc_player 'bra13', 'Raphinha', 'Dias', 'Extremo', 'Insert'
-exec proc_player 'bra14', 'Lucas', 'Paquetá', 'Mediocampista', 'Insert'
-exec proc_player 'bra15', 'Bruno', 'Guimaraes', 'Extremo', 'Insert'
-exec proc_player 'bra16', 'Roberto', 'Firmino', 'Delantero', 'Insert'
-exec proc_player 'bra17', 'Richarlison', 'de Andrade', 'Mediocampista', 'Insert'
-exec proc_player 'bra18', 'Gabriel', 'Jesus', 'Delantero', 'Insert'
-exec proc_player 'bra19', 'Felipe', 'Monteiro', 'Defensa Central', 'Insert'
-exec proc_player 'bra20', 'Marquinhos', 'Aoas', 'Defensa Central', 'Insert'
-
-exec proc_player 'crc1', 'Keylor', 'Navas', 'Portero', 'Insert'
-exec proc_player 'crc2', 'Patrick', 'Sequeira', 'Portero', 'Insert'
-exec proc_player 'crc3', 'Ronald', 'Matarrita', 'Lateral Izquierdo', 'Insert'
-exec proc_player 'crc4', 'Franciso', 'Calvo', 'Defensa Central', 'Insert'
-exec proc_player 'crc5', 'Juan Pablo', 'Vargas', 'Defensa Central', 'Insert'
-exec proc_player 'crc6', 'Oscar', 'Duarte', 'Defensa Central', 'Insert'
-exec proc_player 'crc7', 'Yeltsin', 'Tejeda', 'Mediocampista', 'Insert'
-exec proc_player 'crc8', 'Celso', 'Borges', 'Mediocampista', 'Insert'
-exec proc_player 'crc9', 'Bryan', 'Ruiz', 'Mediocampista', 'Insert'
-exec proc_player 'crc10', 'Brandon', 'Aguilera', 'Mediocampista', 'Insert'
-exec proc_player 'crc11', 'Jewisson', 'Benette', 'Extremo', 'Insert'
-exec proc_player 'crc12', 'Joel', 'Campbell', 'Extremo', 'Insert'
-exec proc_player 'crc13', 'Álvaro', 'Zamora', 'Extremo', 'Insert'
-exec proc_player 'crc14', 'Daniel', 'Chacón', 'Mediocampista', 'Insert'
-exec proc_player 'crc15', 'Carlos', 'Mora', 'Extremo', 'Insert'
-exec proc_player 'crc16', 'Anthony', 'Contreras', 'Delantero', 'Insert'
-exec proc_player 'crc17', 'Yostin', 'Salas', 'Mediocampista', 'Insert'
-exec proc_player 'crc18', 'Johan', 'Venegas', 'Delantero', 'Insert'
-exec proc_player 'crc19', 'Kendall', 'Waston', 'Defensa Central', 'Insert'
-exec proc_player 'crc20', 'Carlos', 'Martinez', 'Lateral Derecho', 'Insert'
-
-exec proc_player 'esp1', 'Roberto', 'Martinez', 'Portero', 'Insert'
-exec proc_player 'esp2', 'David', 'De Gea', 'Portero', 'Insert'
-exec proc_player 'esp3', 'José', 'Gayá', 'Lateral Izquierdo', 'Insert'
-exec proc_player 'esp4', 'Eric', 'García', 'Defensa Central', 'Insert'
-exec proc_player 'esp5', 'Íñigo', 'Martinez', 'Defensa Central', 'Insert'
-exec proc_player 'esp6', 'Mario', 'Hermoso', 'Defensa Central', 'Insert'
-exec proc_player 'esp7', 'Koke', 'Resurección', 'Mediocampista', 'Insert'
-exec proc_player 'esp8', 'Saúl', 'Ñíguez', 'Mediocampista', 'Insert'
-exec proc_player 'esp9', 'Brahim', 'Díaz', 'Mediocampista', 'Insert'
-exec proc_player 'esp10', 'Thiago', 'Alcántara', 'Mediocampista', 'Insert'
-exec proc_player 'esp11', 'Ferrán', 'Torres', 'Extremo', 'Insert'
-exec proc_player 'esp12', 'Pablo', 'Sarabia', 'Extremo', 'Insert'
-exec proc_player 'esp13', 'Dani', 'Olmo', 'Extremo', 'Insert'
-exec proc_player 'esp14', 'Pablo', 'Gavi', 'Mediocampista', 'Insert'
-exec proc_player 'esp15', 'Ansu', 'Fati', 'Extremo', 'Insert'
-exec proc_player 'esp16', 'Álvaro', 'Morata', 'Delantero', 'Insert'
-exec proc_player 'esp17', 'Pedri', 'González', 'Mediocampista', 'Insert'
-exec proc_player 'esp18', 'Iago', 'Aspas', 'Delantero', 'Insert'
-exec proc_player 'esp19', 'Pau', 'Torres', 'Defensa Central', 'Insert'
-exec proc_player 'esp20', 'Marcos', 'Llorente', 'Lateral Derecho', 'Insert'
-
-exec proc_player 'sen1', 'Edouard', 'Mendy', 'Portero', 'Insert'
-exec proc_player 'sen2', 'Seny', 'Dieng', 'Portero', 'Insert'
-exec proc_player 'sen3', 'Fode', 'Ballo-Touré', 'Lateral Izquierdo', 'Insert'
-exec proc_player 'sen4', 'Kalidou', 'Koulibaly', 'Defensa Central', 'Insert'
-exec proc_player 'sen5', 'Abdou', 'Diallo', 'Defensa Central', 'Insert'
-exec proc_player 'sen6', 'Formose', 'Mendy', 'Defensa Central', 'Insert'
-exec proc_player 'sen7', 'Pape', 'Gueye', 'Mediocampista', 'Insert'
-exec proc_player 'sen8', 'Nampalys', 'Mendy', 'Mediocampista', 'Insert'
-exec proc_player 'sen9', 'Chaikhou', 'Kouyaté', 'Mediocampista', 'Insert'
-exec proc_player 'sen10', 'Idrissa', 'Gueye', 'Mediocampista', 'Insert'
-exec proc_player 'sen11', 'Iliman', 'Ndiaye', 'Extremo', 'Insert'
-exec proc_player 'sen12', 'Sadio', 'Mané', 'Extremo', 'Insert'
-exec proc_player 'sen13', 'Ismaila', 'Sarr', 'Extremo', 'Insert'
-exec proc_player 'sen14', 'Pape', 'Sarr', 'Mediocampista', 'Insert'
-exec proc_player 'sen15', 'Mbaye', 'Niang', 'Extremo', 'Insert'
-exec proc_player 'sen16', 'Bamba', 'Dieng', 'Delantero', 'Insert'
-exec proc_player 'sen17', 'Boulaye', 'Dia', 'Mediocampista', 'Insert'
-exec proc_player 'sen18', 'Demba', 'Seck', 'Delantero', 'Insert'
-exec proc_player 'sen19', 'Moussa', 'Niakhaté', 'Defensa Central', 'Insert'
-exec proc_player 'sen20', 'Saliou', 'Ciss', 'Lateral Derecho', 'Insert'
-
-exec proc_player 'eng1', 'Jordan', 'Pickford', 'Portero', 'Insert'
-exec proc_player 'eng2', 'Dean', 'Henderson', 'Portero', 'Insert'
-exec proc_player 'eng3', 'Trent', 'Alexander-Arnold', 'Lateral Izquierdo', 'Insert'
-exec proc_player 'eng4', 'Fiyako', 'Tomori', 'Defensa Central', 'Insert'
-exec proc_player 'eng5', 'Kyle', 'Walker', 'Defensa Central', 'Insert'
-exec proc_player 'eng6', 'Kieran', 'Trippier', 'Defensa Central', 'Insert'
-exec proc_player 'eng7', 'Mason', 'Mount', 'Mediocampista', 'Insert'
-exec proc_player 'eng8', 'Declan', 'Rice', 'Mediocampista', 'Insert'
-exec proc_player 'eng9', 'Callum', 'Hudson-Oddoi', 'Mediocampista', 'Insert'
-exec proc_player 'eng10', 'Jude', 'Bellingham', 'Mediocampista', 'Insert'
-exec proc_player 'eng11', 'Phil', 'Foden', 'Extremo', 'Insert'
-exec proc_player 'eng12', 'Raheem', 'Sterling', 'Extremo', 'Insert'
-exec proc_player 'eng13', 'Jack', 'Grealish', 'Extremo', 'Insert'
-exec proc_player 'eng14', 'James', 'Milner', 'Mediocampista', 'Insert'
-exec proc_player 'eng15', 'Jadon', 'Sancho', 'Extremo', 'Insert'
-exec proc_player 'eng16', 'Harry', 'Kane', 'Delantero', 'Insert'
-exec proc_player 'eng17', 'Bukayo', 'Saka', 'Mediocampista', 'Insert'
-exec proc_player 'eng18', 'Tammy', 'Abraham', 'Delantero', 'Insert'
-exec proc_player 'eng19', 'Connor', 'Coady', 'Defensa Central', 'Insert'
-exec proc_player 'eng20', 'Resee', 'James', 'Lateral Derecho', 'Insert'
-
-exec proc_player 'uru1', 'Fernando', 'Muslera', 'Portero', 'Insert'
-exec proc_player 'uru2', 'Sebastian', 'Sosa', 'Portero', 'Insert'
-exec proc_player 'uru3', 'Martín', 'Cáseres', 'Lateral Izquierdo', 'Insert'
-exec proc_player 'uru4', 'Diego', 'Godín', 'Defensa Central', 'Insert'
-exec proc_player 'uru5', 'Jose María', 'Gimenez', 'Defensa Central', 'Insert'
-exec proc_player 'uru6', 'Sebastián', 'Coates', 'Defensa Central', 'Insert'
-exec proc_player 'uru7', 'Matías', 'Oliveria', 'Mediocampista', 'Insert'
-exec proc_player 'uru8', 'Matías', 'Vecino', 'Mediocampista', 'Insert'
-exec proc_player 'uru9', 'Rodrigo', 'Betancur', 'Mediocampista', 'Insert'
-exec proc_player 'uru10', 'Federico', 'Valverde', 'Mediocampista', 'Insert'
-exec proc_player 'uru11', 'Facundo', 'Pellistri', 'Extremo', 'Insert'
-exec proc_player 'uru12', 'Giorgian', 'De Arrascaeta', 'Extremo', 'Insert'
-exec proc_player 'uru13', 'Facundo', 'Torres', 'Extremo', 'Insert'
-exec proc_player 'uru14', 'Nicolás', 'De la Cruz', 'Mediocampista', 'Insert'
-exec proc_player 'uru15', 'Darwin', 'Núñez', 'Extremo', 'Insert'
-exec proc_player 'uru16', 'Edinson', 'Cavani', 'Delantero', 'Insert'
-exec proc_player 'uru17', 'Lucas', 'Torreira', 'Mediocampista', 'Insert'
-exec proc_player 'uru18', 'Luis', 'Suarez', 'Delantero', 'Insert'
-exec proc_player 'uru19', 'Matías', 'Viña', 'Defensa Central', 'Insert'
-exec proc_player 'uru20', 'Ronald', 'Araújo', 'Lateral Derecho', 'Insert'
-
-exec proc_player 'mex1', 'Guillermo', 'Ochoa', 'Portero', 'Insert'
-exec proc_player 'mex2', 'Alfredo', 'Talavera', 'Portero', 'Insert'
-exec proc_player 'mex3', 'César', 'Montes', 'Lateral Izquierdo', 'Insert'
-exec proc_player 'mex4', 'Héctor', 'Moreno', 'Defensa Central', 'Insert'
-exec proc_player 'mex5', 'Diego', 'Reyes', 'Defensa Central', 'Insert'
-exec proc_player 'mex6', 'Johan', 'Vásquez', 'Defensa Central', 'Insert'
-exec proc_player 'mex7', 'Edson', 'Álvarez', 'Mediocampista', 'Insert'
-exec proc_player 'mex8', 'Erick', 'Gutiérrez', 'Mediocampista', 'Insert'
-exec proc_player 'mex9', 'Luis', 'Romo', 'Mediocampista', 'Insert'
-exec proc_player 'mex10', 'Jesús', 'Gallardo', 'Mediocampista', 'Insert'
-exec proc_player 'mex11', 'Diego', 'Lainez', 'Extremo', 'Insert'
-exec proc_player 'mex12', 'Marcelo', 'Flores', 'Extremo', 'Insert'
-exec proc_player 'mex13', 'Rodolfo', 'Pizarro', 'Extremo', 'Insert'
-exec proc_player 'mex14', 'Héctor', 'Herrera', 'Mediocampista', 'Insert'
-exec proc_player 'mex15', 'Erick', 'Aguirre', 'Extremo', 'Insert'
-exec proc_player 'mex16', 'Raúl', 'Jiménez', 'Delantero', 'Insert'
-exec proc_player 'mex17', 'Jonathan', 'Dos Santos', 'Mediocampista', 'Insert'
-exec proc_player 'mex18', 'Santiago', 'Jiménez', 'Delantero', 'Insert'
-exec proc_player 'mex19', 'Hirving', 'Lozano', 'Extremo', 'Insert'
-exec proc_player 'mex20', 'Jorge', 'Sánchez', 'Lateral Derecho', 'Insert'
-
-
-exec proc_player 'slo1', 'Jan', 'Oblak', 'Portero', 'Insert'
-exec proc_player 'cro2', 'Ivo', 'Grbic', 'Portero', 'Insert'
-exec proc_player 'mzq3', 'Reinildo', 'Mandava', 'Lateral Izquierdo', 'Insert'
-/*exec proc_player 'uru5', 'Jose María', 'Gimenez', 'Defensa Central', 'Insert'*/
-exec proc_player 'mtg5', 'Stefan', 'Savic', 'Defensa Central', 'Insert'
-/*exec proc_player 'esp6', 'Mario', 'Hermoso', 'Defensa Central', 'Insert'*/
-exec proc_player 'rca1', 'Geoffry', 'Kondogbia', 'Mediocampista', 'Insert'
-exec proc_player 'bel5', 'Axel', 'Witsel', 'Mediocampista', 'Insert'
-/*exec proc_player 'arg7', 'Rodrigo', 'DePaul', 'Mediocampista', 'Insert'*/
-/*exec proc_player 'esp7', 'Koke', 'Resurección', 'Mediocampista', 'Insert'*/
-exec proc_player 'bel11', 'Yannick', 'Carrasco', 'Extremo', 'Insert'
-/*exec proc_player 'arg13', 'Ángel', 'Correa', 'Extremo', 'Insert'*/
-/*exec proc_player 'esp8', 'Saúl', 'Ñíguez', 'Mediocampista', 'Insert'*/
-exec proc_player 'por14', 'Joao', 'Félix', 'Mediocampista', 'Insert'
-exec proc_player 'bra22', 'Matheus', 'Cunha', 'Extremo', 'Insert'
-/*exec proc_player 'esp16', 'Álvaro', 'Morata', 'Delantero', 'Insert'*/
-/*exec proc_player 'esp20', 'Marcos', 'Llorente', 'Lateral Derecho', 'Insert'*/
-exec proc_player 'fra8', 'Antoine', 'Griezmann', 'Delantero', 'Insert'
-/*exec proc_player 'bra19', 'Felipe', 'Monteiro', 'Defensa Central', 'Insert'*/
-/*exec proc_player 'arg3', 'Nahuel', 'Molina', 'Lateral Derecho', 'Insert'*/
-
-
-exec proc_player 'fra1', 'Mike', 'Maignan', 'Portero', 'Insert'
-exec proc_player 'rum2', 'Ciprian', 'Tatarusanu', 'Portero', 'Insert'
-exec proc_player 'fra3', 'Theo', 'Hernández', 'Lateral Izquierdo', 'Insert'
-/*exec proc_player 'eng4', 'Fiyako', 'Tomori', 'Defensa Central', 'Insert'*/
-exec proc_player 'den5', 'Simon', 'Kjaer', 'Defensa Central', 'Insert'
-exec proc_player 'ita6', 'Matteo', 'Gabbia', 'Defensa Central', 'Insert'
-exec proc_player 'alg7', 'Ismael', 'Bennacer', 'Mediocampista', 'Insert'
-exec proc_player 'ita8', 'Sandro', 'Tonali', 'Mediocampista', 'Insert'
-exec proc_player 'bel9', 'Charles', 'De Kataelere', 'Mediocampista', 'Insert'
-/*exec proc_player 'esp9', 'Brahim', 'Díaz', 'Mediocampista', 'Insert'*/
-exec proc_player 'por11', 'Rafael', 'Leao', 'Extremo', 'Insert'
-exec proc_player 'bel12', 'Alexis', 'Saelemakers', 'Extremo', 'Insert'
-exec proc_player 'bra33', 'Junior', 'Messias', 'Extremo', 'Insert'
-exec proc_player 'ita14', 'Tomasso', 'Pobega', 'Mediocampista', 'Insert'
-exec proc_player 'bel15', 'Divock', 'Origi', 'Extremo', 'Insert'
-exec proc_player 'fra16', 'Olivier', 'Giroud', 'Delantero', 'Insert'
-exec proc_player 'cro17', 'Ante', 'Rebic', 'Mediocampista', 'Insert'
-exec proc_player 'sue18', 'Zlatan', 'Ibrahimovic', 'Delantero', 'Insert'
-exec proc_player 'fra19', 'Pierre', 'Kalulu', 'Defensa Central', 'Insert'
-exec proc_player 'ita20', 'Davide', 'Calabria', 'Lateral Derecho', 'Insert'
-
-exec proc_player 'crc21', 'Kevin', 'Chamorro', 'Portero', 'Insert'
-exec proc_player 'crc22', 'Aaron', 'Cruz', 'Portero', 'Insert'
-exec proc_player 'crc23', 'Ryan', 'Bolaños', 'Lateral Izquierdo', 'Insert'
-/*exec proc_player 'crc19', 'Kendall', 'Waston', 'Defensa Central', 'Insert'*/
-exec proc_player 'pan1', 'Fidel', 'Escobar', 'Defensa Central', 'Insert'
-exec proc_player 'crc24', 'Pablo', 'Arboine', 'Defensa Central', 'Insert'
-exec proc_player 'crc25', 'David', 'Guzmán', 'Mediocampista', 'Insert'
-/*exec proc_player 'crc17', 'Yostin', 'Salas', 'Mediocampista', 'Insert'*/
-exec proc_player 'crc26', 'Jaylon', 'Hadden', 'Mediocampista', 'Insert'
-exec proc_player 'crc27', 'Marvin', 'Angulo', 'Mediocampista', 'Insert'
-exec proc_player 'crc28', 'Christian', 'Bolaños', 'Extremo', 'Insert'
-/*exec proc_player 'crc13', 'Álvaro', 'Zamora', 'Extremo', 'Insert'*/
-exec proc_player 'crc29', 'Fabricio', 'Alemán', 'Extremo', 'Insert'
-exec proc_player 'arg99', 'Mariano', 'Torres', 'Mediocampista', 'Insert'
-exec proc_player 'crc30', 'Carlos', 'Villegas', 'Extremo', 'Insert'
-exec proc_player 'cub1', 'Luis', 'Paradela', 'Delantero', 'Insert'
-exec proc_player 'crc31', 'Ulises', 'Segura', 'Mediocampista', 'Insert'
-exec proc_player 'jam99', 'Javon', 'East', 'Delantero', 'Insert'
-exec proc_player 'crc32', 'Orlando', 'Sinclair', 'Extremo', 'Insert'
-exec proc_player 'crc33', 'Ricardo', 'Blanco', 'Lateral Derecho', 'Insert'
-
-exec proc_player 'ita1', 'Gianluiggi', 'Donnarumma', 'Portero', 'Insert'
-/*exec proc_player 'crc1', 'Keylor', 'Navas', 'Portero', 'Insert'*/
-exec proc_player 'por2', 'Nuno', 'Mendes', 'Lateral Izquierdo', 'Insert'
-exec proc_player 'esp21', 'Sergio', 'Ramos', 'Defensa Central', 'Insert'
-exec proc_player 'fra4', 'Presnel', 'Kimpembe', 'Defensa Central', 'Insert'
-/*exec proc_player 'bra20', 'Marquinhos', 'Aoas', 'Defensa Central', 'Insert'*/
-exec proc_player 'por5', 'Danilo', 'Pereira', 'Mediocampista', 'Insert'
-exec proc_player 'ita7', 'Marco', 'Verratti', 'Mediocampista', 'Insert'
-exec proc_player 'esp23', 'Fabián', 'Ruiz', 'Mediocampista', 'Insert'
-exec proc_player 'esp24', 'Carlos', 'Soler', 'Mediocampista', 'Insert'
-/*exec proc_player 'esp12', 'Pablo', 'Sarabia', 'Extremo', 'Insert'*/
-/*exec proc_player 'bra9', 'Neymar', 'Jr', 'Mediocampista', 'Insert'*/
-exec proc_player 'esp30', 'Juan', 'Bernat', 'Extremo', 'Insert'
-/*exec proc_player 'arg10', 'Lionel', 'Messi', 'Mediocampista', 'Insert'*/
-exec proc_player 'fra33', 'Hugo', 'Ekitike', 'Extremo', 'Insert'
-exec proc_player 'fra10', 'Kylian', 'Mbappe', 'Delantero', 'Insert'
-exec proc_player 'por6', 'Renato', 'Sanches', 'Mediocampista', 'Insert'
-exec proc_player 'arg32', 'Mauro', 'Icardi', 'Delantero', 'Insert'
-exec proc_player 'ger8', 'Julian', 'Draxler', 'Extremo', 'Insert'
-exec proc_player 'mrc3', 'Achraf', 'Hakimi', 'Lateral Derecho', 'Insert'
+insert into dbo.Country
+values ('AFG','Afganistán'),
+('ALB','Albania'),
+('GER','Alemania'),
+('ALG','Algeria'),
+('ASA','Samoa Americana'),
+('AND','Andorra'),
+('ANG','Angola'),
+('AIA','Anguila'),
+('ATG','Antigua y Barbuda'),
+('KSA','Arabia Saudita'),
+('ARG','Argentina'),
+('ARM','Armenia'),
+('ARU','Aruba'),
+('AUS','Australia'),
+('AUT','Austria'),
+('AZE','Azerbaijan'),
+('BAH','Bahamas'),
+('BHR','Bahrain'),
+('BAN','Bangladés'),
+('BRB','Barbados'),
+('BLR','Bielorrusia'),
+('BEL','Bélgica'),
+('BLZ','Belice'),
+('BEN','Benín'),
+('BER','Bermudas'),
+('MYA','Birmania'),
+('BHU','Bután'),
+('BOL','Bolivia'),
+('BIH','Bosnia y Herzegovina'),
+('BOT','Botsuana'),
+('BRA','Brasil'),
+('BRU','Brunéi'),
+('BUL','Bulgaria'),
+('BFA','Burkina Faso'),
+('BDI','Burundi'),
+('CAM','Camboya'),
+('CMR','Camerún'),
+('CAN','Canadá'),
+('CPV','Cabo Verde'),
+('QAT','Catar'),
+('CHA','Chad'),
+('CHI','Chile'),
+('CHN','China'),
+('TPE','China Taipéi'),
+('COL','Colombia'),
+('COM','Comoras'),
+('CGO','Congo'),
+('PRK','Corea del Norte'),
+('KOR','Corea del Sur'),
+('CIV','Costa de Marfil'),
+('CRC','Costa Rica'),
+('CRO','Croacia'),
+('CUB','Cuba'),
+('CUW','Curazao'),
+('CYP','Chipre'),
+('DEN','Dinamarca'),
+('DMA','Dominica'),
+('ECU','Ecuador'),
+('EGY','Egipto'),
+('SLV','El Salvador'),
+('ESP','España'),
+('UAE','Emiratos Árabes Unidos'),
+('ERI','Eritrea'),
+('SCO','Escocia'),
+('SVK','Eslovaquia'),
+('SVN','Eslovenia'),
+('USA','Estados Unidos de América'),
+('EST','Estonia'),
+('ETH','Etiopía'),
+('PHI','Filipinas'),
+('FIN','Finlandia'),
+('FIJ','Fiyi'),
+('FRA','Francia'),
+('GAB','Gabón'),
+('WAL','Gales'),
+('GAM','Gambia'),
+('GEO','Georgia'),
+('GHA','Ghana'),
+('GIB','Gibraltar'),
+('GRN','Granada'),
+('GRE','Grecie'),
+('GUM','Guam'),
+('GUA','Guatemala'),
+('GUI','Guinea'),
+('GNB','Guinea-Bisau'),
+('EQG','Guinea Ecuatorial'), 
+('GUY','Guyana'),
+('HAI','Haití'),
+('HON','Honduras'),
+('HKG','Hong Kong'),
+('HUN','Hungría'),
+('IND','India'),
+('IDN','Indonesia'),
+('ENG','Inglaterra'),
+('IRN','Irán'),
+('IRQ','Irak'),
+('NIR','Irlanda del Norte'),
+('ISL','Islandia'),
+('CAY','Islas Caimán'),
+('COK','Islas Cook'),
+('FRO','Islas Faroe'),
+('SOL','Islans Solomón'),
+('TCA','Islas Turcas y Caicos'),
+('VGB','Islas Vírgenes Británicas'),
+('ISR','Israel'),
+('ITA','Italia'),
+('JAM','Jamaica'),
+('JPN','Japón'),
+('JOR','Jordania'),
+('KAZ','Kazajistán'),
+('KEN','Kenia'),
+('KOS','Kosovo'),
+('KUW','Kuwait'),
+('KGZ','Kirguistán'),
+('LAO','Laos'),
+('LVA','Latvia'),
+('LBN','Líbano'),
+('LES','Lesoto'),
+('LBR','Liberia'),
+('LBY','Libia'),
+('LIE','Liechtenstein'),
+('LTU','Lituania'),
+('LUX','Luxemburgo'),
+('MAC','Macao'),
+('MKD','Macedonia del Norte'),	
+('MAD','Madagascar'),
+('MWI','Malaui'),
+('MAS','Malasia'),
+('MDV','Maldivas'),
+('MLI','Malí'),
+('MLT','Malta'),
+('MAR','Marruecos'),	
+('MTN','Mauritania'),
+('MRI','Mauricio'),
+('MEX','México'),
+('MDA','Moldavia'),
+('MNG','Mongolia'),
+('MNE','Montenegro'),
+('MSR','Montserrat'),
+('MOZ','Mozambique'),
+('NAM','Namibia'),
+('NEP','Nepal'),
+('NZL','Nueva Zelanda'),
+('NCA','Nicaragua'),
+('NIG','Níger'),
+('NGA','Nigeria'),
+('NOR','Noruga'),
+('NCL','Nueva Caledonia'),
+('OMA','Omán'),
+('NED','Países Bajos'),
+('PAK','Pakistán'),
+('PLE','Palestina'),
+('PAN','Panamá'),
+('PNG','Papúa Nueva Guinea'),
+('PAR','Paraguay'),
+('PER','Perú'),
+('POL','Polonia'),
+('POR','Portugal'),
+('PUR','Puerto Rico'),
+('CTA','República Centroafricana'),
+('CZE','República Checa'),
+('IRL','Repúblic de Irlanda'),
+('COD','República Democrática del Congo'),
+('DOM','República Dominicana'),
+('ROU','Rumania'),
+('RUS','Rusia'),
+('RWA','Ruanda'),
+('SKN','San Cristóbal y Nieves'),
+('SMR','San Marino'),
+('VIN','San Vicente y las Granadinas'),
+('STP','Santo Tomé y Príncipe'),
+('LCA','Santa Lucía'),
+('SAM','Samoa'),
+('SEN','Senegal'),
+('SRB','Serbia'),
+('SEY','Seychelles'),
+('SLE','Sierra Leona'),
+('SGP','Singapur'),
+('SOM','Somalia'),
+('RSA','Sudáfrica'),
+('SYR','Siria'),
+('SRI','Sri Lanka'),
+('SWZ','Suazilandia'),
+('SDN','Sudán'),
+('SSD','Sudán del Sur'),
+('SWE','Suecia'),
+('SUI','Suiza'),
+('SUR','Surinam'),
+('TAH','Tahití'),
+('THA','Tailandia'),
+('TAN','Tanzania'),
+('TJK','Tayikistán'),
+('TLS','Timor Oriental'),
+('TOG','Togo'),
+('TGA','Tonga'),
+('TRI','Trinidad y Tobago'),
+('TUN','Tunicia'),
+('TUR','Turquía'),
+('TKM','Turkmenistán'),
+('UKR','Ucrania'),
+('UGA','Uganda'),
+('URU','Uruguay'),
+('VIR','U.S. Virgin Islands'),
+('UZB','Uzbekistán'),
+('VAN','Vanuatu'),
+('VEN','Venezuela'),
+('VIE','Vietnam'),
+('YEM','Yemen'),
+('DJI','Yibuti'),
+('ZAM','Zambia'),
+('ZIM','Zimbabue')
 
 
-exec proc_player_In_Team 'ARG', 'arg1', 1, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg2', 23, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg3', 16, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg4', 13, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg5', 2, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg6', 19, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg7', 7, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg8', 5, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg9', 20, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg10', 10, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg11', 11, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg12', 17, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg13', 16, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg14', 21, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg15', 17, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg16', 22, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg17', 9, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg18', 12, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg19', 18, 'Insert'
-exec proc_player_In_Team 'ARG', 'arg20', 3, 'Insert'
+exec insertTeam 'ARG','Argentina','CONMEBOL',1
+exec insertTeam 'BRA','Brasil','CONMEBOL',1
+exec insertTeam 'CRC','Costa Rica','CONCACAF',1
+exec insertTeam 'ESP','España','UEFA',1
+exec insertTeam 'SEN','Senegal', 'CAF',1
+exec insertTeam 'ENG','Inglaterra','UEFA',1
+exec insertTeam 'URU','Uruguay','AFC',1
+exec insertTeam 'MEX','México','CONCACAF',1
 
-exec proc_player_In_Team 'BRA', 'bra1', 23, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra2', 1, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra3', 16, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra4', 6, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra5', 3, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra6', 14, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra7', 5, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra8', 15, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra9', 10, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra10', 11, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra11', 20, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra12', 26, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra13', 19, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra14', 7, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra15', 17, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra16', 24, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra17', 9, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra18', 13, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra19', 20, 'Insert'
-exec proc_player_In_Team 'BRA', 'bra20', 4, 'Insert'
-
-exec proc_player_In_Team 'CRC', 'crc1', 1, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc2', 18, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc3', 22, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc4', 5, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc5', 3, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc6', 6, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc7', 17, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc8', 5, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc9', 10, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc10', 20, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc11', 9, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc12', 12, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc13', 24, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc14', 16, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc15', 27, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc16', 7, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc17', 15, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc18', 8, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc19', 19, 'Insert'
-exec proc_player_In_Team 'CRC', 'crc20', 2, 'Insert'
-
-exec proc_player_In_Team 'ESP', 'esp1', 22, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp2', 1, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp3', 18, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp4', 24, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp5', 3, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp6', 23, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp7', 8, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp8', 6, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp9', 20, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp10', 11, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp11', 9, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp12', 13, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp13', 16, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp14', 10, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp15', 19, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp16', 12, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp17', 21, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp18', 17, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp19', 4, 'Insert'
-exec proc_player_In_Team 'ESP', 'esp20', 14, 'Insert'
-
-exec proc_player_In_Team 'SEN', 'sen1', 22, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen2', 1, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen3', 12, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen4', 24, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen5', 3, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen6', 23, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen7', 8, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen8', 6, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen9', 20, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen10', 11, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen11', 9, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen12', 10, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen13', 16, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen14', 13, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen15', 19, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen16', 12, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen17', 21, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen18', 17, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen19', 4, 'Insert'
-exec proc_player_In_Team 'SEN', 'sen20', 14, 'Insert'
-
-exec proc_player_In_Team 'ENG', 'eng1', 13, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng2', 22, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng3', 21, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng4', 3, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng5', 2, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng6', 23, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng7', 8, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng8', 7, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng9', 12, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng10', 16, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng11', 18, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng12', 19, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng13', 10, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng14', 17, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng15', 11, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng16', 9, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng17', 17, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng18', 20, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng19', 13, 'Insert'
-exec proc_player_In_Team 'ENG', 'eng20', 6, 'Insert'
-
-exec proc_player_In_Team 'URU', 'uru1', 1, 'Insert'
-exec proc_player_In_Team 'URU', 'uru2', 13, 'Insert'
-exec proc_player_In_Team 'URU', 'uru3', 21, 'Insert'
-exec proc_player_In_Team 'URU', 'uru4', 3, 'Insert'
-exec proc_player_In_Team 'URU', 'uru5', 2, 'Insert'
-exec proc_player_In_Team 'URU', 'uru6', 5, 'Insert'
-exec proc_player_In_Team 'URU', 'uru7', 6, 'Insert'
-exec proc_player_In_Team 'URU', 'uru8', 8, 'Insert'
-exec proc_player_In_Team 'URU', 'uru9', 16, 'Insert'
-exec proc_player_In_Team 'URU', 'uru10', 15, 'Insert'
-exec proc_player_In_Team 'URU', 'uru11', 11, 'Insert'
-exec proc_player_In_Team 'URU', 'uru12', 10, 'Insert'
-exec proc_player_In_Team 'URU', 'uru13', 24, 'Insert'
-exec proc_player_In_Team 'URU', 'uru14', 22, 'Insert'
-exec proc_player_In_Team 'URU', 'uru15', 19, 'Insert'
-exec proc_player_In_Team 'URU', 'uru16', 21, 'Insert'
-exec proc_player_In_Team 'URU', 'uru17', 14, 'Insert'
-exec proc_player_In_Team 'URU', 'uru18', 9, 'Insert'
-exec proc_player_In_Team 'URU', 'uru19', 18, 'Insert'
-exec proc_player_In_Team 'URU', 'uru20', 4, 'Insert'
-
-exec proc_player_In_Team 'MEX', 'mex1', 13, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex2', 1, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex3', 4, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex4', 2, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex5', 3, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex6', 5, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex7', 5, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex8', 14, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex9', 8, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex10', 15, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex11', 22, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex12', 24, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex13', 12, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex14', 16, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex15', 18, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex16', 9, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex17', 6, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex18', 19, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex19', 11, 'Insert'
-exec proc_player_In_Team 'MEX', 'mex20', 17, 'Insert'
-
-exec proc_player_In_Team 'ATM', 'slo1', 13, 'Insert'
-exec proc_player_In_Team 'ATM', 'cro2', 1, 'Insert'
-exec proc_player_In_Team 'ATM', 'mzq3', 23, 'Insert'
-exec proc_player_In_Team 'ATM', 'uru5', 2, 'Insert'
-exec proc_player_In_Team 'ATM', 'mtg5', 15, 'Insert'
-exec proc_player_In_Team 'ATM', 'esp6', 22, 'Insert'
-exec proc_player_In_Team 'ATM', 'rca1', 4, 'Insert'
-exec proc_player_In_Team 'ATM', 'bel5', 20, 'Insert'
-exec proc_player_In_Team 'ATM', 'arg7', 5, 'Insert'
-exec proc_player_In_Team 'ATM', 'esp7', 6, 'Insert'
-exec proc_player_In_Team 'ATM', 'bel11', 21, 'Insert'
-exec proc_player_In_Team 'ATM', 'arg13', 10, 'Insert'
-exec proc_player_In_Team 'ATM', 'esp8', 17, 'Insert'
-exec proc_player_In_Team 'ATM', 'por14', 7, 'Insert'
-exec proc_player_In_Team 'ATM', 'bra22', 19, 'Insert'
-exec proc_player_In_Team 'ATM', 'esp16', 9, 'Insert'
-exec proc_player_In_Team 'ATM', 'esp20', 14, 'Insert'
-exec proc_player_In_Team 'ATM', 'fra8', 8, 'Insert'
-exec proc_player_In_Team 'ATM', 'bra19', 18, 'Insert'
-exec proc_player_In_Team 'ATM', 'arg3', 16, 'Insert'
-
-exec proc_player_In_Team 'ACM', 'fra1', 16, 'Insert'
-exec proc_player_In_Team 'ACM', 'rum2', 1, 'Insert'
-exec proc_player_In_Team 'ACM', 'fra3', 19, 'Insert'
-exec proc_player_In_Team 'ACM', 'eng4', 3, 'Insert'
-exec proc_player_In_Team 'ACM', 'den5', 24, 'Insert'
-exec proc_player_In_Team 'ACM', 'ita6', 46, 'Insert'
-exec proc_player_In_Team 'ACM', 'alg7', 4, 'Insert'
-exec proc_player_In_Team 'ACM', 'ita8', 8, 'Insert'
-exec proc_player_In_Team 'ACM', 'bel9', 90, 'Insert'
-exec proc_player_In_Team 'ACM', 'esp9', 10, 'Insert'
-exec proc_player_In_Team 'ACM', 'por11', 17, 'Insert'
-exec proc_player_In_Team 'ACM', 'bel12', 15, 'Insert'
-exec proc_player_In_Team 'ACM', 'bra33', 30, 'Insert'
-exec proc_player_In_Team 'ACM', 'ita14', 95, 'Insert'
-exec proc_player_In_Team 'ACM', 'bel15', 20, 'Insert'
-exec proc_player_In_Team 'ACM', 'fra16', 9, 'Insert'
-exec proc_player_In_Team 'ACM', 'cro17', 12, 'Insert'
-exec proc_player_In_Team 'ACM', 'sue18', 11, 'Insert'
-exec proc_player_In_Team 'ACM', 'fra19', 20, 'Insert'
-exec proc_player_In_Team 'ACM', 'ita20', 2, 'Insert'
-
-exec proc_player_In_Team 'SAP', 'crc21', 1, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc22', 13, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc23', 12, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc19', 19, 'Insert'
-exec proc_player_In_Team 'SAP', 'pan1', 33, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc24', 3, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc25', 30, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc17', 15, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc26', 25, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc27', 10, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc28', 2, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc13', 22, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc29', 18, 'Insert'
-exec proc_player_In_Team 'SAP', 'arg99', 20, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc30', 27, 'Insert'
-exec proc_player_In_Team 'SAP', 'cub1', 23, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc31', 28, 'Insert'
-exec proc_player_In_Team 'SAP', 'jam99', 16, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc32', 29, 'Insert'
-exec proc_player_In_Team 'SAP', 'crc33', 4, 'Insert'
+exec insertTeam 'ATM','Club Atlético de Madrid','UEFA',2
+exec insertTeam 'ACM','AC Milan','UEFA',2
+exec insertTeam 'SAP','Deportivo Saprissa','CONMEBOL',2
+exec insertTeam 'PSG','Paris Saint Germain','UEFA',2
 
 
-exec proc_player_In_Team 'PSG', 'ita1', 99, 'Insert'
-exec proc_player_In_Team 'PSG', 'crc1', 1, 'Insert'
-exec proc_player_In_Team 'PSG', 'por2', 25, 'Insert'
-exec proc_player_In_Team 'PSG', 'esp21', 4, 'Insert'
-exec proc_player_In_Team 'PSG', 'fra4', 3, 'Insert'
-exec proc_player_In_Team 'PSG', 'bra20', 5, 'Insert'
-exec proc_player_In_Team 'PSG', 'por5', 15, 'Insert'
-exec proc_player_In_Team 'PSG', 'ita7', 6, 'Insert'
-exec proc_player_In_Team 'PSG', 'esp23', 8, 'Insert'
-exec proc_player_In_Team 'PSG', 'esp24', 27, 'Insert'
-exec proc_player_In_Team 'PSG', 'esp7', 19, 'Insert'
-exec proc_player_In_Team 'PSG', 'bra9', 10, 'Insert'
-exec proc_player_In_Team 'PSG', 'esp30', 14, 'Insert'
-exec proc_player_In_Team 'PSG', 'arg10', 30, 'Insert'
-exec proc_player_In_Team 'PSG', 'fra33', 35, 'Insert'
-exec proc_player_In_Team 'PSG', 'fra10', 7, 'Insert'
-exec proc_player_In_Team 'PSG', 'por6', 18, 'Insert'
-exec proc_player_In_Team 'PSG', 'arg32', 33, 'Insert'
-exec proc_player_In_Team 'PSG', 'ger8', 29, 'Insert'
-exec proc_player_In_Team 'PSG', 'mrc3', 2, 'Insert'
+exec insertPlayer 'arg1', 'Franco', 'Armani', 'Portero'
+exec insertPlayer 'arg2', 'Emiliano', 'Martinez', 'Portero'
+exec insertPlayer 'arg3', 'Nahuel', 'Molina', 'Lateral Derecho'
+exec insertPlayer 'arg4', 'Crisitan', 'Romero', 'Defensa Central'
+exec insertPlayer 'arg5', 'Lisandro', 'Martinez', 'Defensa Central'
+exec insertPlayer 'arg6', 'Nicolás', 'Otamendi', 'Defensa Central'
+exec insertPlayer 'arg7', 'Rodrigo', 'DePaul', 'Mediocampista'
+exec insertPlayer 'arg8', 'Leandro', 'Paredes', 'Mediocampista'
+exec insertPlayer 'arg9', 'Giovanni', 'Lo Celso', 'Mediocampista'
+exec insertPlayer 'arg10', 'Lionel', 'Messi', 'Mediocampista'
+exec insertPlayer 'arg11', 'Ángel', 'Di María', 'Extremo'
+exec insertPlayer 'arg12', 'Joaquín', 'Correa', 'Extremo'
+exec insertPlayer 'arg13', 'Ángel', 'Correa', 'Extremo'
+exec insertPlayer 'arg14', 'Paulo', 'Dybala', 'Mediocampista'
+exec insertPlayer 'arg15', 'Exequiel', 'Palacios', 'Extremo'
+exec insertPlayer 'arg16', 'Lautaro', 'Martinez', 'Delantero'
+exec insertPlayer 'arg17', 'Julián', 'Álvarez', 'Delantero'
+exec insertPlayer 'arg18', 'Alexis', 'McAllister', 'Mediocampista'
+exec insertPlayer 'arg19', 'Juan', 'Foyth', 'Defensa Central'
+exec insertPlayer 'arg20', 'Nicolás', 'Tagliafico', 'Lateral Izquierdo'
+
+
+exec insertPlayer 'bra1', 'Ederson', 'Moraes', 'Portero'
+exec insertPlayer 'bra2', 'Allison', 'Becker', 'Portero'
+exec insertPlayer 'bra3', 'Renan', 'Lodi', 'Lateral Izquierdo'
+exec insertPlayer 'bra4', 'Alex', 'Sandro', 'Defensa Central'
+exec insertPlayer 'bra5', 'Thiago', 'Silva', 'Defensa Central'
+exec insertPlayer 'bra6', 'Eder', 'Militao', 'Defensa Central'
+exec insertPlayer 'bra7', 'Carlos Hernique', 'Casemiro', 'Mediocampista'
+exec insertPlayer 'bra8', 'Fabinho', 'Tavares', 'Mediocampista'
+exec insertPlayer 'bra9', 'Neymar', 'Jr', 'Mediocampista'
+exec insertPlayer 'bra10', 'Philip', 'Coutinho', 'Mediocampista'
+exec insertPlayer 'bra11', 'Vinicius', 'Jr', 'Extremo'
+exec insertPlayer 'bra12', 'Rodrigo', 'Goes', 'Extremo'
+exec insertPlayer 'bra13', 'Raphinha', 'Dias', 'Extremo'
+exec insertPlayer 'bra14', 'Lucas', 'Paquetá', 'Mediocampista'
+exec insertPlayer 'bra15', 'Bruno', 'Guimaraes', 'Extremo'
+exec insertPlayer 'bra16', 'Roberto', 'Firmino', 'Delantero'
+exec insertPlayer 'bra17', 'Richarlison', 'de Andrade', 'Mediocampista'
+exec insertPlayer 'bra18', 'Gabriel', 'Jesus', 'Delantero'
+exec insertPlayer 'bra19', 'Felipe', 'Monteiro', 'Defensa Central'
+exec insertPlayer 'bra20', 'Marquinhos', 'Aoas', 'Defensa Central'
+
+exec insertPlayer 'crc1', 'Keylor', 'Navas', 'Portero'
+exec insertPlayer 'crc2', 'Patrick', 'Sequeira', 'Portero'
+exec insertPlayer 'crc3', 'Ronald', 'Matarrita', 'Lateral Izquierdo'
+exec insertPlayer 'crc4', 'Franciso', 'Calvo', 'Defensa Central'
+exec insertPlayer 'crc5', 'Juan Pablo', 'Vargas', 'Defensa Central'
+exec insertPlayer 'crc6', 'Oscar', 'Duarte', 'Defensa Central'
+exec insertPlayer 'crc7', 'Yeltsin', 'Tejeda', 'Mediocampista'
+exec insertPlayer 'crc8', 'Celso', 'Borges', 'Mediocampista'
+exec insertPlayer 'crc9', 'Bryan', 'Ruiz', 'Mediocampista'
+exec insertPlayer 'crc10', 'Brandon', 'Aguilera', 'Mediocampista'
+exec insertPlayer 'crc11', 'Jewisson', 'Benette', 'Extremo'
+exec insertPlayer 'crc12', 'Joel', 'Campbell', 'Extremo'
+exec insertPlayer 'crc13', 'Álvaro', 'Zamora', 'Extremo'
+exec insertPlayer 'crc14', 'Daniel', 'Chacón', 'Mediocampista'
+exec insertPlayer 'crc15', 'Carlos', 'Mora', 'Extremo'
+exec insertPlayer 'crc16', 'Anthony', 'Contreras', 'Delantero'
+exec insertPlayer 'crc17', 'Yostin', 'Salas', 'Mediocampista'
+exec insertPlayer 'crc18', 'Johan', 'Venegas', 'Delantero'
+exec insertPlayer 'crc19', 'Kendall', 'Waston', 'Defensa Central'
+exec insertPlayer 'crc20', 'Carlos', 'Martinez', 'Lateral Derecho'
+
+exec insertPlayer 'esp1', 'Roberto', 'Martinez', 'Portero'
+exec insertPlayer 'esp2', 'David', 'De Gea', 'Portero'
+exec insertPlayer 'esp3', 'José', 'Gayá', 'Lateral Izquierdo'
+exec insertPlayer 'esp4', 'Eric', 'García', 'Defensa Central'
+exec insertPlayer 'esp5', 'Íñigo', 'Martinez', 'Defensa Central'
+exec insertPlayer 'esp6', 'Mario', 'Hermoso', 'Defensa Central'
+exec insertPlayer 'esp7', 'Koke', 'Resurección', 'Mediocampista'
+exec insertPlayer 'esp8', 'Saúl', 'Ñíguez', 'Mediocampista'
+exec insertPlayer 'esp9', 'Brahim', 'Díaz', 'Mediocampista'
+exec insertPlayer 'esp10', 'Thiago', 'Alcántara', 'Mediocampista'
+exec insertPlayer 'esp11', 'Ferrán', 'Torres', 'Extremo'
+exec insertPlayer 'esp12', 'Pablo', 'Sarabia', 'Extremo'
+exec insertPlayer 'esp13', 'Dani', 'Olmo', 'Extremo'
+exec insertPlayer 'esp14', 'Pablo', 'Gavi', 'Mediocampista'
+exec insertPlayer 'esp15', 'Ansu', 'Fati', 'Extremo'
+exec insertPlayer 'esp16', 'Álvaro', 'Morata', 'Delantero'
+exec insertPlayer 'esp17', 'Pedri', 'González', 'Mediocampista'
+exec insertPlayer 'esp18', 'Iago', 'Aspas', 'Delantero'
+exec insertPlayer 'esp19', 'Pau', 'Torres', 'Defensa Central'
+exec insertPlayer 'esp20', 'Marcos', 'Llorente', 'Lateral Derecho'
+
+exec insertPlayer 'sen1', 'Edouard', 'Mendy', 'Portero'
+exec insertPlayer 'sen2', 'Seny', 'Dieng', 'Portero'
+exec insertPlayer 'sen3', 'Fode', 'Ballo-Touré', 'Lateral Izquierdo'
+exec insertPlayer 'sen4', 'Kalidou', 'Koulibaly', 'Defensa Central'
+exec insertPlayer 'sen5', 'Abdou', 'Diallo', 'Defensa Central'
+exec insertPlayer 'sen6', 'Formose', 'Mendy', 'Defensa Central'
+exec insertPlayer 'sen7', 'Pape', 'Gueye', 'Mediocampista'
+exec insertPlayer 'sen8', 'Nampalys', 'Mendy', 'Mediocampista'
+exec insertPlayer 'sen9', 'Chaikhou', 'Kouyaté', 'Mediocampista'
+exec insertPlayer 'sen10', 'Idrissa', 'Gueye', 'Mediocampista'
+exec insertPlayer 'sen11', 'Iliman', 'Ndiaye', 'Extremo'
+exec insertPlayer 'sen12', 'Sadio', 'Mané', 'Extremo'
+exec insertPlayer 'sen13', 'Ismaila', 'Sarr', 'Extremo'
+exec insertPlayer 'sen14', 'Pape', 'Sarr', 'Mediocampista'
+exec insertPlayer 'sen15', 'Mbaye', 'Niang', 'Extremo'
+exec insertPlayer 'sen16', 'Bamba', 'Dieng', 'Delantero'
+exec insertPlayer 'sen17', 'Boulaye', 'Dia', 'Mediocampista'
+exec insertPlayer 'sen18', 'Demba', 'Seck', 'Delantero'
+exec insertPlayer 'sen19', 'Moussa', 'Niakhaté', 'Defensa Central'
+exec insertPlayer 'sen20', 'Saliou', 'Ciss', 'Lateral Derecho'
+
+exec insertPlayer 'eng1', 'Jordan', 'Pickford', 'Portero'
+exec insertPlayer 'eng2', 'Dean', 'Henderson', 'Portero'
+exec insertPlayer 'eng3', 'Trent', 'Alexander-Arnold', 'Lateral Izquierdo'
+exec insertPlayer 'eng4', 'Fiyako', 'Tomori', 'Defensa Central'
+exec insertPlayer 'eng5', 'Kyle', 'Walker', 'Defensa Central'
+exec insertPlayer 'eng6', 'Kieran', 'Trippier', 'Defensa Central'
+exec insertPlayer 'eng7', 'Mason', 'Mount', 'Mediocampista'
+exec insertPlayer 'eng8', 'Declan', 'Rice', 'Mediocampista'
+exec insertPlayer 'eng9', 'Callum', 'Hudson-Oddoi', 'Mediocampista'
+exec insertPlayer 'eng10', 'Jude', 'Bellingham', 'Mediocampista'
+exec insertPlayer 'eng11', 'Phil', 'Foden', 'Extremo'
+exec insertPlayer 'eng12', 'Raheem', 'Sterling', 'Extremo'
+exec insertPlayer 'eng13', 'Jack', 'Grealish', 'Extremo'
+exec insertPlayer 'eng14', 'James', 'Milner', 'Mediocampista'
+exec insertPlayer 'eng15', 'Jadon', 'Sancho', 'Extremo'
+exec insertPlayer 'eng16', 'Harry', 'Kane', 'Delantero'
+exec insertPlayer 'eng17', 'Bukayo', 'Saka', 'Mediocampista'
+exec insertPlayer 'eng18', 'Tammy', 'Abraham', 'Delantero'
+exec insertPlayer 'eng19', 'Connor', 'Coady', 'Defensa Central'
+exec insertPlayer 'eng20', 'Resee', 'James', 'Lateral Derecho'
+
+exec insertPlayer 'uru1', 'Fernando', 'Muslera', 'Portero'
+exec insertPlayer 'uru2', 'Sebastian', 'Sosa', 'Portero'
+exec insertPlayer 'uru3', 'Martín', 'Cáseres', 'Lateral Izquierdo'
+exec insertPlayer 'uru4', 'Diego', 'Godín', 'Defensa Central'
+exec insertPlayer 'uru5', 'Jose María', 'Gimenez', 'Defensa Central'
+exec insertPlayer 'uru6', 'Sebastián', 'Coates', 'Defensa Central'
+exec insertPlayer 'uru7', 'Matías', 'Oliveria', 'Mediocampista'
+exec insertPlayer 'uru8', 'Matías', 'Vecino', 'Mediocampista'
+exec insertPlayer 'uru9', 'Rodrigo', 'Betancur', 'Mediocampista'
+exec insertPlayer 'uru10', 'Federico', 'Valverde', 'Mediocampista'
+exec insertPlayer 'uru11', 'Facundo', 'Pellistri', 'Extremo'
+exec insertPlayer 'uru12', 'Giorgian', 'De Arrascaeta', 'Extremo'
+exec insertPlayer 'uru13', 'Facundo', 'Torres', 'Extremo'
+exec insertPlayer 'uru14', 'Nicolás', 'De la Cruz', 'Mediocampista'
+exec insertPlayer 'uru15', 'Darwin', 'Núñez', 'Extremo'
+exec insertPlayer 'uru16', 'Edinson', 'Cavani', 'Delantero'
+exec insertPlayer 'uru17', 'Lucas', 'Torreira', 'Mediocampista'
+exec insertPlayer 'uru18', 'Luis', 'Suarez', 'Delantero'
+exec insertPlayer 'uru19', 'Matías', 'Viña', 'Defensa Central'
+exec insertPlayer 'uru20', 'Ronald', 'Araújo', 'Lateral Derecho'
+
+exec insertPlayer 'mex1', 'Guillermo', 'Ochoa', 'Portero'
+exec insertPlayer 'mex2', 'Alfredo', 'Talavera', 'Portero'
+exec insertPlayer 'mex3', 'César', 'Montes', 'Lateral Izquierdo'
+exec insertPlayer 'mex4', 'Héctor', 'Moreno', 'Defensa Central'
+exec insertPlayer 'mex5', 'Diego', 'Reyes', 'Defensa Central'
+exec insertPlayer 'mex6', 'Johan', 'Vásquez', 'Defensa Central'
+exec insertPlayer 'mex7', 'Edson', 'Álvarez', 'Mediocampista'
+exec insertPlayer 'mex8', 'Erick', 'Gutiérrez', 'Mediocampista'
+exec insertPlayer 'mex9', 'Luis', 'Romo', 'Mediocampista'
+exec insertPlayer 'mex10', 'Jesús', 'Gallardo', 'Mediocampista'
+exec insertPlayer 'mex11', 'Diego', 'Lainez', 'Extremo'
+exec insertPlayer 'mex12', 'Marcelo', 'Flores', 'Extremo'
+exec insertPlayer 'mex13', 'Rodolfo', 'Pizarro', 'Extremo'
+exec insertPlayer 'mex14', 'Héctor', 'Herrera', 'Mediocampista'
+exec insertPlayer 'mex15', 'Erick', 'Aguirre', 'Extremo'
+exec insertPlayer 'mex16', 'Raúl', 'Jiménez', 'Delantero'
+exec insertPlayer 'mex17', 'Jonathan', 'Dos Santos', 'Mediocampista'
+exec insertPlayer 'mex18', 'Santiago', 'Jiménez', 'Delantero'
+exec insertPlayer 'mex19', 'Hirving', 'Lozano', 'Extremo'
+exec insertPlayer 'mex20', 'Jorge', 'Sánchez', 'Lateral Derecho'
+
+
+exec insertPlayer 'slo1', 'Jan', 'Oblak', 'Portero'
+exec insertPlayer 'cro2', 'Ivo', 'Grbic', 'Portero'
+exec insertPlayer 'mzq3', 'Reinildo', 'Mandava', 'Lateral Izquierdo'
+/*exec insertPlayer 'uru5', 'Jose María', 'Gimenez', 'Defensa Central'*/
+exec insertPlayer 'mtg5', 'Stefan', 'Savic', 'Defensa Central'
+/*exec insertPlayer 'esp6', 'Mario', 'Hermoso', 'Defensa Central'*/
+exec insertPlayer 'rca1', 'Geoffry', 'Kondogbia', 'Mediocampista'
+exec insertPlayer 'bel5', 'Axel', 'Witsel', 'Mediocampista'
+/*exec insertPlayer 'arg7', 'Rodrigo', 'DePaul', 'Mediocampista'*/
+/*exec insertPlayer 'esp7', 'Koke', 'Resurección', 'Mediocampista'*/
+exec insertPlayer 'bel11', 'Yannick', 'Carrasco', 'Extremo'
+/*exec insertPlayer 'arg13', 'Ángel', 'Correa', 'Extremo'*/
+/*exec insertPlayer 'esp8', 'Saúl', 'Ñíguez', 'Mediocampista'*/
+exec insertPlayer 'por14', 'Joao', 'Félix', 'Mediocampista'
+exec insertPlayer 'bra22', 'Matheus', 'Cunha', 'Extremo'
+/*exec insertPlayer 'esp16', 'Álvaro', 'Morata', 'Delantero'*/
+/*exec insertPlayer 'esp20', 'Marcos', 'Llorente', 'Lateral Derecho'*/
+exec insertPlayer 'fra8', 'Antoine', 'Griezmann', 'Delantero'
+/*exec insertPlayer 'bra19', 'Felipe', 'Monteiro', 'Defensa Central'*/
+/*exec insertPlayer 'arg3', 'Nahuel', 'Molina', 'Lateral Derecho'*/
+
+
+exec insertPlayer 'fra1', 'Mike', 'Maignan', 'Portero'
+exec insertPlayer 'rum2', 'Ciprian', 'Tatarusanu', 'Portero'
+exec insertPlayer 'fra3', 'Theo', 'Hernández', 'Lateral Izquierdo'
+/*exec insertPlayer 'eng4', 'Fiyako', 'Tomori', 'Defensa Central'*/
+exec insertPlayer 'den5', 'Simon', 'Kjaer', 'Defensa Central'
+exec insertPlayer 'ita6', 'Matteo', 'Gabbia', 'Defensa Central'
+exec insertPlayer 'alg7', 'Ismael', 'Bennacer', 'Mediocampista'
+exec insertPlayer 'ita8', 'Sandro', 'Tonali', 'Mediocampista'
+exec insertPlayer 'bel9', 'Charles', 'De Kataelere', 'Mediocampista'
+/*exec insertPlayer 'esp9', 'Brahim', 'Díaz', 'Mediocampista'*/
+exec insertPlayer 'por11', 'Rafael', 'Leao', 'Extremo'
+exec insertPlayer 'bel12', 'Alexis', 'Saelemakers', 'Extremo'
+exec insertPlayer 'bra33', 'Junior', 'Messias', 'Extremo'
+exec insertPlayer 'ita14', 'Tomasso', 'Pobega', 'Mediocampista'
+exec insertPlayer 'bel15', 'Divock', 'Origi', 'Extremo'
+exec insertPlayer 'fra16', 'Olivier', 'Giroud', 'Delantero'
+exec insertPlayer 'cro17', 'Ante', 'Rebic', 'Mediocampista'
+exec insertPlayer 'sue18', 'Zlatan', 'Ibrahimovic', 'Delantero'
+exec insertPlayer 'fra19', 'Pierre', 'Kalulu', 'Defensa Central'
+exec insertPlayer 'ita20', 'Davide', 'Calabria', 'Lateral Derecho'
+
+exec insertPlayer 'crc21', 'Kevin', 'Chamorro', 'Portero'
+exec insertPlayer 'crc22', 'Aaron', 'Cruz', 'Portero'
+exec insertPlayer 'crc23', 'Ryan', 'Bolaños', 'Lateral Izquierdo'
+/*exec insertPlayer 'crc19', 'Kendall', 'Waston', 'Defensa Central'*/
+exec insertPlayer 'pan1', 'Fidel', 'Escobar', 'Defensa Central'
+exec insertPlayer 'crc24', 'Pablo', 'Arboine', 'Defensa Central'
+exec insertPlayer 'crc25', 'David', 'Guzmán', 'Mediocampista'
+/*exec insertPlayer 'crc17', 'Yostin', 'Salas', 'Mediocampista'*/
+exec insertPlayer 'crc26', 'Jaylon', 'Hadden', 'Mediocampista'
+exec insertPlayer 'crc27', 'Marvin', 'Angulo', 'Mediocampista'
+exec insertPlayer 'crc28', 'Christian', 'Bolaños', 'Extremo'
+/*exec insertPlayer 'crc13', 'Álvaro', 'Zamora', 'Extremo'*/
+exec insertPlayer 'crc29', 'Fabricio', 'Alemán', 'Extremo'
+exec insertPlayer 'arg99', 'Mariano', 'Torres', 'Mediocampista'
+exec insertPlayer 'crc30', 'Carlos', 'Villegas', 'Extremo'
+exec insertPlayer 'cub1', 'Luis', 'Paradela', 'Delantero'
+exec insertPlayer 'crc31', 'Ulises', 'Segura', 'Mediocampista'
+exec insertPlayer 'jam99', 'Javon', 'East', 'Delantero'
+exec insertPlayer 'crc32', 'Orlando', 'Sinclair', 'Extremo'
+exec insertPlayer 'crc33', 'Ricardo', 'Blanco', 'Lateral Derecho'
+
+exec insertPlayer 'ita1', 'Gianluiggi', 'Donnarumma', 'Portero'
+/*exec insertPlayer 'crc1', 'Keylor', 'Navas', 'Portero'*/
+exec insertPlayer 'por2', 'Nuno', 'Mendes', 'Lateral Izquierdo'
+exec insertPlayer 'esp21', 'Sergio', 'Ramos', 'Defensa Central'
+exec insertPlayer 'fra4', 'Presnel', 'Kimpembe', 'Defensa Central'
+/*exec insertPlayer 'bra20', 'Marquinhos', 'Aoas', 'Defensa Central'*/
+exec insertPlayer 'por5', 'Danilo', 'Pereira', 'Mediocampista'
+exec insertPlayer 'ita7', 'Marco', 'Verratti', 'Mediocampista'
+exec insertPlayer 'esp23', 'Fabián', 'Ruiz', 'Mediocampista'
+exec insertPlayer 'esp24', 'Carlos', 'Soler', 'Mediocampista'
+/*exec insertPlayer 'esp12', 'Pablo', 'Sarabia', 'Extremo'*/
+/*exec insertPlayer 'bra9', 'Neymar', 'Jr', 'Mediocampista'*/
+exec insertPlayer 'esp30', 'Juan', 'Bernat', 'Extremo'
+/*exec insertPlayer 'arg10', 'Lionel', 'Messi', 'Mediocampista'*/
+exec insertPlayer 'fra33', 'Hugo', 'Ekitike', 'Extremo'
+exec insertPlayer 'fra10', 'Kylian', 'Mbappe', 'Delantero'
+exec insertPlayer 'por6', 'Renato', 'Sanches', 'Mediocampista'
+exec insertPlayer 'arg32', 'Mauro', 'Icardi', 'Delantero'
+exec insertPlayer 'ger8', 'Julian', 'Draxler', 'Extremo'
+exec insertPlayer 'mrc3', 'Achraf', 'Hakimi', 'Lateral Derecho'
+
+
+exec insertPIT 'ARG', 'arg1', 1
+exec insertPIT 'ARG', 'arg2', 23
+exec insertPIT 'ARG', 'arg3', 16
+exec insertPIT 'ARG', 'arg4', 13
+exec insertPIT 'ARG', 'arg5', 2
+exec insertPIT 'ARG', 'arg6', 19
+exec insertPIT 'ARG', 'arg7', 7
+exec insertPIT 'ARG', 'arg8', 5
+exec insertPIT 'ARG', 'arg9', 20
+exec insertPIT 'ARG', 'arg10', 10
+exec insertPIT 'ARG', 'arg11', 11
+exec insertPIT 'ARG', 'arg12', 17
+exec insertPIT 'ARG', 'arg13', 16
+exec insertPIT 'ARG', 'arg14', 21
+exec insertPIT 'ARG', 'arg15', 17
+exec insertPIT 'ARG', 'arg16', 22
+exec insertPIT 'ARG', 'arg17', 9
+exec insertPIT 'ARG', 'arg18', 12
+exec insertPIT 'ARG', 'arg19', 18
+exec insertPIT 'ARG', 'arg20', 3
+
+exec insertPIT 'BRA', 'bra1', 23
+exec insertPIT 'BRA', 'bra2', 1
+exec insertPIT 'BRA', 'bra3', 16
+exec insertPIT 'BRA', 'bra4', 6
+exec insertPIT 'BRA', 'bra5', 3
+exec insertPIT 'BRA', 'bra6', 14
+exec insertPIT 'BRA', 'bra7', 5
+exec insertPIT 'BRA', 'bra8', 15
+exec insertPIT 'BRA', 'bra9', 10
+exec insertPIT 'BRA', 'bra10', 11
+exec insertPIT 'BRA', 'bra11', 20
+exec insertPIT 'BRA', 'bra12', 26
+exec insertPIT 'BRA', 'bra13', 19
+exec insertPIT 'BRA', 'bra14', 7
+exec insertPIT 'BRA', 'bra15', 17
+exec insertPIT 'BRA', 'bra16', 24
+exec insertPIT 'BRA', 'bra17', 9
+exec insertPIT 'BRA', 'bra18', 13
+exec insertPIT 'BRA', 'bra19', 20
+exec insertPIT 'BRA', 'bra20', 4
+
+exec insertPIT 'CRC', 'crc1', 1
+exec insertPIT 'CRC', 'crc2', 18
+exec insertPIT 'CRC', 'crc3', 22
+exec insertPIT 'CRC', 'crc4', 5
+exec insertPIT 'CRC', 'crc5', 3
+exec insertPIT 'CRC', 'crc6', 6
+exec insertPIT 'CRC', 'crc7', 17
+exec insertPIT 'CRC', 'crc8', 5
+exec insertPIT 'CRC', 'crc9', 10
+exec insertPIT 'CRC', 'crc10', 20
+exec insertPIT 'CRC', 'crc11', 9
+exec insertPIT 'CRC', 'crc12', 12
+exec insertPIT 'CRC', 'crc13', 24
+exec insertPIT 'CRC', 'crc14', 16
+exec insertPIT 'CRC', 'crc15', 27
+exec insertPIT 'CRC', 'crc16', 7
+exec insertPIT 'CRC', 'crc17', 15
+exec insertPIT 'CRC', 'crc18', 8
+exec insertPIT 'CRC', 'crc19', 19
+exec insertPIT 'CRC', 'crc20', 2
+
+exec insertPIT 'ESP', 'esp1', 22
+exec insertPIT 'ESP', 'esp2', 1
+exec insertPIT 'ESP', 'esp3', 18
+exec insertPIT 'ESP', 'esp4', 24
+exec insertPIT 'ESP', 'esp5', 3
+exec insertPIT 'ESP', 'esp6', 23
+exec insertPIT 'ESP', 'esp7', 8
+exec insertPIT 'ESP', 'esp8', 6
+exec insertPIT 'ESP', 'esp9', 20
+exec insertPIT 'ESP', 'esp10', 11
+exec insertPIT 'ESP', 'esp11', 9
+exec insertPIT 'ESP', 'esp12', 13
+exec insertPIT 'ESP', 'esp13', 16
+exec insertPIT 'ESP', 'esp14', 10
+exec insertPIT 'ESP', 'esp15', 19
+exec insertPIT 'ESP', 'esp16', 12
+exec insertPIT 'ESP', 'esp17', 21
+exec insertPIT 'ESP', 'esp18', 17
+exec insertPIT 'ESP', 'esp19', 4
+exec insertPIT 'ESP', 'esp20', 14
+
+exec insertPIT 'SEN', 'sen1', 22
+exec insertPIT 'SEN', 'sen2', 1
+exec insertPIT 'SEN', 'sen3', 12
+exec insertPIT 'SEN', 'sen4', 24
+exec insertPIT 'SEN', 'sen5', 3
+exec insertPIT 'SEN', 'sen6', 23
+exec insertPIT 'SEN', 'sen7', 8
+exec insertPIT 'SEN', 'sen8', 6
+exec insertPIT 'SEN', 'sen9', 20
+exec insertPIT 'SEN', 'sen10', 11
+exec insertPIT 'SEN', 'sen11', 9
+exec insertPIT 'SEN', 'sen12', 10
+exec insertPIT 'SEN', 'sen13', 16
+exec insertPIT 'SEN', 'sen14', 13
+exec insertPIT 'SEN', 'sen15', 19
+exec insertPIT 'SEN', 'sen16', 12
+exec insertPIT 'SEN', 'sen17', 21
+exec insertPIT 'SEN', 'sen18', 17
+exec insertPIT 'SEN', 'sen19', 4
+exec insertPIT 'SEN', 'sen20', 14
+
+exec insertPIT 'ENG', 'eng1', 13
+exec insertPIT 'ENG', 'eng2', 22
+exec insertPIT 'ENG', 'eng3', 21
+exec insertPIT 'ENG', 'eng4', 3
+exec insertPIT 'ENG', 'eng5', 2
+exec insertPIT 'ENG', 'eng6', 23
+exec insertPIT 'ENG', 'eng7', 8
+exec insertPIT 'ENG', 'eng8', 7
+exec insertPIT 'ENG', 'eng9', 12
+exec insertPIT 'ENG', 'eng10', 16
+exec insertPIT 'ENG', 'eng11', 18
+exec insertPIT 'ENG', 'eng12', 19
+exec insertPIT 'ENG', 'eng13', 10
+exec insertPIT 'ENG', 'eng14', 17
+exec insertPIT 'ENG', 'eng15', 11
+exec insertPIT 'ENG', 'eng16', 9
+exec insertPIT 'ENG', 'eng17', 17
+exec insertPIT 'ENG', 'eng18', 20
+exec insertPIT 'ENG', 'eng19', 13
+exec insertPIT 'ENG', 'eng20', 6
+
+exec insertPIT 'URU', 'uru1', 1
+exec insertPIT 'URU', 'uru2', 13
+exec insertPIT 'URU', 'uru3', 21
+exec insertPIT 'URU', 'uru4', 3
+exec insertPIT 'URU', 'uru5', 2
+exec insertPIT 'URU', 'uru6', 5
+exec insertPIT 'URU', 'uru7', 6
+exec insertPIT 'URU', 'uru8', 8
+exec insertPIT 'URU', 'uru9', 16
+exec insertPIT 'URU', 'uru10', 15
+exec insertPIT 'URU', 'uru11', 11
+exec insertPIT 'URU', 'uru12', 10
+exec insertPIT 'URU', 'uru13', 24
+exec insertPIT 'URU', 'uru14', 22
+exec insertPIT 'URU', 'uru15', 19
+exec insertPIT 'URU', 'uru16', 21
+exec insertPIT 'URU', 'uru17', 14
+exec insertPIT 'URU', 'uru18', 9
+exec insertPIT 'URU', 'uru19', 18
+exec insertPIT 'URU', 'uru20', 4
+
+exec insertPIT 'MEX', 'mex1', 13
+exec insertPIT 'MEX', 'mex2', 1
+exec insertPIT 'MEX', 'mex3', 4
+exec insertPIT 'MEX', 'mex4', 2
+exec insertPIT 'MEX', 'mex5', 3
+exec insertPIT 'MEX', 'mex6', 5
+exec insertPIT 'MEX', 'mex7', 5
+exec insertPIT 'MEX', 'mex8', 14
+exec insertPIT 'MEX', 'mex9', 8
+exec insertPIT 'MEX', 'mex10', 15
+exec insertPIT 'MEX', 'mex11', 22
+exec insertPIT 'MEX', 'mex12', 24
+exec insertPIT 'MEX', 'mex13', 12
+exec insertPIT 'MEX', 'mex14', 16
+exec insertPIT 'MEX', 'mex15', 18
+exec insertPIT 'MEX', 'mex16', 9
+exec insertPIT 'MEX', 'mex17', 6
+exec insertPIT 'MEX', 'mex18', 19
+exec insertPIT 'MEX', 'mex19', 11
+exec insertPIT 'MEX', 'mex20', 17
+
+exec insertPIT 'ATM', 'slo1', 13
+exec insertPIT 'ATM', 'cro2', 1
+exec insertPIT 'ATM', 'mzq3', 23
+exec insertPIT 'ATM', 'uru5', 2
+exec insertPIT 'ATM', 'mtg5', 15
+exec insertPIT 'ATM', 'esp6', 22
+exec insertPIT 'ATM', 'rca1', 4
+exec insertPIT 'ATM', 'bel5', 20
+exec insertPIT 'ATM', 'arg7', 5
+exec insertPIT 'ATM', 'esp7', 6
+exec insertPIT 'ATM', 'bel11', 21
+exec insertPIT 'ATM', 'arg13', 10
+exec insertPIT 'ATM', 'esp8', 17
+exec insertPIT 'ATM', 'por14', 7
+exec insertPIT 'ATM', 'bra22', 19
+exec insertPIT 'ATM', 'esp16', 9
+exec insertPIT 'ATM', 'esp20', 14
+exec insertPIT 'ATM', 'fra8', 8
+exec insertPIT 'ATM', 'bra19', 18
+exec insertPIT 'ATM', 'arg3', 16
+
+exec insertPIT 'ACM', 'fra1', 16
+exec insertPIT 'ACM', 'rum2', 1
+exec insertPIT 'ACM', 'fra3', 19
+exec insertPIT 'ACM', 'eng4', 3
+exec insertPIT 'ACM', 'den5', 24
+exec insertPIT 'ACM', 'ita6', 46
+exec insertPIT 'ACM', 'alg7', 4
+exec insertPIT 'ACM', 'ita8', 8
+exec insertPIT 'ACM', 'bel9', 90
+exec insertPIT 'ACM', 'esp9', 10
+exec insertPIT 'ACM', 'por11', 17
+exec insertPIT 'ACM', 'bel12', 15
+exec insertPIT 'ACM', 'bra33', 30
+exec insertPIT 'ACM', 'ita14', 95
+exec insertPIT 'ACM', 'bel15', 20
+exec insertPIT 'ACM', 'fra16', 9
+exec insertPIT 'ACM', 'cro17', 12
+exec insertPIT 'ACM', 'sue18', 11
+exec insertPIT 'ACM', 'fra19', 20
+exec insertPIT 'ACM', 'ita20', 2
+
+exec insertPIT 'SAP', 'crc21', 1
+exec insertPIT 'SAP', 'crc22', 13
+exec insertPIT 'SAP', 'crc23', 12
+exec insertPIT 'SAP', 'crc19', 19
+exec insertPIT 'SAP', 'pan1', 33
+exec insertPIT 'SAP', 'crc24', 3
+exec insertPIT 'SAP', 'crc25', 30
+exec insertPIT 'SAP', 'crc17', 15
+exec insertPIT 'SAP', 'crc26', 25
+exec insertPIT 'SAP', 'crc27', 10
+exec insertPIT 'SAP', 'crc28', 2
+exec insertPIT 'SAP', 'crc13', 22
+exec insertPIT 'SAP', 'crc29', 18
+exec insertPIT 'SAP', 'arg99', 20
+exec insertPIT 'SAP', 'crc30', 27
+exec insertPIT 'SAP', 'cub1', 23
+exec insertPIT 'SAP', 'crc31', 28
+exec insertPIT 'SAP', 'jam99', 16
+exec insertPIT 'SAP', 'crc32', 29
+exec insertPIT 'SAP', 'crc33', 4
+
+
+exec insertPIT 'PSG', 'ita1', 99
+exec insertPIT 'PSG', 'crc1', 1
+exec insertPIT 'PSG', 'por2', 25
+exec insertPIT 'PSG', 'esp21', 4
+exec insertPIT 'PSG', 'fra4', 3
+exec insertPIT 'PSG', 'bra20', 5
+exec insertPIT 'PSG', 'por5', 15
+exec insertPIT 'PSG', 'ita7', 6
+exec insertPIT 'PSG', 'esp23', 8
+exec insertPIT 'PSG', 'esp24', 27
+exec insertPIT 'PSG', 'esp7', 19
+exec insertPIT 'PSG', 'bra9', 10
+exec insertPIT 'PSG', 'esp30', 14
+exec insertPIT 'PSG', 'arg10', 30
+exec insertPIT 'PSG', 'fra33', 35
+exec insertPIT 'PSG', 'fra10', 7
+exec insertPIT 'PSG', 'por6', 18
+exec insertPIT 'PSG', 'arg32', 33
+exec insertPIT 'PSG', 'ger8', 29
+exec insertPIT 'PSG', 'mrc3', 2
