@@ -271,18 +271,18 @@ go
 
 
 
-----Nuevos procedimientos PLAYERS para arreglos del API----
+---- PLAYERS Procedures ----
 
-create procedure get_players
+create procedure getPlayers
 as begin
-	select * from dbo.Player
+		select * from dbo.Player
 end
 go
 
 create procedure getOnePlayer(@ID varchar(15))
 as begin
-	select * from dbo.Player
-	where ID = @ID
+		select * from dbo.Player
+		where ID = @ID
 end
 go
 
@@ -301,59 +301,17 @@ create procedure editPlayer(@ID varchar(15),
 				@Lastname varchar(30),
 				@Position varchar(30))
 as begin
-	update dbo.Player set Name=@Name,Lastname=@Lastname,Position=@Position
-	where ID=@ID	
-end
-go
-
-create procedure delete_player(@ID varchar(15))
-as begin
-	delete from dbo.Player
-	where ID = @ID
-end
-go
-
----------------------------------------------------------------------------------
-
-
-create procedure proc_player(@ID varchar(15),
-				@Name varchar(30),
-				@Lastname varchar(30),
-				@Position varchar(30),
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Player(ID,Name,Lastname,Position)
-		values(@ID,@Name,@Lastname,@Position)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Player
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Player
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
 		update dbo.Player set Name=@Name,Lastname=@Lastname,Position=@Position
-		where ID=@ID 	
-	end
+		where ID=@ID	
+end
+go
 
-	if @StatementType = 'Delete'
-	begin
+create procedure deletePlayer(@ID varchar(15))
+as begin
 		delete from dbo.Player
 		where ID = @ID
-	end
 end
 go
-
 
 ----Nuevos procedimientos Player_In_Team para arreglos del API----
 
@@ -621,11 +579,11 @@ as begin
 end
 go
 
-----Nuevos procedimientos STATE para arreglos del API----
+---- STATE Procedures ----
 
-create procedure get_state
+create procedure getStates
 as begin
-select * from dbo.State
+		select * from dbo.State
 end
 go
 
@@ -635,8 +593,6 @@ as begin
 		where ID = @ID
 end
 go
-
-
 
 create procedure insertState(@ID int,
 				@Name varchar(30))
@@ -654,49 +610,10 @@ as begin
 end
 go
 
-create procedure delete_state(@ID int)
+create procedure deleteState(@ID int)
 as begin
 		delete from dbo.State 
 		where ID = @ID
-end
-go
-
--------------------------------------------------------------------------
-
-
-create procedure proc_state(@ID int,
-				@Name varchar(30),
-			    @StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.State(Name)
-		values(@Name)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.State
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.State
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.State set Name=@Name
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.State
-		where ID = @ID
-	end
 end
 go
 
