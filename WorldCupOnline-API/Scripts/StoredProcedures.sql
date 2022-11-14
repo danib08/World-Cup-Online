@@ -313,30 +313,28 @@ as begin
 end
 go
 
-----Nuevos procedimientos Player_In_Team para arreglos del API----
+---- Player_In_Team Procedures ----
 
-create procedure get_PIT
+create procedure getPIT
 as begin
-	select * from dbo.Player_In_Team
+		select * from dbo.Player_In_Team
 end
 go
 
 create procedure getOnePIT(@TeamID varchar(6),
 				@PlayerID varchar(15))
 as begin
-	select * from dbo.Player_In_Team
-	where TeamID = @TeamID and PlayerID= @PlayerID
+		select * from dbo.Player_In_Team
+		where TeamID = @TeamID and PlayerID= @PlayerID
 end
 go
-
-
 
 create procedure insertPIT(@TeamID varchar(6),
 				@PlayerID varchar(15),
 				@JerseyNum int)
 as begin
-	insert into dbo.Player_In_Team(TeamID,PlayerID,JerseyNum)
-	values(@TeamID,@PlayerID,@JerseyNum)
+		insert into dbo.Player_In_Team(TeamID,PlayerID,JerseyNum)
+		values(@TeamID,@PlayerID,@JerseyNum)
 end
 go
 
@@ -344,56 +342,16 @@ create procedure editPIT(@TeamID varchar(6),
 				@PlayerID varchar(15),
 				@JerseyNum int)
 as begin
-	update dbo.Player_In_Team set JerseyNum=@JerseyNum
-	where TeamID = @TeamID and PlayerID= @PlayerID	
-end
-go
-
-create procedure delete_PIT(@TeamID varchar(6),
-				@PlayerID varchar(15))
-as begin
-	delete from dbo.Player_In_Team 
-	where TeamID = @TeamID and PlayerID= @PlayerID
-end
-go
-
--------------------------------------------------------------------------
-
-create procedure proc_player_In_Team(@TeamID varchar(6),
-				@PlayerID varchar(15),
-				@JerseyNum int,
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Player_In_Team(TeamID,PlayerID,JerseyNum)
-		values(@TeamID,@PlayerID,@JerseyNum)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Player_In_Team
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Player_In_Team
-		where TeamID = @TeamID and PlayerID= @PlayerID
-	end
-
-
-	if @StatementType = 'Update'
-	begin
 		update dbo.Player_In_Team set JerseyNum=@JerseyNum
 		where TeamID = @TeamID and PlayerID= @PlayerID	
-	end
+end
+go
 
-	if @StatementType = 'Delete'
-	begin
+create procedure deletePIT(@TeamID varchar(6),
+				@PlayerID varchar(15))
+as begin
 		delete from dbo.Player_In_Team 
 		where TeamID = @TeamID and PlayerID= @PlayerID
-	end
 end
 go
 

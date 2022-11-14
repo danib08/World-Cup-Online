@@ -44,13 +44,13 @@ namespace WorldCupOnline_API.Data
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@id", id);
 
-                using var item = await cmd.ExecuteReaderAsync();
-                while (await item.ReadAsync())
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
                     var state = new State
                     {
-                        id = (int)item["id"],
-                        name = (string)item["name"]
+                        id = (int)reader["id"],
+                        name = (string)reader["name"]
                     };
                     list.Add(state);
                 }
@@ -76,7 +76,7 @@ namespace WorldCupOnline_API.Data
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("editState", sql);
 
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Parameters.AddWithValue("@name", state.name);
 
@@ -89,7 +89,7 @@ namespace WorldCupOnline_API.Data
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("delete_state", sql);
 
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@id", id);
 
             await sql.OpenAsync();
