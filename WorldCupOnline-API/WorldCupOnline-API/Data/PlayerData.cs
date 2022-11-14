@@ -34,9 +34,9 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
-        public async Task<List<Player>> GetOnePlayer(string id)
+        public async Task<Player> GetOnePlayer(string id)
         {
-            var list = new List<Player>();
+            var player = new Player();
             using var sql = new SqlConnection(_con.SQLCon());
             using (var cmd = new SqlCommand("getOnePlayer", sql))
             {
@@ -47,17 +47,16 @@ namespace WorldCupOnline_API.Data
                 using var item = await cmd.ExecuteReaderAsync();
                 while (await item.ReadAsync())
                 {
-                    var player = new Player
+                    player = new Player
                     {
                         id = (string)item["id"],
                         name = (string)item["name"],
                         lastname = (string)item["lastname"],
                         position = (string)item["position"]
                     };
-                    list.Add(player);
                 }
             }
-            return list;
+            return player;
         }
 
         public async Task CreatePlayer(Player player)

@@ -34,9 +34,9 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
-        public async Task<List<Phase>> GetOnePhase(int id)
+        public async Task<Phase> GetOnePhase(int id)
         {
-            var list = new List<Phase>();
+            var phase = new Phase();
             using var sql = new SqlConnection(_con.SQLCon());
 
             using (var cmd = new SqlCommand("getOnePhase", sql))
@@ -48,14 +48,13 @@ namespace WorldCupOnline_API.Data
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    var phase = new Phase();
+                    phase = new Phase();
                     phase.id = (int)reader["id"];
                     phase.name = (string)reader["name"];
                     phase.tournamentID = (int)reader["tournamentid"];
-                    list.Add(phase);
                 }
             }
-            return list;
+            return phase;
         }
 
         public async Task CreatePhase(Phase phase)
@@ -63,8 +62,7 @@ namespace WorldCupOnline_API.Data
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("insertPhase", sql);
 
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@id", phase.id);
+            cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@name", phase.name);
             cmd.Parameters.AddWithValue("@tournamentid", phase.tournamentID);
 

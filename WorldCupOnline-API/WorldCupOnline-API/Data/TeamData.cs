@@ -34,9 +34,9 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
-        public async Task<List<Team>> GetOneTeam(string id)
+        public async Task<Team> GetOneTeam(string id)
         {
-            var list = new List<Team>();
+            var team = new Team();
             using var sql = new SqlConnection(_con.SQLCon());
 
             using (var cmd = new SqlCommand("getOneTeam", sql))
@@ -48,17 +48,16 @@ namespace WorldCupOnline_API.Data
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    var team = new Team
+                    team = new Team
                     {
                         id = (string)reader["id"],
                         name = (string)reader["name"],
                         confederation = (string)reader["confederation"],
                         typeid = (int)reader["typeid"]
                     };
-                    list.Add(team);
                 }
             }
-            return list;
+            return team;
         }
 
         public async Task<List<IdStringBody>> GetTeamsByType(int type)

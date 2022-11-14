@@ -33,9 +33,9 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
-        public async Task<List<State>> GetOneState(int id)
+        public async Task<State> GetOneState(int id)
         {
-            var list = new List<State>();
+            var state = new State();
             using var sql = new SqlConnection(_con.SQLCon());
 
             using (var cmd = new SqlCommand("getOneState", sql))
@@ -47,15 +47,14 @@ namespace WorldCupOnline_API.Data
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    var state = new State
+                    state = new State
                     {
                         id = (int)reader["id"],
                         name = (string)reader["name"]
                     };
-                    list.Add(state);
                 }
             }
-            return list;
+            return state;
         }
 
         public async Task CreateState(State state)

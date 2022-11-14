@@ -32,9 +32,9 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
-        public async Task<List<Player_In_Team>> GetOnePlayer_In_Team(string teamid, string playerid)
+        public async Task<Player_In_Team> GetOnePlayer_In_Team(string teamid, string playerid)
         {
-            var list = new List<Player_In_Team>();
+            var pit = new Player_In_Team();
             using var sql = new SqlConnection(_con.SQLCon());
             using (var cmd = new SqlCommand("getOnePIT", sql))
             {
@@ -52,10 +52,9 @@ namespace WorldCupOnline_API.Data
                         playerid = (string)reader["playerid"],
                         jerseynum = (int)reader["jerseynum"]
                     };
-                    list.Add(player_In_Team);
                 }
             }
-            return list;
+            return pit;
         }
 
         public async Task CreatePlayer_In_Team(Player_In_Team player_In_Team)

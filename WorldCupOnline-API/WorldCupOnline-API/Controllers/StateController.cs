@@ -28,7 +28,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<State>>> GetOne(int id)
+        public async Task<ActionResult<State>> GetOne(int id)
         {
             return await _funct.GetOneState(id);
         }

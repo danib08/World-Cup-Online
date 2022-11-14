@@ -34,9 +34,9 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
-        public async Task<List<Type>> GetOneType(int id)
+        public async Task<Type> GetOneType(int id)
         {
-            var list = new List<Type>();
+            var type = new Type();
             using var sql = new SqlConnection(_con.SQLCon());
 
             using (var cmd = new SqlCommand("getOneType", sql))
@@ -48,15 +48,14 @@ namespace WorldCupOnline_API.Data
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    var type = new Type
+                    type = new Type
                     {
                         id = (int)reader["id"],
                         name = (string)reader["name"]
                     };
-                    list.Add(type);
                 }
             }
-            return list;
+            return type;
         }
 
         public async Task CreateType(Type type)

@@ -32,9 +32,9 @@ namespace WorldCupOnline_API.Data
             return list;
         }
 
-        public async Task<List<Team_In_Tournament>> GetOneTeam_In_Tournament(string teamid, int tournamentid)
+        public async Task<Team_In_Tournament> GetOneTeam_In_Tournament(string teamid, int tournamentid)
         {
-            var list = new List<Team_In_Tournament>();
+            var tit = new Team_In_Tournament();
             using var sql = new SqlConnection(_con.SQLCon());
             using (var cmd = new SqlCommand("getOneTIT", sql))
             {
@@ -46,15 +46,14 @@ namespace WorldCupOnline_API.Data
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    var team_In_Tournament = new Team_In_Tournament
+                    tit = new Team_In_Tournament
                     {
                         teamid = (string)reader["teamid"],
                         tournamentid = (int)reader["tournamentid"]
                     };
-                    list.Add(team_In_Tournament);
                 }
             }
-            return list;
+            return tit;
         }
 
         public async Task CreateTeam_In_Tournament(Team_In_Tournament team_In_Tournament)

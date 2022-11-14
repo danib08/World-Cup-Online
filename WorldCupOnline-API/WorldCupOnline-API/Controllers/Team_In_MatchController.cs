@@ -34,7 +34,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         [HttpGet("{teamid}/{matchid}")]
-        public async Task<ActionResult<List<Team_In_Match>>> GetOne(string teamid, int matchid)
+        public async Task<ActionResult<Team_In_Match>> GetOne(string teamid, int matchid)
         {
             return await _funct.GetOneTeam_In_Match(teamid, matchid); ;
         }
