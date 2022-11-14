@@ -116,9 +116,8 @@ go
 
 create procedure deleteTeam(@ID varchar(8))
 as begin
-		select ID, Name, Confederation
-		from (Team join Player on Team.ID = TeamID)
-		where TournamentID = @ID
+		delete from dbo.Team
+		where ID = @ID
 end
 go
 
@@ -273,9 +272,8 @@ create procedure editPhase(@ID int,
 				@Name varchar(50),
 				@TournamentID int)
 as begin
-		insert into dbo.Phase(Name,TournamentID)
-		values(@Name,@TournamentID)	
-		where ID = @ID
+		update dbo.Phase set Name=@Name, TournamentID=@TournamentID
+		where ID = @ID	
 end
 go
 
@@ -587,109 +585,127 @@ as begin
 end
 go
 
-&----------------------------------------------------------------------------------
+--- BET Procedures ---
 
-create procedure proc_bet(@ID int,
-				@GoalsTeam1 int,
+create procedure getBets
+as begin
+		select * from dbo.Bet
+end
+go
+
+create procedure getOneBet(@ID int)
+as begin
+		select * from dbo.Bet
+		where @ID = @ID
+end
+go
+
+create procedure insertBet(@GoalsTeam1 int,
 				@GoalsTeam2 int,
-				@Score int ,
 				@MVP varchar(15),
 				@UserID varchar(12),
-				@MatchID int,
-			    @StatementType varchar(50) = '')
+				@MatchID int)
 as begin
-
-	if @StatementType = 'Insert'
-	begin
 		insert into dbo.Bet(GoalsTeam1, GoalsTeam2, Score, MVP, UserID, MatchID)
-		values(@GoalsTeam1, @GoalsTeam2, @Score, @MVP, @UserID, @MatchID)
-	end
+		values(@GoalsTeam1, @GoalsTeam2, 0, @MVP, @UserID, @MatchID)
+end
+go
 
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Bet
-	end
-
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Bet
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
+create procedure editBet(@ID int,
+				@GoalsTeam1 int,
+				@GoalsTeam2 int,
+				@Score int,
+				@MVP varchar(15),
+				@UserID varchar(12),
+				@MatchID int)
+as begin
 		update dbo.Bet set GoalsTeam1=@GoalsTeam1, GoalsTeam2=@GoalsTeam2, Score=@Score, MVP=@MVP, UserID=@UserID, MatchID=@MatchID
 		where ID = @ID 	
-	end
+end
+go
 
-	if @StatementType = 'Delete'
-	begin
+create procedure deleteBet(@ID int)
+as begin
 		delete from dbo.Bet
 		where ID = @ID
-	end
 end
 go
 
 
-create procedure proc_scorerInBet(@ID int,
-				@BetID int,
-				@PlayerID varchar(15),
-			    @StatementType varchar(50) = '')
+--- ASSIST_IN_BET Procedures ---
+
+create procedure getAIB
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Scorer_In_Bet(ID,BetID,PlayerID)
-		values(@ID, @BetID,@PlayerID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Scorer_In_Bet
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Scorer_In_Bet
-		where BetID = @BetID and PlayerID = @PlayerID
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Scorer_In_Bet
-		where BetID = @BetID and PlayerID = @PlayerID
-	end
+		select * from dbo.Assist_In_Bet
 end
 go
 
-create procedure proc_assistInBet(@ID int,
-				@BetID int,
-				@PlayerID varchar(15),
-			    @StatementType varchar(50) = '')
+create procedure getOneAIB(@ID int)
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Assist_In_Bet(ID,BetID,PlayerID)
-		values(@ID, @BetID,@PlayerID)
-	end
-
-	if @StatementType = 'Select'
-	begin
 		select * from dbo.Assist_In_Bet
-	end
+		where @ID = @ID
+end
+go
 
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Assist_In_Bet
-		where BetID = @BetID and PlayerID = @PlayerID
-	end
+create procedure insertAIB(@BetID int,
+				@PlayerID int)
+as begin
+		insert into dbo.Assist_In_Bet(BetID, PlayerID)
+		values(@BetID, @PlayerID)
+end
+go
 
-	if @StatementType = 'Delete'
-	begin
+create procedure editAIB(@ID int,
+				@BetID int,
+				@PlayerID int)
+as begin
+		update dbo.Assist_In_Bet set BetID=@BetID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteAIB(@ID int)
+as begin
 		delete from dbo.Assist_In_Bet
-		where BetID = @BetID and PlayerID = @PlayerID
-	end
+		where ID = @ID
+end
+go
+
+--- SCORER_IN_BET Procedures ---
+
+create procedure getSIB
+as begin
+		select * from dbo.Scorer_In_Bet
+end
+go
+
+create procedure getOneSIB(@ID int)
+as begin
+		select * from dbo.Scorer_In_Bet
+		where @ID = @ID
+end
+go
+
+create procedure insertSIB(@BetID int,
+				@PlayerID int)
+as begin
+		insert into dbo.Scorer_In_Bet(BetID, PlayerID)
+		values(@BetID, @PlayerID)
+end
+go
+
+create procedure editSIB(@ID int,
+				@BetID int,
+				@PlayerID int)
+as begin
+		update dbo.Scorer_In_Bet set BetID=@BetID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteSIB(@ID int)
+as begin
+		delete from dbo.Scorer_In_Bet
+		where ID = @ID
 end
 go
