@@ -51,10 +51,18 @@ namespace WorldCupOnline_API.Controllers
 
 
         [HttpPost]
-        public async Task Post([FromBody] Tournament tournament)
+        public async Task Post([FromBody] TournamentCreator tournament)
         {
             var function = new TournamentData();
+            var fun2 = new Team_In_TournamentData();
             await function.PostTournament(tournament);
+
+
+            foreach(string teamid in tournament.teamsIds)
+            {
+                var team_in_tournament = new Team_In_Tournament { teamid = teamid, };
+                await fun2.PostTeam_In_Tournament(team_in_tournament);
+            }
         }
 
         [HttpPut("{id}")]
@@ -106,46 +114,9 @@ namespace WorldCupOnline_API.Controllers
             var list = await function.GetTeamsTournament(tournament);
             return list;
         }
-
-
-        /// <summary>
-        /// Method to get the teams of a tournament
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("Teams/{id}")]
-        public JsonResult GetTeamsByTournament(int id)
-        {
-            string query = @"exec proc_tournament @id,'','','','',0,'Get Teams By Tourn'"; ///sql query
-
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
-        }
     }
 }
-
-          /**
+        /**
 
         /// <summary>
         /// Create a team in tournament

@@ -158,14 +158,13 @@ namespace WorldCupOnline_API.Data
             }
         }
 
-        public async Task PostTournament(Tournament tournament)
+        public async Task PostTournament(TournamentCreator tournament)
         {
             using (var sql = new SqlConnection(con.SQLCon()))
             {
                 using (var cmd = new SqlCommand("insertTournament", sql))
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", tournament.id);
                     cmd.Parameters.AddWithValue("@name", tournament.name);
                     cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
                     cmd.Parameters.AddWithValue("@enddate", tournament.enddate);
