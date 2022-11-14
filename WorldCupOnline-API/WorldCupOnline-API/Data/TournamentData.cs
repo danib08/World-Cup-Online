@@ -8,208 +8,216 @@ namespace WorldCupOnline_API.Data
 {
     public class TournamentData
     {
-        DbConection con = new DbConection();
-        public async Task<List<Tournament>> GetTournament()
+        private readonly DbConection _con = new();
+
+        public async Task<List<GetTournamentBody>> GetTournament()
         {
-            var list = new List<Tournament>();
-            using (var sql = new SqlConnection(con.SQLCon()))
+            var list = new List<GetTournamentBody>();
+            using (var sql = new SqlConnection(_con.SQLCon()))
             {
-                using (var cmd = new SqlCommand("get_tournaments", sql))
+                using var cmd = new SqlCommand("getTournaments", sql);
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using var item = await cmd.ExecuteReaderAsync();
+                while (await item.ReadAsync())
                 {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    using (var item = await cmd.ExecuteReaderAsync())
+                    var tournament = new GetTournamentBody
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var tournament = new Tournament();
-                            tournament.id = (int)item["id"];
-                            tournament.name = (string)item["name"];
-                            tournament.startdate = (DateTime)item["startdate"];
-                            tournament.enddate = (DateTime)item["enddate"];
-                            tournament.description = (string)item["description"];
-                            tournament.typeid = (int)item["typeid"];
-                            list.Add(tournament);
-                        }
-                    }
+                        id = (int)item["id"],
+                        name = (string)item["name"],
+                        startdate = (DateTime)item["startdate"],
+                        enddate = (DateTime)item["enddate"],
+                        description = (string)item["description"],
+                        type = (string)item["type"]
+                    };
+                    list.Add(tournament);
                 }
             }
             return list;
         }
 
-        public async Task<List<Tournament>> GetOneTournament(Tournament data)
+        public async Task<GetTournamentBody> GetOneTournament(int id)
         {
-            var list = new List<Tournament>();
-            using (var sql = new SqlConnection(con.SQLCon()))
+            var tournament = new GetTournamentBody();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using (var cmd = new SqlCommand("getOneTournament", sql))
             {
-                using (var cmd = new SqlCommand("getOneTournament", sql))
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using var item = await cmd.ExecuteReaderAsync();
+                while (await item.ReadAsync())
                 {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", data.id);
-
-                    using (var item = await cmd.ExecuteReaderAsync())
+                    tournament = new GetTournamentBody
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var tournament = new Tournament();
-                            tournament.id = (int)item["id"];
-                            tournament.name = (string)item["name"];
-                            tournament.startdate = (DateTime)item["startdate"];
-                            tournament.enddate = (DateTime)item["enddate"];
-                            tournament.description = (string)item["description"];
-                            tournament.typeid = (int)item["typeid"];
-                            list.Add(tournament);
-
-                        }
-                    }
+                        id = (int)item["id"],
+                        name = (string)item["name"],
+                        startdate = (DateTime)item["startdate"],
+                        enddate = (DateTime)item["enddate"],
+                        description = (string)item["description"],
+                        type = (string)item["type"]
+                    };
                 }
-
-                return list;
             }
+            return tournament;
         }
 
-        public async Task<List<MatchTournamentBody>> GetMatchesTournament(Tournament data)
+        public async Task<List<MatchTournamentBody>> GetMatchesByTournament(int id)
         {
             var list = new List<MatchTournamentBody>();
-            using (var sql = new SqlConnection(con.SQLCon()))
+            using var sql = new SqlConnection(_con.SQLCon());
+            using (var cmd = new SqlCommand("getMatchesByTournament", sql))
             {
-                using (var cmd = new SqlCommand("getMatchesTournament", sql))
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using var item = await cmd.ExecuteReaderAsync();
+                while (await item.ReadAsync())
                 {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", data.id);
-
-                    using (var item = await cmd.ExecuteReaderAsync())
+                    var tournamentMatches = new MatchTournamentBody
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var tournamentMatches = new MatchTournamentBody();
-                            tournamentMatches.id = (int)item["id"];
-                            tournamentMatches.name = (string)item["name"];
-                            tournamentMatches.startdate = (DateTime)item["startdate"];
-                            tournamentMatches.starttime = (TimeSpan)item["starttime"];
-                            tournamentMatches.location = (string)item["location"];
-                            tournamentMatches.state = (string)item["state"];
-                            tournamentMatches.score = (string)item["score"];
-                            list.Add(tournamentMatches);
-
-                        }
-                    }
+                        id = (int)item["id"],
+                        name = (string)item["name"],
+                        startdate = (DateTime)item["startdate"],
+                        starttime = (TimeSpan)item["starttime"],
+                        location = (string)item["location"],
+                        state = (string)item["state"],
+                        score = (string)item["score"]
+                    };
+                    list.Add(tournamentMatches);
                 }
-
-                return list;
             }
+            return list;
         }
 
-        public async Task<List<PhasesBody>> GetPhasesTournament(Tournament data)
+        public async Task<List<ValueIntBody>> GetPhasesByTournament(int id)
         {
-            var list = new List<PhasesBody>();
-            using (var sql = new SqlConnection(con.SQLCon()))
+            var list = new List<ValueIntBody>();
+            using var sql = new SqlConnection(_con.SQLCon());
+
+            using (var cmd = new SqlCommand("getPhasesByTournament", sql))
             {
-                using (var cmd = new SqlCommand("getPhasesTournament", sql))
+                await sql.OpenAsync();
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", data.id);
-
-                    using (var item = await cmd.ExecuteReaderAsync())
+                    var item = new ValueIntBody
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var tournament = new PhasesBody();
-                            tournament.value = (int)item["value"];
-                            tournament.label = (string)item["label"];
-                            list.Add(tournament);
-
-                        }
-                    }
+                        value = (int)reader["value"],
+                        label = (string)reader["label"]
+                    };
+                    list.Add(item);
                 }
-
-                return list;
             }
+            return list;
         }
 
-        public async Task<List<TeamTournamentBody>> GetTeamsTournament(Tournament data)
+        public async Task<List<TeamTournamentBody>> GetTeamsByTournament(int id)
         {
             var list = new List<TeamTournamentBody>();
-            using (var sql = new SqlConnection(con.SQLCon()))
+            using var sql = new SqlConnection(_con.SQLCon());
+            using (var cmd = new SqlCommand("getTeamsByTournament", sql))
             {
-                using (var cmd = new SqlCommand("getTeamsTournament", sql))
-                {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", data.id);
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
 
-                    using (var item = await cmd.ExecuteReaderAsync())
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var team = new TeamTournamentBody
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var tournament = new TeamTournamentBody();
-                            tournament.id = (string)item["id"];
-                            tournament.name = (string)item["name"];
-                            tournament.confederation = (string)item["confederation"];
-                            list.Add(tournament);
-
-                        }
-                    }
+                        id = (string)reader["id"],
+                        name = (string)reader["name"],
+                        confederation = (string)reader["confederation"]
+                    };
+                    list.Add(team);
                 }
-                return list;
+            }
+            return list;
+        }
+
+        public async Task CreateTournament(TournamentCreator tournament)
+        {
+            int newTournamentId = 0;
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("insertTournament", sql);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@name", tournament.name);
+            cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
+            cmd.Parameters.AddWithValue("@enddate", tournament.enddate);
+            cmd.Parameters.AddWithValue("@description", tournament.description);
+            cmd.Parameters.AddWithValue("@typeid", tournament.typeid);
+
+            await sql.OpenAsync();
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var id = reader["id"];
+                newTournamentId = Convert.ToInt32(id);
+            }
+
+            await reader.CloseAsync();
+            await sql.CloseAsync();
+
+            var teams = new Team_In_TournamentData();
+            foreach (string teamid in tournament.teamsIds)
+            {
+                var TIM = new Team_In_Tournament
+                {
+                    teamid = teamid,
+                    tournamentid = newTournamentId
+                };
+
+                await teams.CreateTeam_In_Tournament(TIM);
+            }
+
+            var phases = new PhaseData();
+            foreach (string item in tournament.phases)
+            {
+                var phase = new Phase
+                {
+                    name = item,
+                    tournamentID = newTournamentId
+                };
+                await phases.CreatePhase(phase);
             }
         }
 
-        public async Task PostTournament(TournamentCreator tournament)
+        public async Task EditTournament(int id, Tournament tournament)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("insertTournament", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@name", tournament.name);
-                    cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
-                    cmd.Parameters.AddWithValue("@enddate", tournament.enddate);
-                    cmd.Parameters.AddWithValue("@description", tournament.description);
-                    cmd.Parameters.AddWithValue("@typeid", tournament.typeid);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("editTournament", sql);
 
-                }
-            }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@name", tournament.name);
+            cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
+            cmd.Parameters.AddWithValue("@enddate", tournament.enddate);
+            cmd.Parameters.AddWithValue("@description", tournament.description);
+            cmd.Parameters.AddWithValue("@typeid", tournament.typeid);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
 
-        public async Task PutTournament(Tournament tournament)
+        public async Task DeleteTournament(int id)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("editTournament", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", tournament.id);
-                    cmd.Parameters.AddWithValue("@name", tournament.name);
-                    cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
-                    cmd.Parameters.AddWithValue("@enddate", tournament.enddate);
-                    cmd.Parameters.AddWithValue("@description", tournament.description);
-                    cmd.Parameters.AddWithValue("@typeid", tournament.typeid);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("deleteTournament", sql);
 
-                }
-            }
-        }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", id);
 
-        public async Task DeleteTournament(Tournament tournament)
-        {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("delete_tournament", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", tournament.id);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
-
-                }
-            }
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
     }
 }
