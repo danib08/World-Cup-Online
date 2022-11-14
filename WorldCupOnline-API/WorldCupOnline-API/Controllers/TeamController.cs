@@ -40,6 +40,12 @@ namespace WorldCupOnline_API.Controllers
             return await _funct.GetTeamsByType(type);
         }
 
+        [HttpGet("{teamId}/Players")]
+        public async Task<ActionResult<List<IdStringBody>>> GetPlayersByTeam(string teamId)
+        {
+            return await _funct.GetPlayersByTeam(teamId);
+        }
+
         [HttpPost]
         public async Task Post([FromBody] Team team)
         {
