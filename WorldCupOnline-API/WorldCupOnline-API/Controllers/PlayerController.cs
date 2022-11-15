@@ -21,30 +21,55 @@ namespace WorldCupOnline_API.Controllers
             _funct = new PlayerData();
         }
 
+        /// <summary>
+        /// Service to get all Player
+        /// </summary>
+        /// <returns>List of Player</returns>
         [HttpGet]
         public async Task<ActionResult<List<Player>>> Get()
         {
             return await _funct.GetPlayers();
         }
 
+        /// <summary>
+        /// Service to get one Player
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Player</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Player>> GetOne(string id)
         {
             return await _funct.GetOnePlayer(id);
         }
 
+        /// <summary>
+        /// Service to insert Player
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task Post([FromBody] Player player)
         {
             await _funct.CreatePlayer(player);
         }
 
+        /// <summary>
+        /// Service to edit Player
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task Put(string id, [FromBody] Player player)
         {
             await _funct.EditPlayer(id, player);
         }
 
+        /// <summary>
+        /// Service to delete Player
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {

@@ -27,24 +27,45 @@ namespace WorldCupOnline_API.Controllers
             _funct = new Team_In_MatchData();
         }
 
+        /// <summary>
+        /// Service to get all Team_In_Match
+        /// </summary>
+        /// <returns>List of Team_In_Match</returns>
         [HttpGet]
         public async Task<ActionResult<List<Team_In_Match>>> Get()
         {
             return await _funct.GetTeam_In_Match();
         }
 
+        /// <summary>
+        /// Service to get oen Team_In_Match
+        /// </summary>
+        /// <param name="teamid"></param>
+        /// <param name="matchid"></param>
+        /// <returns>Team_In_Match</returns>
         [HttpGet("{teamid}/{matchid}")]
         public async Task<ActionResult<Team_In_Match>> GetOne(string teamid, int matchid)
         {
             return await _funct.GetOneTeam_In_Match(teamid, matchid); ;
         }
 
+        /// <summary>
+        /// Service to insert Team_In_Match
+        /// </summary>
+        /// <param name="team_In_Match"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task Post([FromBody] Team_In_Match team_In_Match)
         {
             await _funct.CreateTeam_In_Match(team_In_Match);
         }
 
+        /// <summary>
+        /// Service to delete Team_In_Match
+        /// </summary>
+        /// <param name="teamid"></param>
+        /// <param name="matchid"></param>
+        /// <returns></returns>
         [HttpDelete("{teamid}/{matchid}")]
         public async Task Delete(string teamid, int matchid)
         {

@@ -22,36 +22,66 @@ namespace WorldCupOnline_API.Controllers
             _funct = new TeamData();
         }
 
+        /// <summary>
+        /// Service to get all Teams
+        /// </summary>
+        /// <returns>List of IdStringBody</returns>
         [HttpGet]
         public async Task<ActionResult<List<IdStringBody>>> Get()
         {
             return await _funct.GetTeams();
         }
 
+        /// <summary>
+        /// Service to get one Team
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Team</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Team>> GetOne(string id)
         {
             return await _funct.GetOneTeam(id);
         }
 
+        /// <summary>
+        /// Service to get all teams of a type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>List of IdStringBody</returns>
         [HttpGet("Type/{type}")]
         public async Task<ActionResult<List<IdStringBody>>> GetTeamsByType(int type)
         {
             return await _funct.GetTeamsByType(type);
         }
 
+        /// <summary>
+        /// Service to get all players of a team
+        /// </summary
+        /// <param name="teamId"></param>
+        /// <returns>List of IdStringBody</returns>
         [HttpGet("{teamId}/Players")]
         public async Task<ActionResult<List<IdStringBody>>> GetPlayersByTeam(string teamId)
         {
             return await _funct.GetPlayersByTeam(teamId);
         }
 
+        /// <summary>
+        /// Service to insert Team
+        /// </summary>
+        /// <param name="team"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task Post([FromBody] Team team)
         {
             await _funct.CreateTeam(team);
         }
 
+        /// <summary>
+        /// Service to edit Team
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="team"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task Put(string id, [FromBody] Team team)
         {
@@ -59,6 +89,11 @@ namespace WorldCupOnline_API.Controllers
             
         }
 
+        /// <summary>
+        /// Service to delete Team
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {

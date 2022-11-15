@@ -22,30 +22,55 @@ namespace WorldCupOnline_API.Controllers
             _funct = new TypeData();
         }
 
+        /// <summary>
+        /// Service to get all Type
+        /// </summary>
+        /// <returns>List of ValueIntBody</returns>
         [HttpGet]
         public async Task<ActionResult<List<ValueIntBody>>> Get()
         {
             return await _funct.GetTypes();
         }
 
+        /// <summary>
+        /// Service to get one Type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Type>> GetOne(int id)
         {
             return await _funct.GetOneType(id); ;
         }
 
-       [HttpPost]
+        /// <summary>
+        /// Service to insert Type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpPost]
         public async Task Post([FromBody] Type type)
         {
             await _funct.CreateType(type);
         }
 
+        /// <summary>
+        /// Service to edit Type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task Put(int id, [FromBody] Type type)
         {
             await _funct.EditType(id, type);
         }
 
+        /// <summary>
+        /// Service to delete Type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
