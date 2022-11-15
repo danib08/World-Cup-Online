@@ -334,51 +334,6 @@ as begin
 end
 go
 
--------------------------------------------------------------------------
-
-create procedure proc_match(@ID int,
-			    @StartDate datetime,
-			    @StartTime time,
-			    @Score varchar(7),
-			    @Location varchar(50),
-			    @StateID int,
-			    @TournamentID int,
-				@PhaseID int,
-			    @StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Match(StartDate,StartTime,Score,Location,StateID,TournamentID,PhaseID)
-		values(@StartDate,@StartTime,@Score,@Location,@StateID,@TournamentID,@PhaseID)
-		select SCOPE_IDENTITY() as ID
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Match
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Match
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,StateID=@StateID,TournamentID=@TournamentID,PhaseID=@PhaseID
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Match 
-		where ID = @ID
-	end
-end
-go
-
 ---- STATE Procedures ----
 
 create procedure getStates
@@ -608,6 +563,7 @@ create procedure insertBet(@GoalsTeam1 int,
 as begin
 		insert into dbo.Bet(GoalsTeam1, GoalsTeam2, Score, MVP, UserID, MatchID)
 		values(@GoalsTeam1, @GoalsTeam2, 0, @MVP, @UserID, @MatchID)
+		select SCOPE_IDENTITY() as ID
 end
 go
 
@@ -648,7 +604,7 @@ end
 go
 
 create procedure insertAIB(@BetID int,
-				@PlayerID int)
+				@PlayerID varchar(15))
 as begin
 		insert into dbo.Assist_In_Bet(BetID, PlayerID)
 		values(@BetID, @PlayerID)
@@ -657,7 +613,7 @@ go
 
 create procedure editAIB(@ID int,
 				@BetID int,
-				@PlayerID int)
+				@PlayerID varchar(15))
 as begin
 		update dbo.Assist_In_Bet set BetID=@BetID, PlayerID=@PlayerID
 		where ID = @ID 	
@@ -687,7 +643,7 @@ end
 go
 
 create procedure insertSIB(@BetID int,
-				@PlayerID int)
+				@PlayerID varchar(15))
 as begin
 		insert into dbo.Scorer_In_Bet(BetID, PlayerID)
 		values(@BetID, @PlayerID)
@@ -696,7 +652,7 @@ go
 
 create procedure editSIB(@ID int,
 				@BetID int,
-				@PlayerID int)
+				@PlayerID varchar(15))
 as begin
 		update dbo.Scorer_In_Bet set BetID=@BetID, PlayerID=@PlayerID
 		where ID = @ID 	

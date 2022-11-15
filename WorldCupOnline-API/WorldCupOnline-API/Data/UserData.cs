@@ -15,7 +15,7 @@ namespace WorldCupOnline_API.Data
             var list = new List<Users>();
             using (var sql = new SqlConnection(_con.SQLCon()))
             {
-                using var cmd = new SqlCommand("get_users", sql);
+                using var cmd = new SqlCommand("getUsers", sql);
                 await sql.OpenAsync();
                 cmd.CommandType = CommandType.StoredProcedure;
                 using var reader = await cmd.ExecuteReaderAsync();
@@ -151,7 +151,7 @@ namespace WorldCupOnline_API.Data
         public async Task DeleteUser(string username)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("delete_user", sql);
+            using var cmd = new SqlCommand("deleteUser", sql);
 
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@username", username);

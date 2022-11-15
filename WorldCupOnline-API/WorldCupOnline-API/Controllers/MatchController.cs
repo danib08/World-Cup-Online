@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data.SqlClient;
-using System.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
 
@@ -10,7 +6,6 @@ namespace WorldCupOnline_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class MatchController : ControllerBase
     {
         private readonly IConfiguration _configuration;
