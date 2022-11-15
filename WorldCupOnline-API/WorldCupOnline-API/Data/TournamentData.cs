@@ -8,20 +8,26 @@ namespace WorldCupOnline_API.Data
 {
     public class TournamentData
     {
+        ///Create connection
         private readonly DbConnection _con = new();
 
+        /// <summary>
+        /// Method to obtain all tournaments
+        /// </summary>
+        /// <returns>List of GetTournamentBody object</returns>
         public async Task<List<GetTournamentBody>> GetTournament()
         {
-            var list = new List<GetTournamentBody>();
+            var list = new List<GetTournamentBody>(); //Create GetTournamentBody object
             using (var sql = new SqlConnection(_con.SQLCon()))
             {
-                using var cmd = new SqlCommand("getTournaments", sql);
+                using var cmd = new SqlCommand("getTournaments", sql);///Calls stored procedure via sql connection
                 await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
 
                 using var item = await cmd.ExecuteReaderAsync();
                 while (await item.ReadAsync())
                 {
+                    ///Read from database
                     var tournament = new GetTournamentBody
                     {
                         id = (int)item["id"],
@@ -31,25 +37,31 @@ namespace WorldCupOnline_API.Data
                         description = (string)item["description"],
                         type = (string)item["type"]
                     };
-                    list.Add(tournament);
+                    list.Add(tournament); ///Add to list
                 }
             }
-            return list;
+            return list; ///Return list
         }
 
+        /// <summary>
+        /// Method to get one tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>GetTournamentBody object</returns>
         public async Task<GetTournamentBody> GetOneTournament(int id)
         {
-            var tournament = new GetTournamentBody();
+            var tournament = new GetTournamentBody(); ///Creation of GetTournamentBody object
             using var sql = new SqlConnection(_con.SQLCon());
-            using (var cmd = new SqlCommand("getOneTournament", sql))
+            using (var cmd = new SqlCommand("getOneTournament", sql))///Calls stored procedure via sql connection
             {
                 await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+                cmd.Parameters.AddWithValue("@id", id); ///Add parameters with value
 
                 using var item = await cmd.ExecuteReaderAsync();
                 while (await item.ReadAsync())
                 {
+                    ///Read from database
                     tournament = new GetTournamentBody
                     {
                         id = (int)item["id"],
@@ -61,22 +73,28 @@ namespace WorldCupOnline_API.Data
                     };
                 }
             }
-            return tournament;
+            return tournament; ///Return object
         }
 
+        /// <summary>
+        /// Method to obtain all matches in a tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>List of MatchTournamentBody objects</returns>
         public async Task<List<MatchTournamentBody>> GetMatchesByTournament(int id)
         {
-            var list = new List<MatchTournamentBody>();
+            var list = new List<MatchTournamentBody>(); ///MatchTournamentBody object creation
             using var sql = new SqlConnection(_con.SQLCon());
-            using (var cmd = new SqlCommand("getMatchesByTournament", sql))
+            using (var cmd = new SqlCommand("getMatchesByTournament", sql))///Calls stored procedure via sql connection
             {
                 await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+                cmd.Parameters.AddWithValue("@id", id); ///Add parameters with value
 
                 using var item = await cmd.ExecuteReaderAsync();
                 while (await item.ReadAsync())
                 {
+                    ///Read from database
                     var tournamentMatches = new MatchTournamentBody
                     {
                         id = (int)item["id"],
@@ -87,69 +105,87 @@ namespace WorldCupOnline_API.Data
                         state = (string)item["state"],
                         score = (string)item["score"]
                     };
-                    list.Add(tournamentMatches);
+                    list.Add(tournamentMatches); ///Add to list
                 }
             }
-            return list;
+            return list; ///Return list
         }
 
+        /// <summary>
+        /// Method to obtain all phases in a tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>List of ValueIntBody</returns>
         public async Task<List<ValueIntBody>> GetPhasesByTournament(int id)
         {
-            var list = new List<ValueIntBody>();
+            var list = new List<ValueIntBody>(); ///ValueIntBody list creation
             using var sql = new SqlConnection(_con.SQLCon());
 
-            using (var cmd = new SqlCommand("getPhasesByTournament", sql))
+            using (var cmd = new SqlCommand("getPhasesByTournament", sql))///Calls stored procedure via sql connection
             {
                 await sql.OpenAsync();
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;///Indicates that command is a stored procedure
+                cmd.Parameters.AddWithValue("@id", id); ///Add parameters with value
 
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
+                    ///Read from database
                     var item = new ValueIntBody
                     {
                         value = (int)reader["value"],
                         label = (string)reader["label"]
                     };
-                    list.Add(item);
+                    list.Add(item);///Add to list
                 }
             }
-            return list;
+            return list; ///Return list
         }
 
+        /// <summary>
+        /// Method to get teams by tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>List of TeamTournamentBody object</returns>
         public async Task<List<TeamTournamentBody>> GetTeamsByTournament(int id)
         {
-            var list = new List<TeamTournamentBody>();
+            var list = new List<TeamTournamentBody>(); ///TeamTournamentBody list creation
             using var sql = new SqlConnection(_con.SQLCon());
-            using (var cmd = new SqlCommand("getTeamsByTournament", sql))
+            using (var cmd = new SqlCommand("getTeamsByTournament", sql))///Calls stored procedure via sql connection
             {
                 await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+                cmd.Parameters.AddWithValue("@id", id); ///Add parameters with value
 
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
+                    ///Read from database
                     var team = new TeamTournamentBody
                     {
                         id = (string)reader["id"],
                         name = (string)reader["name"],
                         confederation = (string)reader["confederation"]
                     };
-                    list.Add(team);
+                    list.Add(team); ///Add to list
                 }
             }
-            return list;
+            return list; /// Return list
         }
 
+        /// <summary>
+        /// Method to create tournament
+        /// </summary>
+        /// <param name="tournament"></param>
+        /// <returns></returns>
         public async Task CreateTournament(TournamentCreator tournament)
         {
             int newTournamentId = 0;
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("insertTournament", sql);
+            using var cmd = new SqlCommand("insertTournament", sql);///Calls stored procedure via sql connection
 
-            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+            ///Add parameters with value
             cmd.Parameters.AddWithValue("@name", tournament.name);
             cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
             cmd.Parameters.AddWithValue("@enddate", tournament.enddate);
@@ -167,6 +203,7 @@ namespace WorldCupOnline_API.Data
             await reader.CloseAsync();
             await sql.CloseAsync();
 
+            ///Create teams in tournament for each team added
             var teams = new Team_In_TournamentData();
             foreach (string teamid in tournament.teamsIds)
             {
@@ -176,9 +213,10 @@ namespace WorldCupOnline_API.Data
                     tournamentid = newTournamentId
                 };
 
-                await teams.CreateTeam_In_Tournament(TIM);
+                await teams.CreateTeam_In_Tournament(TIM); ///Call method from other data file
             }
 
+            ///Create phase in tournament for each team added
             var phases = new PhaseData();
             foreach (string item in tournament.phases)
             {
@@ -187,16 +225,23 @@ namespace WorldCupOnline_API.Data
                     name = item,
                     tournamentID = newTournamentId
                 };
-                await phases.CreatePhase(phase);
+                await phases.CreatePhase(phase);///Call method from other data file
             }
         }
 
+        /// <summary>
+        /// Method to edit tournaments
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tournament"></param>
+        /// <returns></returns>
         public async Task EditTournament(int id, Tournament tournament)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("editTournament", sql);
+            using var cmd = new SqlCommand("editTournament", sql);///Calls stored procedure via sql connection
 
-            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+            ///Add parameters with value
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Parameters.AddWithValue("@name", tournament.name);
             cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
@@ -208,13 +253,18 @@ namespace WorldCupOnline_API.Data
             await cmd.ExecuteReaderAsync();
         }
 
+        /// <summary>
+        /// Method to delete tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task DeleteTournament(int id)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("deleteTournament", sql);
+            using var cmd = new SqlCommand("deleteTournament", sql);///Calls stored procedure via sql connection
 
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+            cmd.Parameters.AddWithValue("@id", id); ///Add parameter with value
 
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();
