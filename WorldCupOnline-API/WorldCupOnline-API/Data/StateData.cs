@@ -86,7 +86,7 @@ namespace WorldCupOnline_API.Data
         public async Task DeleteState(int id)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("delete_state", sql);
+            using var cmd = new SqlCommand("deleteState", sql);
 
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@id", id);

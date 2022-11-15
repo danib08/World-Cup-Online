@@ -132,7 +132,7 @@ namespace WorldCupOnline_API.Data
         public async Task DeleteMatch(int id)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("delete_match", sql);
+            using var cmd = new SqlCommand("deleteMatch", sql);
 
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@id", id);

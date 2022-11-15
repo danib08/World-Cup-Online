@@ -5,77 +5,77 @@ using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
-    public class Team_In_MatchData
+    public class Assist_In_BetData
     {
         private readonly DbConnection _con = new();
 
-        public async Task<List<Team_In_Match>> GetTeam_In_Match()
+        public async Task<List<Assist_In_Bet>> GetAssist_In_Bet()
         {
-            var list = new List<Team_In_Match>();
+            var list = new List<Assist_In_Bet>();
             using (var sql = new SqlConnection(_con.SQLCon()))
             {
-                using var cmd = new SqlCommand("getTIM", sql);
+                using var cmd = new SqlCommand("getAIB", sql);
                 await sql.OpenAsync();
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    var team_In_Match = new Team_In_Match
+                    var assist_In_Bet = new Assist_In_Bet
                     {
-                        teamid = (string)reader["teamid"],
-                        matchid = (int)reader["matchid"]
+                        id = (int)reader["id"],
+                        betid = (int)reader["betid"],
+                        playerid = (string)reader["playerid"]
                     };
-                    list.Add(team_In_Match);
+                    list.Add(assist_In_Bet);
                 }
             }
             return list;
         }
 
-        public async Task<Team_In_Match> GetOneTeam_In_Match(string teamid, int matchid)
+        public async Task<Assist_In_Bet> GetOneAssist_In_Bet(int id)
         {
-            var tim = new Team_In_Match();
+            var aib = new Assist_In_Bet();
             using var sql = new SqlConnection(_con.SQLCon());
-            using (var cmd = new SqlCommand("getOneTIM", sql))
+            using (var cmd = new SqlCommand("getOneAIB", sql))
             {
                 await sql.OpenAsync();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@teamid", teamid);
-                cmd.Parameters.AddWithValue("@matchid", matchid);
+                cmd.Parameters.AddWithValue("@id", id);
 
                 using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    tim = new Team_In_Match
+                    aib = new Assist_In_Bet
                     {
-                        teamid = (string)reader["teamid"],
-                        matchid = (int)reader["matchid"]
+                        id = (int)reader["id"],
+                        betid = (int)reader["betid"],
+                        playerid = (string)reader["playerid"]
                     };
                 }
             }
-            return tim;
+            return aib;
         }
 
-        public async Task CreateTeam_In_Match(Team_In_Match team_In_Match)
+        public async Task CreateAssist_In_Bet(Assist_In_Bet assist_In_Bet)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("insertTIM", sql);
+            using var cmd = new SqlCommand("insertAIB", sql);
 
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@teamid", team_In_Match.teamid);
-            cmd.Parameters.AddWithValue("@matchid", team_In_Match.matchid);
+            cmd.Parameters.AddWithValue("@betid", assist_In_Bet.betid);
+            cmd.Parameters.AddWithValue("@playerid", assist_In_Bet.playerid);
 
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();
         }
 
-        public async Task DeleteTeam_In_Match(string teamid, int matchid)
+        public async Task DeleteAssist_In_Bet(int id)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("deleteTIM", sql);
+            using var cmd = new SqlCommand("deleteAIB", sql);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@teamid", teamid);
-            cmd.Parameters.AddWithValue("@matchid", matchid);
+            cmd.Parameters.AddWithValue("@id", id);
 
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();

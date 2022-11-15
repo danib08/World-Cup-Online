@@ -88,7 +88,7 @@ namespace WorldCupOnline_API.Data
         public async Task DeletePlayer_In_Team(string teamId, string playerId)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("delete_PIT", sql);
+            using var cmd = new SqlCommand("deletePIT", sql);
 
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@teamid", teamId);
