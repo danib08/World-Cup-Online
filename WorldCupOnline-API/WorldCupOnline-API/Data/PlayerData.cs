@@ -1,122 +1,134 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
-using WorldCupOnline_API.Conection;
+using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Models;
-using System.Numerics;
 
 namespace WorldCupOnline_API.Data
 {
     public class PlayerData
     {
+        ///Create connection
+        private readonly DbConnection _con = new();
 
-        DbConection con = new DbConection();
+        /// <summary>
+        /// Method to obtain all Players
+        /// </summary>
+        /// <returns>List of Player object</returns>
         public async Task<List<Player>> GetPlayers()
         {
-            var list = new List<Player>();
-            using (var sql = new SqlConnection(con.SQLCon()))
+            var list = new List<Player>(); ///Creat list of players
+            using (var sql = new SqlConnection(_con.SQLCon()))
             {
-                using (var cmd = new SqlCommand("get_players", sql))
+                using var cmd = new SqlCommand("getPlayers", sql);///Calls stored procedure via sql connection
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+
+                using var item = await cmd.ExecuteReaderAsync();
+                while (await item.ReadAsync())
                 {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    using (var item = await cmd.ExecuteReaderAsync())
+                    ///Read from database
+                    var player = new Player
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var player = new Player();
-                            player.id = (string)item["id"];
-                            player.name = (string)item["name"];
-                            player.lastname = (string)item["lastname"];
-                            player.position = (string)item["position"];
-                            list.Add(player);
-                        }
-                    }
+                        id = (string)item["id"],
+                        name = (string)item["name"],
+                        lastname = (string)item["lastname"],
+                        position = (string)item["position"]
+                    };
+                    list.Add(player); ///Add to list
                 }
             }
-            return list;
+            return list; ///Return list
         }
 
-        public async Task<List<Player>> GetOnePlayer(Player data)
+        /// <summary>
+        /// Method to get one Player
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Player object</returns>
+        public async Task<Player> GetOnePlayer(string id)
         {
-            var list = new List<Player>();
-            using (var sql = new SqlConnection(con.SQLCon()))
+            var player = new Player(); ///Create new object Player
+            using var sql = new SqlConnection(_con.SQLCon());
+            using (var cmd = new SqlCommand("getOnePlayer", sql))///Calls stored procedure via sql connection
             {
-                using (var cmd = new SqlCommand("getOnePlayer", sql))
-                {
-                    await sql.OpenAsync();
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", data.id);
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+                cmd.Parameters.AddWithValue("@id", id);
 
-                    using (var item = await cmd.ExecuteReaderAsync())
+                using var item = await cmd.ExecuteReaderAsync();
+                while (await item.ReadAsync())
+                {
+                    ///Read from database
+                    player = new Player
                     {
-                        while (await item.ReadAsync())
-                        {
-                            var player = new Player();
-                            player.id = (string)item["id"];
-                            player.name = (string)item["name"];
-                            player.lastname = (string)item["lastname"];
-                            player.position = (string)item["position"];
-                            list.Add(player);
-
-                        }
-                    }
+                        id = (string)item["id"],
+                        name = (string)item["name"],
+                        lastname = (string)item["lastname"],
+                        position = (string)item["position"]
+                    };
                 }
-
-                return list;
             }
+            return player; ///Return object
         }
 
-        public async Task PostPlayer(Player player)
+        /// <summary>
+        /// Method to create Players
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public async Task CreatePlayer(Player player)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("insertPlayer", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", player.id);
-                    cmd.Parameters.AddWithValue("@name", player.name);
-                    cmd.Parameters.AddWithValue("@lastname", player.lastname);
-                    cmd.Parameters.AddWithValue("@position", player.position);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("insertPlayer", sql);///Calls stored procedure via sql connection
 
-                }
-            }
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;///Indicates that command is a stored procedure
+            ///Add parameters with value
+            cmd.Parameters.AddWithValue("@id", player.id);
+            cmd.Parameters.AddWithValue("@name", player.name);
+            cmd.Parameters.AddWithValue("@lastname", player.lastname);
+            cmd.Parameters.AddWithValue("@position", player.position);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
 
-        public async Task PutPlayer(Player player)
+        /// <summary>
+        /// Method to edit Players
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public async Task EditPlayer(string id, Player player)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("editPlayer", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", player.id);
-                    cmd.Parameters.AddWithValue("@name", player.name);
-                    cmd.Parameters.AddWithValue("@lastname", player.lastname);
-                    cmd.Parameters.AddWithValue("@position", player.position);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("editPlayer", sql);///Calls stored procedure via sql connection
 
-                }
-            }
+            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+            ///Add parameters with value
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@name", player.name);
+            cmd.Parameters.AddWithValue("@lastname", player.lastname);
+            cmd.Parameters.AddWithValue("@position", player.position);
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
 
-
-
-        public async Task DeletePlayer(Player player)
+        /// <summary>
+        /// method to delete player
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeletePlayer(string id)
         {
-            using (var sql = new SqlConnection(con.SQLCon()))
-            {
-                using (var cmd = new SqlCommand("delete_player", sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", player.id);
-                    await sql.OpenAsync();
-                    await cmd.ExecuteReaderAsync();
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmd = new SqlCommand("deletePlayer", sql);///Calls stored procedure via sql connection
 
-                }
-            }
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;///Indicates that command is a stored procedure
+            cmd.Parameters.AddWithValue("@id", id);///Add parameter with value
+
+            await sql.OpenAsync();
+            await cmd.ExecuteReaderAsync();
         }
     }
 }

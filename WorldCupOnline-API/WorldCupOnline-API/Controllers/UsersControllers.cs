@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
 using WorldCupOnline_API.Models;
-using System.Security.Cryptography;
-using System.Text;
+using WorldCupOnline_API.Data;
+using Newtonsoft.Json.Linq;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -14,248 +10,95 @@ namespace WorldCupOnline_API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private SHA512 _hashAlgorithm;
+        private readonly UserData _funct;
 
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public UsersController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _hashAlgorithm = SHA512.Create();
+            _funct = new UserData();
         }
 
         /// <summary>
-        /// Method to get all created users
+        /// Service to get all Users
         /// </summary>
-        /// <returns>JSONResult with all users</returns>
+        /// <returns>List of Users</returns>
         [HttpGet]
-        public JsonResult GetUsers()
+        public async Task<ActionResult<List<Users>>> Get()
         {
-            string query = @"exec proc_users '','','','','','','','Select'"; ///sql query
-
-            DataTable table = new DataTable(); //Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
+            return await _funct.GetUsers();
         }
 
         /// <summary>
-        /// Method to get one user by its username
+        /// Service to get one User
         /// </summary>
-        /// <param username="username"></param>
+        /// <param name="id"></param>
+        /// <returns>Users</returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Users>> GetOne(string id)
+        {
+            return await _funct.GetOneUser(id);
+        }
+
+        /// <summary>
+        /// Service to post Users
+        /// </summary>
+        /// <param name="user"></param>
         /// <returns></returns>
-        [HttpGet("{username}")]
-        public string GetUser(string username)
-        {
-            ///Created label
-            string lbl_username;
-            string lbl_name;
-            string lbl_lastname;
-            string lbl_email;
-            string lbl_countryid;
-            string lbl_birthdate;
-
-            ///SQL Query
-            string query = @"
-                            exec proc_users @username,'','','','','','','Select One'";
-
-            DataTable table = new DataTable();///Created table to store data
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection created
-            {
-                myCon.Open();///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))///Command with query and connection
-                {
-                    ///Added parameters
-                    myCommand.Parameters.AddWithValue("@username", username);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Load data to table
-                    myReader.Close();
-                    myCon.Close(); ///Close connection
-                }
-            }
-
-            ///Verify if table is empty
-            if (table.Rows.Count > 0)
-            {
-
-                DataRow row = table.Rows[0];
-
-                ///Manipulation of every row of datatable and parse them to string
-                lbl_username = row["username"].ToString();
-                lbl_name = row["name"].ToString();
-                lbl_lastname = row["lastname"].ToString();
-                lbl_email = row["email"].ToString();
-                lbl_countryid = row["countrid"].ToString();
-                lbl_birthdate = row["birthdate"].ToString();
-
-
-                ///Creation of the JSON
-                var data = new JObject(new JProperty("username", lbl_username), new JProperty("name", lbl_name),
-                    new JProperty("lastname", lbl_lastname), new JProperty("email", lbl_email),
-                    new JProperty("countryid", lbl_countryid), new JProperty("birthdate", lbl_birthdate));
-
-                return data.ToString(); ///Return created JSON
-            }
-            else
-            {
-                var data = new JObject(new JProperty("Existe", "no"));
-                return data.ToString(); ///Return message if table is empty
-            }
-
-        }
-
-        /// <summary>
-        /// Method to create users
-        /// </summary>
-        /// <param users=""></param>
-        /// <returns>JSON of the type created</returns>
         [HttpPost]
-        public JsonResult PostUser(Users user)
+        public async Task Post([FromBody] Users user)
         {
-            byte[] bytesPassword = Encoding.ASCII.GetBytes(user.password);
-            byte[] hash;
-
-            using (SHA512 shaM = SHA512.Create())
-            {
-                hash = shaM.ComputeHash(bytesPassword);
-            }
-
-            string encrypted = Convert.ToBase64String(hash);
-
-
-            //SQL Query
-            string query = @"
-                             exec proc_users @username,@name,@lastname,@email,@countryid,@birthdate,@password,'Insert'
-                           ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
-            {
-                myCon.Open(); ///Opened connection
-                SqlCommand myCommand = new SqlCommand(query, myCon);
-
-                ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@username", user.username);
-                myCommand.Parameters.AddWithValue("@name", user.name);
-                myCommand.Parameters.AddWithValue("@lastname", user.lastname);
-                myCommand.Parameters.AddWithValue("@email", user.email);
-                myCommand.Parameters.AddWithValue("@countryid", user.countryid);
-                myCommand.Parameters.AddWithValue("@birthdate", user.birthdate);
-                myCommand.Parameters.AddWithValue("@password", encrypted);
-
-                myReader = myCommand.ExecuteReader();
-                table.Load(myReader);
-                myReader.Close();
-                myCon.Close();///Closed connection
-
-            }
-
-            return new JsonResult(table); ///Returns table with info
+            await _funct.CreateUsers(user);
         }
 
-        /// Method to authenticate users
+        /// <summary>
+        /// Service to edit Users
         /// </summary>
-        /// <param auth=""></param>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        [HttpPost("Auth")]
-        public IActionResult AuthUser(Auth auth)
+        [HttpPut("{id}")]
+        public async Task Put(string id, [FromBody] Users user)
         {
-            byte[] bytesPassword = Encoding.ASCII.GetBytes(auth.password);
-            byte[] hash;
+            await _funct.EditUser(id, user);
+        }
 
-            using (SHA512 hasher = SHA512.Create())
-            {
-                hash = hasher.ComputeHash(bytesPassword);
-            }
+        /// <summary>
+        /// Service to delete Users
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task Delete(string id)
+        {
+            await _funct.DeleteUser(id);
+        }
 
-            string encrypted = Convert.ToBase64String(hash);
+        /// <summary>
+        /// Service to authenticate users
+        /// </summary>
+        /// <param name="auth"></param>
+        /// <returns>IActionResult</returns>
+        [HttpPost("Auth")]
+        public IActionResult Auth(Auth auth)
+        {
+            string result = _funct.AuthUser(auth).Result;
 
-
-            //SQL Query
-            string query = @"exec proc_users '','','',@email,'','','','Auth'";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
-            {
-                myCon.Open(); ///Opened connection
-                SqlCommand myCommand = new SqlCommand(query, myCon);
-
-                ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@email", auth.email);
-          
-                myReader = myCommand.ExecuteReader();
-                table.Load(myReader);
-                myReader.Close();
-                myCon.Close();///Closed connection
-
-            }
-            DataRow row = table.Rows[0];
-            string lbl_pwd = row["password"].ToString();
-            string lbl_username = row["username"].ToString();
-
-            if (lbl_pwd == encrypted)
-            {
-                var data = new JObject(new JProperty("username", lbl_username));
-                return Ok(data);
-            }
-            else
-            {
+            ///Validation of non existance
+            if (result.Equals("")) {
                 return BadRequest();
             }
-        }
-
-        /// <summary>
-        /// Method to delete a user by its username
-        /// </summary>
-        /// <param username="username"></param>
-        /// <returns></returns>
-        [HttpDelete("{username}")]
-        public ActionResult DeleteUser(string username)
-        {
-            ///SQL Query
-            string query = @"
-                            exec proc_users @username,'','','','','','','Delete'";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection created
+            else ///If exists sends Ok state result
             {
-                myCon.Open();///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon)) ///Command with query and connection
-                {
-                    myCommand.Parameters.AddWithValue("@username", username);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();///Closed connection
-                }
+                var data = new JObject(new JProperty("username", result));
+                return Ok(data);
             }
-            return Ok(); ///Returns acceptance
         }
     }
 }
+
+
+

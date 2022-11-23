@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data;
-using System.Data.SqlClient;
-using System.Globalization;
+﻿using Microsoft.AspNetCore.Mvc;
+using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
 
@@ -14,240 +10,104 @@ namespace WorldCupOnline_API.Controllers
     public class TournamentController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly TournamentData _funct;
 
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public TournamentController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _funct = new TournamentData();
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Tournament>>> Get()
-        {
-            var function = new TournamentData();
-
-            var list = await function.GetTournament();
-            return list;
-        }
- 
         /// <summary>
-        /// Method to get one Tournament by its id
+        /// Service to Get all Tournament
         /// </summary>
-        /// <param id="id"></param>
-        /// <returns>Json of the required tournaments</returns>
+        /// <returns>List of GetTournamentBody</returns>
+        [HttpGet]
+        public async Task<ActionResult<List<GetTournamentBody>>> Get()
+        {
+            return await _funct.GetTournament();
+        }
+
+        /// <summary>
+        /// Service to get one Tournament 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>GetTournamentBody</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Tournament>>> GetOne(int id)
+        public async Task<ActionResult<GetTournamentBody>> GetOne(int id)
         {
-            var function = new TournamentData();
-            var tournament = new Tournament();
-            tournament.id = id;
-            var list = await function.GetOneTournament(tournament);
-            return list;
+            return await _funct.GetOneTournament(id);
         }
 
-
+        /// <summary>
+        /// Service to insert Tournament
+        /// </summary>
+        /// <param name="tournament"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task Post([FromBody] Tournament tournament)
+        public async Task Post([FromBody] TournamentCreator tournament)
         {
-            var function = new TournamentData();
-            await function.PostTournament(tournament);
+            await _funct.CreateTournament(tournament);
         }
 
+        /// <summary>
+        /// Service to edit Tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tournament"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task Put(int id, [FromBody] Tournament tournament)
         {
-            var function = new TournamentData();
-            tournament.id = id;
-            await function.PutTournament(tournament);
-
+            await _funct.EditTournament(id, tournament);
         }
 
+        /// <summary>
+        /// Service to delete Tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            var function = new TournamentData();
-            var tournament = new Tournament();
-            tournament.id = id;
-            await function.DeleteTournament(tournament);
-        }
-    
-
-/// <summary>
-/// Method to get the matches of a tournament
-/// </summary>
-/// <param name="tournamentId"></param>
-/// <returns></returns>
-[HttpGet("{tournamentId}/Matches")]
-        public JsonResult GetMatchesByTournament(int tournamentId)
-        {
-            string query = @"exec proc_tournament @tournamentId,'','','','',0,'Get Matches By Tourn'"; ///sql query
-
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@tournamentId", tournamentId);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
+            await _funct.DeleteTournament(id);
         }
 
         /// <summary>
-        /// Method get the phases of a tournament
+        /// Service to get all matches in a Tournament
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>List of MatchTournamentBody</returns>
+        [HttpGet("Matches/{id}")]
+        public async Task<ActionResult<List<MatchTournamentBody>>> GetMatchesTournament(int id)
+        {
+            return await _funct.GetMatchesByTournament(id);
+        }
+
+        /// <summary>
+        /// Service to get all phases in a Tournament
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>List of ValueIntBody</returns>
         [HttpGet("Phases/{id}")]
-        public JsonResult GetPhasesByTournament(int id)
+        public async Task<ActionResult<List<ValueIntBody>>> GetPhasesByTournament(int id)
         {
-            string query = @"exec proc_tournament @id,'','','','',0,'Get Phases By Tourn'"; ///sql query
-
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
+            return await _funct.GetPhasesByTournament(id);
         }
 
         /// <summary>
-        /// Method to get the teams of a tournament
+        /// Service to get teams in a Tournament
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>List of TeamTournamentBody</returns>
         [HttpGet("Teams/{id}")]
-        public JsonResult GetTeamsByTournament(int id)
+        public async Task<ActionResult<List<TeamTournamentBody>>> GetTeamsByTournament(int id)
         {
-            string query = @"exec proc_tournament @id,'','','','',0,'Get Teams By Tourn'"; ///sql query
-
-            DataTable table = new DataTable(); ///Create datatable
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");  ///Establish connection
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open(); ///Open connection
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ///Data is loaded into table
-                    myReader.Close();
-                    myCon.Close(); ///Closed connection
-                }
-            }
-
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            foreach (DataColumn column in table.Columns)
-            {
-                column.ColumnName = ti.ToLower(column.ColumnName); ///Make all lowercase to avoid conflicts with communication
-            }
-
-            return new JsonResult(table); ///Return JSON Of the data table
-        }
-
-        /// <summary>
-        /// Create a team in tournament
-        /// </summary>
-        /// <param name="team_In_Tournament"></param>
-        /// <returns></returns>
-        [HttpPost("postTeamInTournament")]
-        public JsonResult PostTeam_In_Tournament(Team_In_Tournament team_In_Tournament)
-        {
-            ///SQL Query
-            string query = @"
-                             exec proc_teamInTournament @teamid,@tournamentid,'Insert'
-                            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))//Connection stablished
-            {
-                myCon.Open(); ///Opened connection
-                SqlCommand myCommand = new SqlCommand(query, myCon);
-
-                ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@teamid", team_In_Tournament.teamid);
-                myCommand.Parameters.AddWithValue("@tournamentid", team_In_Tournament.tournamentid);
-
-                myReader = myCommand.ExecuteReader();
-                table.Load(myReader);
-                myReader.Close();
-                myCon.Close();///Closed connection
-            }
-
-            return new JsonResult(table); ///Returns table with info
-
-        }
-
-        /// <summary>
-        /// Method to create a phase in a tournament
-        /// </summary>
-        /// <param name="phase"></param>
-        /// <returns></returns>
-        [HttpPost("postPhase")]
-        public JsonResult PostPhase(Phase phase)
-        {
-            ///SQL Query
-            string query = @"
-                             exec proc_phase @id,@name,@tournamentid,'Insert'
-                            ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("WorldCupOnline");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))///Connection stablished
-            {
-                myCon.Open(); ///Opened connection
-                SqlCommand myCommand = new SqlCommand(query, myCon);
-
-                ///Parameters added with values
-                myCommand.Parameters.AddWithValue("@id", phase.id);
-                myCommand.Parameters.AddWithValue("@name", phase.name);
-                myCommand.Parameters.AddWithValue("@tournamentid", phase.tournamentID);
-
-                myReader = myCommand.ExecuteReader();
-                table.Load(myReader);
-                myReader.Close();
-                myCon.Close();///Closed connection
-
-            }
-
-            return new JsonResult(table); ///Returns table with info
+            return await _funct.GetTeamsByTournament(id);
         }
     }
 }
-

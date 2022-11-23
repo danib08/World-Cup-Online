@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
+﻿using Microsoft.AspNetCore.Mvc;
 using Type = WorldCupOnline_API.Models.Type;
 using WorldCupOnline_API.Data;
+using WorldCupOnline_API.Bodies;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -14,63 +10,71 @@ namespace WorldCupOnline_API.Controllers
     public class TypeController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly TypeData _funct;
+
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public TypeController(IConfiguration configuration)
         {
             _configuration = configuration;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<List<Type>>> Get()
-        {
-            var function = new TypeData();
-            var list = await function.GetTypes();
-            return list;
-            
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<List<Type>>> GetOne(int id)
-        {
-            var function = new TypeData();
-            var type = new Type();
-            type.id = id;
-            var list = await function.GetOneType(type);
-            return list;
+            _funct = new TypeData();
         }
 
         /// <summary>
-        /// Method to create types
+        /// Service to get all Type
+        /// </summary>
+        /// <returns>List of ValueIntBody</returns>
+        [HttpGet]
+        public async Task<ActionResult<List<ValueIntBody>>> Get()
+        {
+            return await _funct.GetTypes();
+        }
+
+        /// <summary>
+        /// Service to get one Type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Type>> GetOne(int id)
+        {
+            return await _funct.GetOneType(id); ;
+        }
+
+        /// <summary>
+        /// Service to insert Type
         /// </summary>
         /// <param name="type"></param>
-        /// <returns>JSON of the type created</returns>
+        /// <returns></returns>
         [HttpPost]
         public async Task Post([FromBody] Type type)
         {
-            var function = new TypeData();
-            await function.PostType(type);
+            await _funct.CreateType(type);
         }
 
+        /// <summary>
+        /// Service to edit Type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task Put(int id, [FromBody] Type type)
         {
-            var function = new TypeData();
-            type.id = id;
-            await function.PutType(type);
-            
+            await _funct.EditType(id, type);
         }
 
+        /// <summary>
+        /// Service to delete Type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            var function = new TypeData();
-            var type = new Type();
-            type.id = id;
-            await function.DeleteType(type);  
+            await _funct.DeleteType(id);  
         }
-
     }
 }

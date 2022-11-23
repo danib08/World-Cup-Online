@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
 
@@ -14,60 +9,72 @@ namespace WorldCupOnline_API.Controllers
     public class PhaseController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly PhaseData _funct; 
 
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establishconfiguration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public PhaseController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _funct = new PhaseData();
         }
 
-    [HttpGet]
+        /// <summary>
+        /// Service to get all Phases
+        /// </summary>
+        /// <returns>List of Phase</returns>
+        [HttpGet]
         public async Task<ActionResult<List<Phase>>> Get()
         {
-            var function = new PhaseData();
-
-            var list = await function.GetPhases();
-            return list;
+            return await _funct.GetPhases(); ;
         }
 
+        /// <summary>
+        /// Service to get one Phase
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Phase</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Phase>>> GetOne(int id)
+        public async Task<ActionResult<Phase>> GetOne(int id)
         {
-            var function = new PhaseData();
-            var phase = new Phase();
-            phase.id = id;
-            var list = await function.GetOnePhase(phase);
-            return list;
+            return await _funct.GetOnePhase(id);
         }
 
+        /// <summary>
+        /// Service to insert Phase
+        /// </summary>
+        /// <param name="phase"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task Post([FromBody] Phase phase)
         {
-            var function = new PhaseData();
-            await function.PostPhase(phase);
+            await _funct.CreatePhase(phase);
         }
 
+        /// <summary>
+        /// Service to edit Phase
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="phase"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task Put(int id, [FromBody] Phase phase)
         {
-            var function = new PhaseData();
-            phase.id = id;
-            await function.PutPhase(phase);
-            
+            await _funct.EditPhase(id, phase);
         }
 
+        /// <summary>
+        /// Service to delete Phase
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            var function = new PhaseData();
-            var phase = new Phase();
-            phase.id = id;
-            await function.DeletePhase(phase);  
+            await _funct.DeletePhase(id);  
         }
-
     }
 }
 

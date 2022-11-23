@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Data.SqlClient;
-using System.Data;
-using System.Globalization;
+﻿using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
 
@@ -14,60 +9,71 @@ namespace WorldCupOnline_API.Controllers
     public class StateController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly StateData _funct;
 
         /// <summary>
-        /// Established configuration for controller to get connection
+        /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
         public StateController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _funct = new StateData();
         }
 
+        /// <summary>
+        /// Service to get State
+        /// </summary>
+        /// <returns>List of State</returns>
         [HttpGet]
         public async Task<ActionResult<List<State>>> Get()
         {
-            var function = new StateData();
-
-            var list = await function.GetStates();
-            return list;
+            return await _funct.GetStates();
         }
 
+        /// <summary>
+        /// Service to get one State
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>State</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<State>>> GetOne(int id)
+        public async Task<ActionResult<State>> GetOne(int id)
         {
-            var function = new StateData();
-            var state = new State();
-            state.id = id;
-            var list = await function.GetOneState(state);
-            return list;
+            return await _funct.GetOneState(id);
         }
 
-
+        /// <summary>
+        /// Service to insert State
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task Post([FromBody] State state)
         {
-            var function = new StateData();
-            await function.PostState(state);
+            await _funct.CreateState(state);
         }
 
+        /// <summary>
+        /// Service to edit State
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task Put(int id, [FromBody] State state)
         {
-            var function = new StateData();
-            state.id = id;
-            await function.PutState(state);
-
+            await _funct.EditState(id, state);
         }
 
+        /// <summary>
+        /// Service to delete State
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            var function = new StateData();
-            var state = new State();
-            state.id = id;
-            await function.DeleteState(state);
+            await _funct.DeleteState(id);
         }
     }
 }
-
