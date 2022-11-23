@@ -32,11 +32,13 @@ namespace WorldCupOnline_API.Data
                         id = (int)reader["id"],
                         startdate = (DateTime)reader["startdate"],
                         starttime = (TimeSpan)reader["starttime"],
-                        score = (string)reader["score"],
+                        goalsteam1 = (int)reader["goalsteam1"],
+                        goalsteam2 = (int)reader["goalsteam2"],
                         location = (string)reader["location"],
                         stateid = (int)reader["stateid"],
                         tournamentid = (int)reader["tournamentid"],
-                        phaseid = (int)reader["phaseid"]
+                        phaseid = (int)reader["phaseid"],
+                        mvp = (string)reader["mvp"]
                     };
                     list.Add(match);
                 }
@@ -68,11 +70,13 @@ namespace WorldCupOnline_API.Data
                         id = (int)reader["id"],
                         startdate = (DateTime)reader["startdate"],
                         starttime = (TimeSpan)reader["starttime"],
-                        score = (string)reader["score"],
+                        goalsteam1 = (int)reader["goalsteam1"],
+                        goalsteam2 = (int)reader["goalsteam2"],
                         location = (string)reader["location"],
                         stateid = (int)reader["stateid"],
                         tournamentid = (int)reader["tournamentid"],
-                        phaseid = (int)reader["phaseid"]
+                        phaseid = (int)reader["phaseid"],
+                        mvp = (string)reader["mvp"]
                     };
                 }
             }
@@ -94,11 +98,13 @@ namespace WorldCupOnline_API.Data
             ///Add parameters with value
             cmd.Parameters.AddWithValue("@startdate", match.startdate);
             cmd.Parameters.AddWithValue("@starttime", match.starttime);
-            cmd.Parameters.AddWithValue("@score", "0-0");
+            cmd.Parameters.AddWithValue("@goalsteam1", 0);
+            cmd.Parameters.AddWithValue("@goalsteam2", 0);
             cmd.Parameters.AddWithValue("@location", match.location);
             cmd.Parameters.AddWithValue("@stateid", 1);
             cmd.Parameters.AddWithValue("@tournamentid", match.tournamentid);
             cmd.Parameters.AddWithValue("@phaseid", match.phaseid);
+            cmd.Parameters.AddWithValue("@mvp", "");
 
             await sql.OpenAsync();
             using var reader = await cmd.ExecuteReaderAsync();
@@ -147,11 +153,13 @@ namespace WorldCupOnline_API.Data
             ///Add parameters with valuecmd.Parameters.AddWithValue("@id", id);
             cmd.Parameters.AddWithValue("@startdate", match.startdate);
             cmd.Parameters.AddWithValue("@starttime", match.starttime);
-            cmd.Parameters.AddWithValue("@score", match.score);
+            cmd.Parameters.AddWithValue("@goalsteam1", match.goalsteam1);
+            cmd.Parameters.AddWithValue("@goalsteam2", match.goalsteam2);
             cmd.Parameters.AddWithValue("@location", match.location);
             cmd.Parameters.AddWithValue("@stateid", match.stateid);
             cmd.Parameters.AddWithValue("@tournamentid", match.tournamentid);
             cmd.Parameters.AddWithValue("@phaseid", match.phaseid);
+            cmd.Parameters.AddWithValue("@mvp", match.mvp);
 
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();
