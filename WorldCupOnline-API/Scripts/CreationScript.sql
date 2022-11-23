@@ -31,11 +31,13 @@ CREATE TABLE dbo.Match(
 ID int IDENTITY(1,1) NOT NULL,
 StartDate datetime NOT NULL,
 StartTime time NOT NULL,
-Score varchar(7) NOT NULL,
+GoalsTeam1 int NOT NULL,
+GoalsTeam2 int NOT NULL,
 Location varchar(50) NOT NULL,
 StateID int NOT NULL,
 TournamentID int NOT NULL,
-PhaseID int NOT NULL
+PhaseID int NOT NULL,
+MVP varchar(15) NOT NULL,
 )
 
 CREATE TABLE dbo.State(
@@ -71,6 +73,7 @@ Lastname varchar(30) NOT NULL,
 Email varchar(45) NOT NULL,
 CountryID varchar(3) NOT NULL,
 Birthdate datetime NOT NULL,
+isAdmin bit NOT NULL,
 Password varchar(MAX) NOT NULL
 )
 
@@ -100,6 +103,35 @@ ID int IDENTITY(1,1) NOT NULL,
 BetID int NOT NULL,
 PlayerID varchar(15) NOT NULL
 )
+
+CREATE TABLE dbo.Scorer_In_Match(
+ID int IDENTITY(1,1) NOT NULL,
+MatchID int NOT NULL,
+PlayerID varchar(15) NOT NULL
+)
+
+CREATE TABLE dbo.Assist_In_Match(
+ID int IDENTITY(1,1) NOT NULL,
+MatchID int NOT NULL,
+PlayerID varchar(15) NOT NULL
+)
+
+CREATE TABLE dbo.User_In_Bet(
+ID int IDENTITY(1,1) NOT NULL,
+BetID int NOT NULL,
+UserID varchar(12) NOT NULL,
+Score int NOT NULL
+)
+
+CREATE TABLE dbo.League(
+ID int IDENTITY(1,1) NOT NULL,
+Name varchar(30) NOT NULL,
+AccessCode int,
+TournamentID int NOT NULL,
+UserID varchar(12) NOT NULL
+)
+
+
 ---------------------------------------------------------------------------------------
 
 ALTER TABLE dbo.Tournament
@@ -132,6 +164,10 @@ ADD PRIMARY KEY (ID)
 ALTER TABLE dbo.Bet
 ADD PRIMARY KEY (ID)
 
+ALTER TABLE dbo.League
+ADD PRIMARY KEY (ID)
+
+
 ALTER TABLE dbo.Team_In_Tournament
 ADD CONSTRAINT PK_TeamTourn PRIMARY KEY(TeamID, TournamentID)
 
@@ -146,6 +182,15 @@ ADD CONSTRAINT PK_ScorerBet PRIMARY KEY(BetID,PlayerID)
 
 ALTER TABLE dbo.Assist_In_Bet
 ADD CONSTRAINT PK_AssistBet PRIMARY KEY(BetID,PlayerID)
+
+ALTER TABLE dbo.Scorer_In_Match
+ADD CONSTRAINT PK_ScorerMatch PRIMARY KEY(MatchID,PlayerID)
+
+ALTER TABLE dbo.Assist_In_Match
+ADD CONSTRAINT PK_AssistMatch PRIMARY KEY(MatchID,PlayerID)
+
+ALTER TABLE dbo.User_In_Bet
+ADD CONSTRAINT PK_UserBet PRIMARY KEY(BetID,UserID)
 
 --------------------------------------------------------------------------------------
 
@@ -172,6 +217,10 @@ REFERENCES dbo.Tournament(ID)
 ALTER TABLE dbo.Match
 ADD CONSTRAINT FK_Match_PhaseID FOREIGN KEY(PhaseID)
 REFERENCES dbo.Phase(ID)
+
+ALTER TABLE dbo.Match
+ADD CONSTRAINT FK_Match_MVP FOREIGN KEY (MVP)
+REFERENCES dbo.Player(ID)
 
 ALTER TABLE dbo.Users
 ADD CONSTRAINT FK_Country_User FOREIGN KEY(CountryID)
@@ -227,4 +276,20 @@ REFERENCES dbo.Bet(ID)
 
 ALTER TABLE dbo.Assist_In_Bet
 ADD CONSTRAINT FK_AIB_Player FOREIGN KEY(PlayerID)
+REFERENCES dbo.Player(ID)
+
+ALTER TABLE dbo.Scorer_In_Match
+ADD CONSTRAINT FK_SIM_Bet FOREIGN KEY(MatchID)
+REFERENCES dbo.Match(ID)
+
+ALTER TABLE dbo.Scorer_In_Match
+ADD CONSTRAINT FK_SIM_Player FOREIGN KEY(PlayerID)
+REFERENCES dbo.Player(ID)
+
+ALTER TABLE dbo.Assist_In_Match
+ADD CONSTRAINT FK_AIM_Match FOREIGN KEY(MatchID)
+REFERENCES dbo.Match(ID)
+
+ALTER TABLE dbo.Assist_In_Match
+ADD CONSTRAINT FK_AIM_Player FOREIGN KEY(PlayerID)
 REFERENCES dbo.Player(ID)

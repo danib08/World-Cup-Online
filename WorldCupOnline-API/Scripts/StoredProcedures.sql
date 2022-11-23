@@ -48,7 +48,7 @@ go
 
 create procedure getMatchesByTournament(@ID int)
 as begin
-		select dbo.Match.ID, dbo.Team.Name, StartDate, StartTime, Location, dbo.State.Name as State, Score
+		select dbo.Match.ID, dbo.Team.Name, StartDate, StartTime, Location, dbo.State.Name as State, GoalsTeam1, GoalsTeam2
 		from ((dbo.Match join dbo.State on StateID = dbo.State.ID) join dbo.Team_In_Match on MatchID = dbo.Match.ID) join dbo.Team on TeamID = dbo.Team.ID
 		where TournamentID = @ID
 		order by dbo.Match.ID  
@@ -301,14 +301,16 @@ go
 
 create procedure insertMatch(@StartDate datetime,
 			    @StartTime time,
-			    @Score varchar(7),
+			    @GoalsTeam1 int,
+				@GoalsTeam2 int,
 			    @Location varchar(50),
 			    @StateID int,
 			    @TournamentID int,
-				@PhaseID int)
+				@PhaseID int,
+				@MVP varchar(15))
 as begin
-		insert into dbo.Match(StartDate,StartTime,Score,Location,StateID,TournamentID,PhaseID)
-		values(@StartDate,@StartTime,@Score,@Location,@StateID,@TournamentID,@PhaseID)
+		insert into dbo.Match(StartDate,StartTime,GoalsTeam1,GoalsTeam2,Location,StateID,TournamentID,PhaseID)
+		values(@StartDate,@StartTime,@GoalsTeam1,@GoalsTeam2,@Location,@StateID,@TournamentID,@PhaseID)
 		select SCOPE_IDENTITY() as ID
 end
 go
@@ -316,13 +318,15 @@ go
 create procedure editMatch(@ID int,
 			    @StartDate datetime,
 			    @StartTime time,
-			    @Score varchar(7),
+			    @GoalsTeam1 int,
+				@GoalsTeam2 int,
 			    @Location varchar(50),
 			    @StateID int,
 			    @TournamentID int,
-				@PhaseID int)
+				@PhaseID int,
+				@MVP varchar(15))
 as begin
-		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,StateID=@StateID,TournamentID=@TournamentID,PhaseID=@PhaseID
+		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,GoalsTeam1=@GoalsTeam1,GoalsTeam2=@GoalsTeam2, Location=@Location,StateID=@StateID,TournamentID=@TournamentID,PhaseID=@PhaseID, MVP=@MVP
 		where ID=@ID	
 end
 go
@@ -506,10 +510,11 @@ create procedure insertUser(@Username varchar(12),
 				@Email varchar(45),
 				@CountryID varchar(3),
 				@Birthdate datetime,
+				@isAdmin bit,
 				@Password varchar(MAX))
 as begin
-		insert into dbo.Users(Username, Name, Lastname, Email, CountryID, Birthdate, Password)
-		values(@Username, @Name, @Lastname, @Email, @CountryID, @Birthdate, @Password)
+		insert into dbo.Users(Username, Name, Lastname, Email, CountryID, Birthdate, isAdmin, Password)
+		values(@Username, @Name, @Lastname, @Email, @CountryID, @Birthdate, @isAdmin, @Password)
 end
 go
 
@@ -519,9 +524,10 @@ create procedure editUser(@Username varchar(12),
 				@Email varchar(45),
 				@CountryID varchar(3),
 				@Birthdate datetime,
+				@isAdmin bit,
 				@Password varchar(MAX))
 as begin
-		update dbo.Users set Name=@Name, Lastname=@Lastname, Email=@Email, CountryID=@CountryID, Birthdate=@Birthdate, Password=@Password
+		update dbo.Users set Name=@Name, Lastname=@Lastname, Email=@Email, CountryID=@CountryID, Birthdate=@Birthdate, isAdmin=@isAdmin ,Password=@Password
 		where Username = @Username 
 end
 go
@@ -662,6 +668,168 @@ go
 create procedure deleteSIB(@ID int)
 as begin
 		delete from dbo.Scorer_In_Bet
+		where ID = @ID
+end
+go
+
+
+--- SCORER_IN_MATCH Procedures ---
+
+create procedure getSIM
+as begin
+		select * from dbo.Scorer_In_Match
+end
+go
+
+create procedure getOneSIM(@ID int)
+as begin
+		select * from dbo.Scorer_In_Match
+		where @ID = @ID
+end
+go
+
+create procedure insertSIM(@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		insert into dbo.Scorer_In_Match(MatchID, PlayerID)
+		values(@MatchID, @PlayerID)
+end
+go
+
+create procedure editSIM(@ID int,
+				@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		update dbo.Scorer_In_Match set MatchID=@MatchID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteSIM(@ID int)
+as begin
+		delete from dbo.Scorer_In_Match
+		where ID = @ID
+end
+go
+
+--- ASSIST_IN_MATCH Procedures ---
+
+create procedure getAIM
+as begin
+		select * from dbo.Assist_In_Match
+end
+go
+
+create procedure getOneAIM(@ID int)
+as begin
+		select * from dbo.Assist_In_Match
+		where @ID = @ID
+end
+go
+
+create procedure insertAIM(@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		insert into dbo.Assist_In_Match(MatchID, PlayerID)
+		values(@MatchID, @PlayerID)
+end
+go
+
+create procedure editAIM(@ID int,
+				@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		update dbo.Assist_In_Match set MatchID=@MatchID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteAIM(@ID int)
+as begin
+		delete from dbo.Assist_In_Match
+		where ID = @ID
+end
+go
+
+--- USER_IN_BET Procedures ---
+
+create procedure getUIB
+as begin
+		select * from dbo.User_In_Bet
+end
+go
+
+create procedure getOneUIB(@ID int)
+as begin
+		select * from dbo.User_In_Bet
+		where @ID = @ID
+end
+go
+
+create procedure insertUIB(@BetID int,
+				@UserID varchar(15))
+as begin
+		insert into dbo.User_In_Bet(BetID, UserID)
+		values(@BetID, @UserID)
+end
+go
+
+create procedure editUIB(@ID int,
+				@BetID int,
+				@UserID varchar(15))
+as begin
+		update dbo.User_In_Bet set BetID=@BetID, UserID=@UserID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteUIB(@ID int)
+as begin
+		delete from dbo.User_In_Bet
+		where ID = @ID
+end
+go
+
+---- LEAGUES PROCEDURES ----
+
+create procedure getLeagues
+as begin
+		select * from dbo.League
+end
+go
+
+create procedure getOneLeague(@ID int)
+as begin
+		select * from dbo.League
+		where ID = @ID
+end
+go
+
+create procedure insertLeague(@Name varchar(30),
+				@AccessCode int,
+				@TournamentID int,
+				@UserID varchar(15))
+as begin
+		insert into dbo.League(Name,AccessCode,TournamentID,UserID)
+		values(@Name,@AccessCode,@TournamentID,@UserID)
+		select SCOPE_IDENTITY() as ID
+end
+go
+
+create procedure editLeague(@ID int,
+				@Name varchar(30),
+				@AccessCode int,
+				@TournamentID int,
+				@UserID varchar(15))
+as begin
+		update dbo.League set Name=@Name,AccessCode=@AccessCode,TournamentID=@TournamentID,UserID=@UserID
+		where ID=@ID 	
+end
+go
+
+create procedure deleteLeague(@ID int)
+as begin
+		delete from dbo.League
 		where ID = @ID
 end
 go
