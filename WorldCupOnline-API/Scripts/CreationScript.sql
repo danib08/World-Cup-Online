@@ -37,7 +37,7 @@ Location varchar(50) NOT NULL,
 StateID int NOT NULL,
 TournamentID int NOT NULL,
 PhaseID int NOT NULL,
-MVP varchar(15) NOT NULL,
+MVP varchar(15),
 )
 
 CREATE TABLE dbo.State(
@@ -126,7 +126,7 @@ Score int NOT NULL
 CREATE TABLE dbo.League(
 ID int IDENTITY(1,1) NOT NULL,
 Name varchar(30) NOT NULL,
-AccessCode int,
+AccessCode varchar(max),
 TournamentID int NOT NULL,
 UserID varchar(12) NOT NULL
 )

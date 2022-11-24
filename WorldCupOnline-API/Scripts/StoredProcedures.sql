@@ -7,6 +7,13 @@ as begin
 end
 go
 
+create procedure getTournLeagues
+as begin
+		select ID as value, Name as label
+		from Tournament
+end
+go
+
 create procedure getOneTournament(@ID int)
 as begin
 		select t.ID, t.name, StartDate, EndDate, Description, Type.Name as Type
@@ -309,8 +316,8 @@ create procedure insertMatch(@StartDate datetime,
 				@PhaseID int,
 				@MVP varchar(15))
 as begin
-		insert into dbo.Match(StartDate,StartTime,GoalsTeam1,GoalsTeam2,Location,StateID,TournamentID,PhaseID)
-		values(@StartDate,@StartTime,@GoalsTeam1,@GoalsTeam2,@Location,@StateID,@TournamentID,@PhaseID)
+		insert into dbo.Match(StartDate,StartTime,GoalsTeam1,GoalsTeam2,Location,StateID,TournamentID,PhaseID,MVP)
+		values(@StartDate,@StartTime,@GoalsTeam1,@GoalsTeam2,@Location,@StateID,@TournamentID,@PhaseID,@MVP)
 		select SCOPE_IDENTITY() as ID
 end
 go
@@ -330,6 +337,17 @@ as begin
 		where ID=@ID	
 end
 go
+
+create procedure updateMatch(@ID int,
+			    @GoalsTeam1 int,
+				@GoalsTeam2 int,
+				@MVP varchar(15))
+as begin
+		update dbo.Match set GoalsTeam1=@GoalsTeam1,GoalsTeam2=@GoalsTeam2,MVP=@MVP
+		where ID=@ID	
+end
+go
+
 
 create procedure deleteMatch(@ID int)
 as begin
@@ -792,7 +810,7 @@ go
 
 ---- LEAGUES PROCEDURES ----
 
-create procedure getLeagues
+create procedure getLeague
 as begin
 		select * from dbo.League
 end
@@ -806,7 +824,7 @@ end
 go
 
 create procedure insertLeague(@Name varchar(30),
-				@AccessCode int,
+				@AccessCode varchar(max),
 				@TournamentID int,
 				@UserID varchar(15))
 as begin
@@ -818,7 +836,7 @@ go
 
 create procedure editLeague(@ID int,
 				@Name varchar(30),
-				@AccessCode int,
+				@AccessCode varchar(max),
 				@TournamentID int,
 				@UserID varchar(15))
 as begin
