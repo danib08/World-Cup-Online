@@ -12,5 +12,6 @@
         public string location { get; set; }
         public int tournamentid { get; set; }
         public int phaseid { get; set; }
+        public string mvpid { get; set; }
     }
 }
