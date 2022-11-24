@@ -110,7 +110,7 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@email", user.email);
             cmd.Parameters.AddWithValue("@countryid", user.countryid);
             cmd.Parameters.AddWithValue("@birthdate", user.birthdate);
-            cmd.Parameters.AddWithValue("@isadmin", user.isAdmin);
+            cmd.Parameters.AddWithValue("@isadmin", user.isadmin);
             cmd.Parameters.AddWithValue("@password", encrypted);
 
             await sql.OpenAsync();
@@ -181,7 +181,7 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@email", user.email);
             cmd.Parameters.AddWithValue("@countryid", user.countryid);
             cmd.Parameters.AddWithValue("@birthdate", user.birthdate);
-            cmd.Parameters.AddWithValue("@isadmin", user.isAdmin);
+            cmd.Parameters.AddWithValue("@isadmin", user.isadmin);
             cmd.Parameters.AddWithValue("@password", user.password);
 
             await sql.OpenAsync();

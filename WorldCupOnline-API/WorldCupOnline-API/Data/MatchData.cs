@@ -104,7 +104,7 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@stateid", 1);
             cmd.Parameters.AddWithValue("@tournamentid", match.tournamentid);
             cmd.Parameters.AddWithValue("@phaseid", match.phaseid);
-            cmd.Parameters.AddWithValue("@mvp", "");
+            cmd.Parameters.AddWithValue("@mvp", match.mvpid);
 
             await sql.OpenAsync();
             using var reader = await cmd.ExecuteReaderAsync();
@@ -143,26 +143,68 @@ namespace WorldCupOnline_API.Data
         /// <param name="id"></param>
         /// <param name="match"></param>
         /// <returns></returns>
-        public async Task EditMatch(int id, Match match)
+        public async Task EditMatch(int id, BetCreator match)
         {
+            
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("editMatch", sql);///Calls stored procedure via sql connection
+            using var cmd = new SqlCommand("updateMatch", sql);///Calls stored procedure via sql connection
 
             cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
 
-            ///Add parameters with valuecmd.Parameters.AddWithValue("@id", id);
-            cmd.Parameters.AddWithValue("@startdate", match.startdate);
-            cmd.Parameters.AddWithValue("@starttime", match.starttime);
-            cmd.Parameters.AddWithValue("@goalsteam1", match.goalsteam1);
-            cmd.Parameters.AddWithValue("@goalsteam2", match.goalsteam2);
-            cmd.Parameters.AddWithValue("@location", match.location);
-            cmd.Parameters.AddWithValue("@stateid", match.stateid);
-            cmd.Parameters.AddWithValue("@tournamentid", match.tournamentid);
-            cmd.Parameters.AddWithValue("@phaseid", match.phaseid);
-            cmd.Parameters.AddWithValue("@mvp", match.mvp);
+            ///Add parameters with value
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@goalsteam1", match.team1goals);
+            cmd.Parameters.AddWithValue("@goalsteam2", match.team2goals);
+            cmd.Parameters.AddWithValue("@mvp", match.mvpid);
 
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();
+
+            var scorers = new Scorer_In_MatchData();
+            var assists = new Assist_In_MatchData();
+
+            foreach(string scorerId in match.team1scorers)
+            {
+                var SIM = new Scorer_In_Match
+                {
+                    matchid = id,
+                    playerid = scorerId
+
+                };
+                await scorers.CreateScorer_In_Match(SIM);
+            }
+
+            foreach (string scorerId in match.team2scorers)
+            {
+                var SIM = new Scorer_In_Match
+                {
+                    matchid = id,
+                    playerid = scorerId
+
+                };
+                await scorers.CreateScorer_In_Match(SIM);
+            }
+
+            foreach(string assistId in match.team1assists)
+            {
+                var AIM = new Assist_In_Match
+                {
+                    matchid = id,
+                    playerid = assistId
+                };
+                await assists.CreateAssist_In_Match(AIM);
+            }
+
+            foreach (string assistId in match.team2assists)
+            {
+                var AIM = new Assist_In_Match
+                {
+                    matchid = id,
+                    playerid = assistId
+                };
+                await assists.CreateAssist_In_Match(AIM);
+            }
+
         }
 
         /// <summary>

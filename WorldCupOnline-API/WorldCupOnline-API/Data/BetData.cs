@@ -174,6 +174,7 @@ namespace WorldCupOnline_API.Data
             using var cmd = new SqlCommand("editBet", sql); ///Calls the stored procedure
 
             cmd.CommandType = CommandType.StoredProcedure; //Indicates that command is a stored procedure
+            
             ///Add parameters with value for bet
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Parameters.AddWithValue("@goalsteam1", bet.goalsteam1);

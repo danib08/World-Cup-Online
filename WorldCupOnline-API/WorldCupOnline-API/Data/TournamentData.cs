@@ -173,6 +173,7 @@ namespace WorldCupOnline_API.Data
             return list; /// Return list
         }
 
+
         /// <summary>
         /// Method to create tournament
         /// </summary>
