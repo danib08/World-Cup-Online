@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
+using WorldCupOnline_API.Bodies;
 
 namespace WorldCupOnline_API.Controllers
 {
@@ -28,7 +29,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<League>>> Get()
         {
-            return await _funct.GetLeagues();
+            return await _funct.GetLeague();
         }
 
         /// <summary>
@@ -43,12 +44,23 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
+        /// Service to get one Tournament 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>GetTournamentBody</returns>
+        [HttpGet("Tournaments")]
+        public async Task<ActionResult<List<ValueIntBody>>> GetLeagues()
+        {
+            return await _funct.GetTournaments();
+        }
+
+        /// <summary>
         /// Service to insert League
         /// </summary>
         /// <param name="league"></param>
         /// <returns>Task action result</returns>
         [HttpPost]
-        public async Task Post([FromBody] League league)
+        public async Task Post([FromBody] LeagueCreator league)
         {
             await _funct.CreateLeague(league);
         }

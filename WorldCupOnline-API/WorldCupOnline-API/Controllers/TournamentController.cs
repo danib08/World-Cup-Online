@@ -32,6 +32,7 @@ namespace WorldCupOnline_API.Controllers
             return await _funct.GetTournament();
         }
 
+
         /// <summary>
         /// Service to get one Tournament 
         /// </summary>
