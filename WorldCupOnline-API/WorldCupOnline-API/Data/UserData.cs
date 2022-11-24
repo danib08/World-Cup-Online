@@ -36,6 +36,7 @@ namespace WorldCupOnline_API.Data
                         email = (string)reader["email"],
                         countryid = (string)reader["countryid"],
                         birthdate = (DateTime)reader["birthdate"],
+                        isadmin = (int)reader["isadmin"],
                         password = (string)reader["password"]
                     };
                     list.Add(user); ///Add to list
@@ -71,6 +72,7 @@ namespace WorldCupOnline_API.Data
                         email = (string)reader["email"],
                         countryid = (string)reader["countryid"],
                         birthdate = (DateTime)reader["birthdate"],
+                        isadmin = (int)reader["isadmin"],
                         password = (string)reader["password"]
                     };
                 }
