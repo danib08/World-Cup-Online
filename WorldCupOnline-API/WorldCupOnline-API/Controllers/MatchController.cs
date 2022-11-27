@@ -60,7 +60,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="match"></param>
         /// <returns>Task action result</returns>
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Match match)
+        public async Task Put(int id, [FromBody] BetCreator match)
         {
             await _funct.EditMatch(id, match);
         }

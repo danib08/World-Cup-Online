@@ -32,13 +32,14 @@ namespace WorldCupOnline_API.Controllers
             return await _funct.GetTournament();
         }
 
+
         /// <summary>
         /// Service to get one Tournament 
         /// </summary>
         /// <param name="id"></param>
         /// <returns>GetTournamentBody</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetTournamentBody>> GetOne(int id)
+        public async Task<ActionResult<GetTournamentBody>> GetOne(string id)
         {
             return await _funct.GetOneTournament(id);
         }
@@ -61,7 +62,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="tournament"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Tournament tournament)
+        public async Task Put(string id, [FromBody] Tournament tournament)
         {
             await _funct.EditTournament(id, tournament);
         }
@@ -72,7 +73,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
             await _funct.DeleteTournament(id);
         }
@@ -83,7 +84,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns>List of MatchTournamentBody</returns>
         [HttpGet("Matches/{id}")]
-        public async Task<ActionResult<List<MatchTournamentBody>>> GetMatchesTournament(int id)
+        public async Task<ActionResult<List<MatchTournamentBody>>> GetMatchesTournament(string id)
         {
             return await _funct.GetMatchesByTournament(id);
         }
@@ -94,7 +95,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns>List of ValueIntBody</returns>
         [HttpGet("Phases/{id}")]
-        public async Task<ActionResult<List<ValueIntBody>>> GetPhasesByTournament(int id)
+        public async Task<ActionResult<List<ValueIntBody>>> GetPhasesByTournament(string id)
         {
             return await _funct.GetPhasesByTournament(id);
         }
@@ -105,7 +106,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns>List of TeamTournamentBody</returns>
         [HttpGet("Teams/{id}")]
-        public async Task<ActionResult<List<TeamTournamentBody>>> GetTeamsByTournament(int id)
+        public async Task<ActionResult<List<TeamTournamentBody>>> GetTeamsByTournament(string id)
         {
             return await _funct.GetTeamsByTournament(id);
         }
