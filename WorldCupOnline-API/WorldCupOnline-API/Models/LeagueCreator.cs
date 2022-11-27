@@ -3,7 +3,7 @@
     public class LeagueCreator
     {
         public string userid { get; set; }
-        public int tournamentid { get; set; }
+        public string tournamentid { get; set; }
         public string name { get; set; }
     }
 }

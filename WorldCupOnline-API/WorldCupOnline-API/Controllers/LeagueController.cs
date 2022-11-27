@@ -38,7 +38,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns>League</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<League>> GetOne(int id)
+        public async Task<ActionResult<League>> GetOne(string id)
         {
             return await _funct.GetOneLeague(id);
         }
@@ -72,7 +72,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="league"></param>
         /// <returns>Task action result</returns>
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] League league)
+        public async Task Put(string id, [FromBody] League league)
         {
             await _funct.EditLeague(id, league);
         }
@@ -83,7 +83,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="id"></param>
         /// <returns>Task action result</returns>
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
             await _funct.DeleteLeague(id);
         }

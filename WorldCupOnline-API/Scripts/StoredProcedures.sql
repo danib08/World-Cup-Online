@@ -14,7 +14,7 @@ as begin
 end
 go
 
-create procedure getOneTournament(@ID int)
+create procedure getOneTournament(@ID varchar(6))
 as begin
 		select t.ID, t.name, StartDate, EndDate, Description, Type.Name as Type
 		from Tournament as t join Type on TypeID = Type.ID
@@ -22,19 +22,19 @@ as begin
 end
 go
 
-create procedure insertTournament(@Name varchar(30),
+create procedure insertTournament(@ID varchar(6),
+				@Name varchar(30),
 				@StartDate datetime,
 				@EndDate datetime,
 				@Description varchar(1000),
 				@TypeID int)
 as begin
-		insert into dbo.Tournament(Name,StartDate,EndDate,Description,TypeID)
-		values(@Name,@StartDate,@EndDate,@Description,@TypeID)
-		select SCOPE_IDENTITY() as ID
+		insert into dbo.Tournament(ID,Name,StartDate,EndDate,Description,TypeID)
+		values(@ID,@Name,@StartDate,@EndDate,@Description,@TypeID)
 end
 go
 
-create procedure editTournament(@ID int,
+create procedure editTournament(@ID varchar(6),
 				@Name varchar(30),
 				@StartDate datetime,
 				@EndDate datetime,
@@ -46,14 +46,14 @@ as begin
 end
 go
 
-create procedure deleteTournament(@ID int)
+create procedure deleteTournament(@ID varchar(6))
 as begin
 		delete from dbo.Tournament
 		where ID = @ID
 end
 go
 
-create procedure getMatchesByTournament(@ID int)
+create procedure getMatchesByTournament(@ID varchar(6))
 as begin
 		select dbo.Match.ID, dbo.Team.Name, StartDate, StartTime, Location, dbo.State.Name as State, GoalsTeam1, GoalsTeam2
 		from ((dbo.Match join dbo.State on StateID = dbo.State.ID) join dbo.Team_In_Match on MatchID = dbo.Match.ID) join dbo.Team on TeamID = dbo.Team.ID
@@ -62,7 +62,7 @@ as begin
 end
 go
 
-create procedure getPhasesByTournament(@ID int)
+create procedure getPhasesByTournament(@ID varchar(6))
 as begin
 		select ID as value, Name as label
 		from Phase
@@ -70,7 +70,7 @@ as begin
 end
 go
 
-create procedure getTeamsByTournament(@ID int)
+create procedure getTeamsByTournament(@ID varchar(6))
 as begin
 		select ID, Name, Confederation
 		from (Team_In_Tournament join Team on TeamID = ID)
@@ -145,7 +145,7 @@ end
 go
 
 create procedure getOneTIT(@TeamID varchar(8),
-				@TournamentID int)
+				@TournamentID varchar(6))
 as begin
 		select * from dbo.Team_In_Tournament
 		where TeamID = @TeamID and TournamentID = @TournamentID
@@ -153,7 +153,7 @@ end
 go
 
 create procedure insertTIT(@TeamID varchar(8),
-				@TournamentID int)
+				@TournamentID varchar(6))
 as begin
 		insert into dbo.Team_In_Tournament(TeamID,TournamentID)
 		values(@TeamID,@TournamentID)
@@ -161,7 +161,7 @@ end
 go
 
 create procedure deleteTIT(@TeamID varchar(8),
-				@TournamentID int)
+				@TournamentID varchar(6))
 as begin
 		delete from dbo.Team_In_Tournament
 		where TeamID = @TeamID and TournamentID = @TournamentID
@@ -268,7 +268,7 @@ end
 go
 
 create procedure insertPhase(@Name varchar(50),
-				@TournamentID int)
+				@TournamentID varchar(6))
 as begin
 		insert into dbo.Phase(Name,TournamentID)
 		values(@Name,@TournamentID)
@@ -277,7 +277,7 @@ go
 
 create procedure editPhase(@ID int,
 				@Name varchar(50),
-				@TournamentID int)
+				@TournamentID varchar(6))
 as begin
 		update dbo.Phase set Name=@Name, TournamentID=@TournamentID
 		where ID = @ID	
@@ -312,7 +312,7 @@ create procedure insertMatch(@StartDate datetime,
 				@GoalsTeam2 int,
 			    @Location varchar(50),
 			    @StateID int,
-			    @TournamentID int,
+			    @TournamentID varchar(6),
 				@PhaseID int,
 				@MVP varchar(15))
 as begin
@@ -329,7 +329,7 @@ create procedure editMatch(@ID int,
 				@GoalsTeam2 int,
 			    @Location varchar(50),
 			    @StateID int,
-			    @TournamentID int,
+			    @TournamentID varchar(6),
 				@PhaseID int,
 				@MVP varchar(15))
 as begin
@@ -825,7 +825,7 @@ go
 
 create procedure insertLeague(@Name varchar(30),
 				@AccessCode varchar(max),
-				@TournamentID int,
+				@TournamentID varchar(6),
 				@UserID varchar(15))
 as begin
 		insert into dbo.League(Name,AccessCode,TournamentID,UserID)
@@ -837,7 +837,7 @@ go
 create procedure editLeague(@ID int,
 				@Name varchar(30),
 				@AccessCode varchar(max),
-				@TournamentID int,
+				@TournamentID varchar(6),
 				@UserID varchar(15))
 as begin
 		update dbo.League set Name=@Name,AccessCode=@AccessCode,TournamentID=@TournamentID,UserID=@UserID

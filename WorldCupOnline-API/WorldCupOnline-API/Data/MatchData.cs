@@ -36,7 +36,7 @@ namespace WorldCupOnline_API.Data
                         goalsteam2 = (int)reader["goalsteam2"],
                         location = (string)reader["location"],
                         stateid = (int)reader["stateid"],
-                        tournamentid = (int)reader["tournamentid"],
+                        tournamentid = (string)reader["tournamentid"],
                         phaseid = (int)reader["phaseid"],
                         mvp = (string)reader["mvp"]
                     };
@@ -74,7 +74,7 @@ namespace WorldCupOnline_API.Data
                         goalsteam2 = (int)reader["goalsteam2"],
                         location = (string)reader["location"],
                         stateid = (int)reader["stateid"],
-                        tournamentid = (int)reader["tournamentid"],
+                        tournamentid = (string)reader["tournamentid"],
                         phaseid = (int)reader["phaseid"],
                         mvp = (string)reader["mvp"]
                     };

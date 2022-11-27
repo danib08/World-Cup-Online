@@ -38,7 +38,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="tournamentid"></param>
         /// <returns>Team_In_Tournament</returns>
         [HttpGet("{teamid}/{tournamentid}")]
-        public async Task<ActionResult<Team_In_Tournament>> GetOne(string teamid, int tournamentid)
+        public async Task<ActionResult<Team_In_Tournament>> GetOne(string teamid, string tournamentid)
         {
             return await _funct.GetOneTeam_In_Tournament(teamid, tournamentid);
         }
@@ -61,7 +61,7 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="tournamentid"></param>
         /// <returns></returns>
         [HttpDelete("{teamid}/{tournamentid}")]
-        public async Task Delete(string teamid, int tournamentid)
+        public async Task Delete(string teamid, string tournamentid)
         {
  
             await _funct.DeleteTeam_In_Tournament(teamid, tournamentid);

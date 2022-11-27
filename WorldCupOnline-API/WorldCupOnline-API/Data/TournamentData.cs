@@ -30,7 +30,7 @@ namespace WorldCupOnline_API.Data
                     ///Read from database
                     var tournament = new GetTournamentBody
                     {
-                        id = (int)item["id"],
+                        id = (string)item["id"],
                         name = (string)item["name"],
                         startdate = (DateTime)item["startdate"],
                         enddate = (DateTime)item["enddate"],
@@ -48,7 +48,7 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns>GetTournamentBody object</returns>
-        public async Task<GetTournamentBody> GetOneTournament(int id)
+        public async Task<GetTournamentBody> GetOneTournament(string id)
         {
             var tournament = new GetTournamentBody(); ///Creation of GetTournamentBody object
             using var sql = new SqlConnection(_con.SQLCon());
@@ -64,7 +64,7 @@ namespace WorldCupOnline_API.Data
                     ///Read from database
                     tournament = new GetTournamentBody
                     {
-                        id = (int)item["id"],
+                        id = (string)item["id"],
                         name = (string)item["name"],
                         startdate = (DateTime)item["startdate"],
                         enddate = (DateTime)item["enddate"],
@@ -81,7 +81,7 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns>List of MatchTournamentBody objects</returns>
-        public async Task<List<MatchTournamentBody>> GetMatchesByTournament(int id)
+        public async Task<List<MatchTournamentBody>> GetMatchesByTournament(string id)
         {
             var list = new List<MatchTournamentBody>(); ///MatchTournamentBody object creation
             using var sql = new SqlConnection(_con.SQLCon());
@@ -116,7 +116,7 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns>List of ValueIntBody</returns>
-        public async Task<List<ValueIntBody>> GetPhasesByTournament(int id)
+        public async Task<List<ValueIntBody>> GetPhasesByTournament(string id)
         {
             var list = new List<ValueIntBody>(); ///ValueIntBody list creation
             using var sql = new SqlConnection(_con.SQLCon());
@@ -124,7 +124,7 @@ namespace WorldCupOnline_API.Data
             using (var cmd = new SqlCommand("getPhasesByTournament", sql))///Calls stored procedure via sql connection
             {
                 await sql.OpenAsync();
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;///Indicates that command is a stored procedure
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
                 cmd.Parameters.AddWithValue("@id", id); ///Add parameters with value
 
                 using var reader = await cmd.ExecuteReaderAsync();
@@ -147,7 +147,7 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns>List of TeamTournamentBody object</returns>
-        public async Task<List<TeamTournamentBody>> GetTeamsByTournament(int id)
+        public async Task<List<TeamTournamentBody>> GetTeamsByTournament(string id)
         {
             var list = new List<TeamTournamentBody>(); ///TeamTournamentBody list creation
             using var sql = new SqlConnection(_con.SQLCon());
@@ -181,12 +181,17 @@ namespace WorldCupOnline_API.Data
         /// <returns></returns>
         public async Task CreateTournament(TournamentCreator tournament)
         {
-            int newTournamentId = 0;
+            Random random = new();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string newTournamentId = new(Enumerable.Repeat(chars, 6)
+                                    .Select(s => s[random.Next(s.Length)]).ToArray());
+
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("insertTournament", sql);///Calls stored procedure via sql connection
 
             cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
             ///Add parameters with value
+            cmd.Parameters.AddWithValue("@id", newTournamentId);
             cmd.Parameters.AddWithValue("@name", tournament.name);
             cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
             cmd.Parameters.AddWithValue("@enddate", tournament.enddate);
@@ -195,11 +200,6 @@ namespace WorldCupOnline_API.Data
 
             await sql.OpenAsync();
             using var reader = await cmd.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-            {
-                var id = reader["id"];
-                newTournamentId = Convert.ToInt32(id);
-            }
 
             await reader.CloseAsync();
             await sql.CloseAsync();
@@ -236,7 +236,7 @@ namespace WorldCupOnline_API.Data
         /// <param name="id"></param>
         /// <param name="tournament"></param>
         /// <returns></returns>
-        public async Task EditTournament(int id, Tournament tournament)
+        public async Task EditTournament(string id, Tournament tournament)
         {
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("editTournament", sql);///Calls stored procedure via sql connection
@@ -259,7 +259,7 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task DeleteTournament(int id)
+        public async Task DeleteTournament(string id)
         {
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("deleteTournament", sql);///Calls stored procedure via sql connection

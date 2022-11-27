@@ -1,5 +1,5 @@
 CREATE TABLE dbo.Tournament(
-ID int IDENTITY(1,1) NOT NULL,
+ID varchar(6) NOT NULL,
 Name varchar(30) NOT NULL,
 StartDate datetime NOT NULL,
 EndDate datetime NOT NULL,
@@ -10,7 +10,7 @@ TypeID int NOT NULL
 CREATE TABLE dbo.Phase(
 ID int IDENTITY(1,1) NOT NULL,
 Name varchar(50) NOT NULL,
-TournamentID int NOT NULL,
+TournamentID varchar(6) NOT NULL,
 )
 
 CREATE TABLE dbo.Team(
@@ -35,7 +35,7 @@ GoalsTeam1 int NOT NULL,
 GoalsTeam2 int NOT NULL,
 Location varchar(50) NOT NULL,
 StateID int NOT NULL,
-TournamentID int NOT NULL,
+TournamentID varchar(6) NOT NULL,
 PhaseID int NOT NULL,
 MVP varchar(15),
 )
@@ -52,7 +52,7 @@ Name varchar(30) NOT NULL
 
 CREATE TABLE dbo.Team_In_Tournament(
 TeamID varchar(8) NOT NULL,
-TournamentID int NOT NULL
+TournamentID varchar(6) NOT NULL
 )
 
 CREATE TABLE dbo.Player_In_Team(
@@ -127,7 +127,7 @@ CREATE TABLE dbo.League(
 ID int IDENTITY(1,1) NOT NULL,
 Name varchar(30) NOT NULL,
 AccessCode varchar(max),
-TournamentID int NOT NULL,
+TournamentID varchar(6) NOT NULL,
 UserID varchar(12) NOT NULL
 )
 

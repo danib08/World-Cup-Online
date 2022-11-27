@@ -32,7 +32,7 @@ namespace WorldCupOnline_API.Data
                     {
                         id = (int)reader["id"],
                         name = (string)reader["name"],
-                        tournamentID = (int)reader["tournamentid"]
+                        tournamentID = (string)reader["tournamentid"]
                     };
                     list.Add(phase);/// Add object to list
                 }
@@ -63,7 +63,7 @@ namespace WorldCupOnline_API.Data
                     phase = new Phase();
                     phase.id = (int)reader["id"];
                     phase.name = (string)reader["name"];
-                    phase.tournamentID = (int)reader["tournamentid"];
+                    phase.tournamentID = (string)reader["tournamentid"];
                 }
             }
             return phase;

@@ -30,10 +30,10 @@ namespace WorldCupOnline_API.Data
                     ///Read from Database
                     var league = new League
                     {
-                        id = (int)reader["id"],
+                        id = (string)reader["id"],
                         name = (string)reader["name"],
                         accesscode = (int)reader["accesscode"],
-                        tournamentid = (int)reader["tournamentid"],
+                        tournamentid = (string)reader["tournamentid"],
                         userid = (string)reader["userid"]
                     };
                     list.Add(league);
@@ -47,14 +47,14 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns>League object</returns>
-        public async Task<League> GetOneLeague(int id)
+        public async Task<League> GetOneLeague(string id)
         {
             var league = new League();///Creates object League
             using var sql = new SqlConnection(_con.SQLCon());
             using (var cmd = new SqlCommand("getOneLeague", sql))///Calls stored procedure via sql connection
             {
                 await sql.OpenAsync();
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;///Indicates that command is a stored procedure
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
                 cmd.Parameters.AddWithValue("@id", id); ///Add parameters with value
 
                 using var reader = await cmd.ExecuteReaderAsync();
@@ -63,10 +63,10 @@ namespace WorldCupOnline_API.Data
                     ///Read from Database
                     league = new League
                     {
-                        id = (int)reader["id"],
+                        id = (string)reader["id"],
                         name = (string)reader["name"],
                         accesscode = (int)reader["accesscode"],
-                        tournamentid = (int)reader["tournamentid"],
+                        tournamentid = (string)reader["tournamentid"],
                         userid = (string)reader["userid"]
                     };
                 }
@@ -75,7 +75,7 @@ namespace WorldCupOnline_API.Data
         }
 
         /// <summary>
-        /// Method to obtain all Types
+        /// Method to obtain all Tournaments
         /// </summary>
         /// <returns>List of ValueIntBody object</returns>
         public async Task<List<ValueIntBody>> GetTournaments()
@@ -111,11 +111,10 @@ namespace WorldCupOnline_API.Data
         public async Task CreateLeague(LeagueCreator league)
         {
             Random random = new Random();
-            int randomNumber = random.Next();
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("insertLeague", sql);///Calls stored procedure via sql connection
 
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;///Indicates that command is a stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
             ///Add parameters with value
             cmd.Parameters.AddWithValue("@name", league.name);
             cmd.Parameters.AddWithValue("@accesscode", Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
@@ -132,7 +131,7 @@ namespace WorldCupOnline_API.Data
         /// <param name="id"></param>
         /// <param name="league"></param>
         /// <returns></returns>
-        public async Task EditLeague(int id, League league)
+        public async Task EditLeague(string id, League league)
         {
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("editLeague", sql);///Calls stored procedure via sql connection
@@ -140,7 +139,7 @@ namespace WorldCupOnline_API.Data
             cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
 
             ///Add parameters with value
-            cmd.Parameters.AddWithValue("@id", league.id);
+            cmd.Parameters.AddWithValue("@id", id);
             cmd.Parameters.AddWithValue("@name", league.name);
             cmd.Parameters.AddWithValue("@accesscode", league.accesscode);
             cmd.Parameters.AddWithValue("@tournamentid", league.tournamentid);
@@ -155,7 +154,7 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task DeleteLeague(int id)
+        public async Task DeleteLeague(string id)
         {
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("deleteLeague", sql);///Calls stored procedure via sql connection
