@@ -664,4 +664,201 @@ as begin
 		delete from dbo.Scorer_In_Bet
 		where ID = @ID
 end
+<<<<<<< Updated upstream
 go
+=======
+go
+
+
+--- SCORER_IN_MATCH Procedures ---
+
+create procedure getSIM
+as begin
+		select * from dbo.Scorer_In_Match
+end
+go
+
+create procedure getOneSIM(@ID int)
+as begin
+		select * from dbo.Scorer_In_Match
+		where @ID = @ID
+end
+go
+
+create procedure insertSIM(@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		insert into dbo.Scorer_In_Match(MatchID, PlayerID)
+		values(@MatchID, @PlayerID)
+end
+go
+
+create procedure editSIM(@ID int,
+				@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		update dbo.Scorer_In_Match set MatchID=@MatchID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteSIM(@ID int)
+as begin
+		delete from dbo.Scorer_In_Match
+		where ID = @ID
+end
+go
+
+--- ASSIST_IN_MATCH Procedures ---
+
+create procedure getAIM
+as begin
+		select * from dbo.Assist_In_Match
+end
+go
+
+create procedure getOneAIM(@ID int)
+as begin
+		select * from dbo.Assist_In_Match
+		where @ID = @ID
+end
+go
+
+create procedure insertAIM(@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		insert into dbo.Assist_In_Match(MatchID, PlayerID)
+		values(@MatchID, @PlayerID)
+end
+go
+
+create procedure editAIM(@ID int,
+				@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		update dbo.Assist_In_Match set MatchID=@MatchID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteAIM(@ID int)
+as begin
+		delete from dbo.Assist_In_Match
+		where ID = @ID
+end
+go
+
+--- USER_IN_BET Procedures ---
+
+create procedure getUIB
+as begin
+		select * from dbo.User_In_Bet
+end
+go
+
+create procedure getOneUIB(@ID int)
+as begin
+		select * from dbo.User_In_Bet
+		where @ID = @ID
+end
+go
+
+create procedure insertUIB(@BetID int,
+				@UserID varchar(15))
+as begin
+		insert into dbo.User_In_Bet(BetID, UserID)
+		values(@BetID, @UserID)
+end
+go
+
+create procedure editUIB(@ID int,
+				@BetID int,
+				@UserID varchar(15))
+as begin
+		update dbo.User_In_Bet set BetID=@BetID, UserID=@UserID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteUIB(@ID int)
+as begin
+		delete from dbo.User_In_Bet
+		where ID = @ID
+end
+go
+
+---- LEAGUES PROCEDURES ----
+
+create procedure getLeague
+as begin
+		select * from dbo.League
+end
+go
+
+create procedure getOneLeague(@ID varchar(6))
+as begin
+		select * from dbo.League
+		where ID = @ID
+end
+go
+
+create procedure insertLeague(@ID varchar(6),
+				@Name varchar(30),
+				@AccessCode varchar(max),
+				@TournamentID varchar(6),
+				@UserID varchar(15))
+as begin
+		insert into dbo.League(Name,AccessCode,TournamentID,UserID)
+		values(@ID,@Name,@AccessCode,@TournamentID,@UserID)
+end
+go
+
+create procedure editLeague(@ID varchar(6),
+				@Name varchar(30),
+				@AccessCode varchar(max),
+				@TournamentID varchar(6),
+				@UserID varchar(15))
+as begin
+		update dbo.League set Name=@Name,AccessCode=@AccessCode,TournamentID=@TournamentID,UserID=@UserID
+		where ID=@ID 	
+end
+go
+
+create procedure deleteLeague(@ID varchar(6))
+as begin
+		delete from dbo.League
+		where ID = @ID
+end
+go
+
+---- LEAGUES PROCEDURES ----
+
+create procedure getUIL
+as begin
+		select * from dbo.User_In_League
+end
+go
+
+create procedure getOneUIL(@ID int)
+as begin
+		select * from dbo.User_In_League
+		where ID = @ID
+end
+go
+
+create procedure insertUIL(LeagueID int,
+				@UserID varchar(15))
+as begin
+		insert into dbo.User_In_League(LeagueID,UserID)
+		values(@LeagueID,@UserID)
+		select SCOPE_IDENTITY() as ID
+end
+go
+
+create procedure deleteUIL(@ID int)
+as begin
+		delete from dbo.User_In_League
+		where ID = @ID
+end
+go
+>>>>>>> Stashed changes

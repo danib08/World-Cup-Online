@@ -100,6 +100,43 @@ ID int IDENTITY(1,1) NOT NULL,
 BetID int NOT NULL,
 PlayerID varchar(15) NOT NULL
 )
+<<<<<<< Updated upstream
+=======
+
+CREATE TABLE dbo.Scorer_In_Match(
+ID int IDENTITY(1,1) NOT NULL,
+MatchID int NOT NULL,
+PlayerID varchar(15) NOT NULL
+)
+
+CREATE TABLE dbo.Assist_In_Match(
+ID int IDENTITY(1,1) NOT NULL,
+MatchID int NOT NULL,
+PlayerID varchar(15) NOT NULL
+)
+
+CREATE TABLE dbo.User_In_Bet(
+ID int IDENTITY(1,1) NOT NULL,
+BetID int NOT NULL,
+UserID varchar(12) NOT NULL,
+Score int NOT NULL
+)
+
+CREATE TABLE dbo.League(
+ID varchar(6) NOT NULL,
+Name varchar(30) NOT NULL,
+AccessCode varchar(max),
+TournamentID varchar(6) NOT NULL,
+UserID varchar(12) NOT NULL
+)
+
+CREATE TABLE dbo.User_In_League(
+ID int IDENTITY(1,1) NOT NULL,
+LeagueID int NOT NULL,
+UserID varchar(12) NOT NULL,
+)
+
+>>>>>>> Stashed changes
 ---------------------------------------------------------------------------------------
 
 ALTER TABLE dbo.Tournament
@@ -147,6 +184,21 @@ ADD CONSTRAINT PK_ScorerBet PRIMARY KEY(BetID,PlayerID)
 ALTER TABLE dbo.Assist_In_Bet
 ADD CONSTRAINT PK_AssistBet PRIMARY KEY(BetID,PlayerID)
 
+<<<<<<< Updated upstream
+=======
+ALTER TABLE dbo.Scorer_In_Match
+ADD CONSTRAINT PK_ScorerMatch PRIMARY KEY(MatchID,PlayerID)
+
+ALTER TABLE dbo.Assist_In_Match
+ADD CONSTRAINT PK_AssistMatch PRIMARY KEY(MatchID,PlayerID)
+
+ALTER TABLE dbo.User_In_Bet
+ADD CONSTRAINT PK_UserBet PRIMARY KEY(BetID,UserID)
+
+ALTER TABLE dbo.User_In_League
+ADD CONSTRAINT PK_UserLeague PRIMARY KEY(LeagueID,UserID)
+
+>>>>>>> Stashed changes
 --------------------------------------------------------------------------------------
 
 ALTER TABLE dbo.Tournament
@@ -228,3 +280,56 @@ REFERENCES dbo.Bet(ID)
 ALTER TABLE dbo.Assist_In_Bet
 ADD CONSTRAINT FK_AIB_Player FOREIGN KEY(PlayerID)
 REFERENCES dbo.Player(ID)
+
+ALTER TABLE dbo.Scorer_In_Match
+ADD CONSTRAINT FK_SIM_Bet FOREIGN KEY(MatchID)
+REFERENCES dbo.Match(ID)
+
+ALTER TABLE dbo.Scorer_In_Match
+ADD CONSTRAINT FK_SIM_Player FOREIGN KEY(PlayerID)
+REFERENCES dbo.Player(ID)
+
+ALTER TABLE dbo.Assist_In_Match
+ADD CONSTRAINT FK_AIM_Match FOREIGN KEY(MatchID)
+REFERENCES dbo.Match(ID)
+
+ALTER TABLE dbo.Assist_In_Match
+ADD CONSTRAINT FK_AIM_Player FOREIGN KEY(PlayerID)
+REFERENCES dbo.Player(ID)
+
+ALTER TABLE dbo.User_In_League
+ADD CONSTRAINT FK_UIL_League FOREIGN KEY(LeagueID)
+REFERENCES dbo.League(ID)
+
+ALTER TABLE dbo.User_In_League
+ADD CONSTRAINT FK_UIL_User FOREIGN KEY(UserID)
+REFERENCES dbo.Users(Username)
+
++create procedure getUIL
+as begin
+		select * from dbo.User_In_League
+end
+go
+
+create procedure getOneUIL(@ID int)
+as begin
+		select * from dbo.User_In_League
+		where ID = @ID
+end
+go
+
+create procedure insertUIL(LeagueID int,
+				@UserID varchar(15))
+as begin
+		insert into dbo.User_In_League(LeagueID,UserID)
+		values(@LeagueID,@UserID)
+		select SCOPE_IDENTITY() as ID
+end
+go
+
+create procedure deleteUIL(@ID int)
+as begin
+		delete from dbo.User_In_League
+		where ID = @ID
+end
+go
