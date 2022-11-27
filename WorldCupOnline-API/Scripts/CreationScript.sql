@@ -100,8 +100,6 @@ ID int IDENTITY(1,1) NOT NULL,
 BetID int NOT NULL,
 PlayerID varchar(15) NOT NULL
 )
-<<<<<<< Updated upstream
-=======
 
 CREATE TABLE dbo.Scorer_In_Match(
 ID int IDENTITY(1,1) NOT NULL,
@@ -136,7 +134,7 @@ LeagueID int NOT NULL,
 UserID varchar(12) NOT NULL,
 )
 
->>>>>>> Stashed changes
+
 ---------------------------------------------------------------------------------------
 
 ALTER TABLE dbo.Tournament
@@ -184,8 +182,7 @@ ADD CONSTRAINT PK_ScorerBet PRIMARY KEY(BetID,PlayerID)
 ALTER TABLE dbo.Assist_In_Bet
 ADD CONSTRAINT PK_AssistBet PRIMARY KEY(BetID,PlayerID)
 
-<<<<<<< Updated upstream
-=======
+
 ALTER TABLE dbo.Scorer_In_Match
 ADD CONSTRAINT PK_ScorerMatch PRIMARY KEY(MatchID,PlayerID)
 
@@ -198,7 +195,7 @@ ADD CONSTRAINT PK_UserBet PRIMARY KEY(BetID,UserID)
 ALTER TABLE dbo.User_In_League
 ADD CONSTRAINT PK_UserLeague PRIMARY KEY(LeagueID,UserID)
 
->>>>>>> Stashed changes
+
 --------------------------------------------------------------------------------------
 
 ALTER TABLE dbo.Tournament
@@ -305,31 +302,3 @@ ALTER TABLE dbo.User_In_League
 ADD CONSTRAINT FK_UIL_User FOREIGN KEY(UserID)
 REFERENCES dbo.Users(Username)
 
-+create procedure getUIL
-as begin
-		select * from dbo.User_In_League
-end
-go
-
-create procedure getOneUIL(@ID int)
-as begin
-		select * from dbo.User_In_League
-		where ID = @ID
-end
-go
-
-create procedure insertUIL(LeagueID int,
-				@UserID varchar(15))
-as begin
-		insert into dbo.User_In_League(LeagueID,UserID)
-		values(@LeagueID,@UserID)
-		select SCOPE_IDENTITY() as ID
-end
-go
-
-create procedure deleteUIL(@ID int)
-as begin
-		delete from dbo.User_In_League
-		where ID = @ID
-end
-go

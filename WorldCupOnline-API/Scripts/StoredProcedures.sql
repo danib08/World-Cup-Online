@@ -664,10 +664,8 @@ as begin
 		delete from dbo.Scorer_In_Bet
 		where ID = @ID
 end
-<<<<<<< Updated upstream
 go
-=======
-go
+
 
 
 --- SCORER_IN_MATCH Procedures ---
@@ -831,7 +829,7 @@ as begin
 end
 go
 
----- LEAGUES PROCEDURES ----
+---- User_In_League PROCEDURES ----
 
 create procedure getUIL
 as begin
@@ -861,4 +859,4 @@ as begin
 		where ID = @ID
 end
 go
->>>>>>> Stashed changes
+
