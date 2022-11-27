@@ -10,7 +10,8 @@
         public DateTime startdate { get; set; }
         public DateTime starttime { get; set; }
         public string location { get; set; }
-        public int tournamentid { get; set; }
+        public string tournamentid { get; set; }
         public int phaseid { get; set; }
+        public string mvpid { get; set; }
     }
 }

@@ -36,6 +36,7 @@ namespace WorldCupOnline_API.Data
                         email = (string)reader["email"],
                         countryid = (string)reader["countryid"],
                         birthdate = (DateTime)reader["birthdate"],
+                        isadmin = (int)reader["isadmin"],
                         password = (string)reader["password"]
                     };
                     list.Add(user); ///Add to list
@@ -71,6 +72,7 @@ namespace WorldCupOnline_API.Data
                         email = (string)reader["email"],
                         countryid = (string)reader["countryid"],
                         birthdate = (DateTime)reader["birthdate"],
+                        isadmin = (int)reader["isadmin"],
                         password = (string)reader["password"]
                     };
                 }
@@ -108,6 +110,7 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@email", user.email);
             cmd.Parameters.AddWithValue("@countryid", user.countryid);
             cmd.Parameters.AddWithValue("@birthdate", user.birthdate);
+            cmd.Parameters.AddWithValue("@isadmin", user.isadmin);
             cmd.Parameters.AddWithValue("@password", encrypted);
 
             await sql.OpenAsync();
@@ -178,6 +181,7 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@email", user.email);
             cmd.Parameters.AddWithValue("@countryid", user.countryid);
             cmd.Parameters.AddWithValue("@birthdate", user.birthdate);
+            cmd.Parameters.AddWithValue("@isadmin", user.isadmin);
             cmd.Parameters.AddWithValue("@password", user.password);
 
             await sql.OpenAsync();
