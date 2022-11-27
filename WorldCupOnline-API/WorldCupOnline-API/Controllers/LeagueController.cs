@@ -60,9 +60,10 @@ namespace WorldCupOnline_API.Controllers
         /// <param name="league"></param>
         /// <returns>Task action result</returns>
         [HttpPost]
-        public async Task Post([FromBody] LeagueCreator league)
+        public IActionResult Post([FromBody] LeagueCreator league)
         {
-            await _funct.CreateLeague(league);
+            string accessCode = _funct.CreateLeague(league).Result;
+            return Ok(accessCode);
         }
 
         /// <summary>

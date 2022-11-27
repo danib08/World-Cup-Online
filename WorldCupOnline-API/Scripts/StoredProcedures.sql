@@ -816,25 +816,25 @@ as begin
 end
 go
 
-create procedure getOneLeague(@ID int)
+create procedure getOneLeague(@ID varchar(6))
 as begin
 		select * from dbo.League
 		where ID = @ID
 end
 go
 
-create procedure insertLeague(@Name varchar(30),
+create procedure insertLeague(@ID varchar(6),
+				@Name varchar(30),
 				@AccessCode varchar(max),
 				@TournamentID varchar(6),
 				@UserID varchar(15))
 as begin
 		insert into dbo.League(Name,AccessCode,TournamentID,UserID)
-		values(@Name,@AccessCode,@TournamentID,@UserID)
-		select SCOPE_IDENTITY() as ID
+		values(@ID,@Name,@AccessCode,@TournamentID,@UserID)
 end
 go
 
-create procedure editLeague(@ID int,
+create procedure editLeague(@ID varchar(6),
 				@Name varchar(30),
 				@AccessCode varchar(max),
 				@TournamentID varchar(6),
@@ -845,7 +845,7 @@ as begin
 end
 go
 
-create procedure deleteLeague(@ID int)
+create procedure deleteLeague(@ID varchar(6))
 as begin
 		delete from dbo.League
 		where ID = @ID

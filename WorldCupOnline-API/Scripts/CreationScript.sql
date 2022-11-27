@@ -124,7 +124,7 @@ Score int NOT NULL
 )
 
 CREATE TABLE dbo.League(
-ID int IDENTITY(1,1) NOT NULL,
+ID varchar(6) NOT NULL,
 Name varchar(30) NOT NULL,
 AccessCode varchar(max),
 TournamentID varchar(6) NOT NULL,

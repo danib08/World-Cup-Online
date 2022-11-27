@@ -32,7 +32,7 @@ namespace WorldCupOnline_API.Data
                     {
                         id = (string)reader["id"],
                         name = (string)reader["name"],
-                        accesscode = (int)reader["accesscode"],
+                        accesscode = (string)reader["accesscode"],
                         tournamentid = (string)reader["tournamentid"],
                         userid = (string)reader["userid"]
                     };
@@ -65,7 +65,7 @@ namespace WorldCupOnline_API.Data
                     {
                         id = (string)reader["id"],
                         name = (string)reader["name"],
-                        accesscode = (int)reader["accesscode"],
+                        accesscode = (string)reader["accesscode"],
                         tournamentid = (string)reader["tournamentid"],
                         userid = (string)reader["userid"]
                     };
@@ -108,21 +108,28 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="league"></param>
         /// <returns></returns>
-        public async Task CreateLeague(LeagueCreator league)
+        public async Task<string> CreateLeague(LeagueCreator league)
         {
-            Random random = new Random();
+            Random random = new();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string newLeagueId = new(Enumerable.Repeat(chars, 6)
+                                    .Select(s => s[random.Next(s.Length)]).ToArray());
+            string accessCode = league.tournamentid + newLeagueId;
+
             using var sql = new SqlConnection(_con.SQLCon());
             using var cmd = new SqlCommand("insertLeague", sql);///Calls stored procedure via sql connection
 
             cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
             ///Add parameters with value
+            cmd.Parameters.AddWithValue("@id", newLeagueId);
             cmd.Parameters.AddWithValue("@name", league.name);
-            cmd.Parameters.AddWithValue("@accesscode", Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
+            cmd.Parameters.AddWithValue("@accesscode", accessCode);
             cmd.Parameters.AddWithValue("@tournamentid", league.tournamentid);
             cmd.Parameters.AddWithValue("@userid", league.userid);
 
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();
+            return accessCode;
         }
 
         /// <summary>
