@@ -214,68 +214,33 @@ namespace WorldCupOnline_API.Data
             using var reader = await cmd.ExecuteReaderAsync();
 
             await reader.CloseAsync();
-            await sql.CloseAsync();
+            //await sql.CloseAsync();
 
             ///Create teams in tournament for each team added
             foreach (string teamid in tournament.teamsIds)
             {
-                var TIM = new Team_In_Tournament
-                {
-                    teamid = teamid,
-                    tournamentid = newTournamentId
-                };
+                //await CreateTeam_In_Tournament(TIM);
+                using var cmdTeam = new SqlCommand("insertTIT", sql);
+                cmdTeam.CommandType = CommandType.StoredProcedure;
+                cmdTeam.Parameters.AddWithValue("@teamid", teamid);
+                cmdTeam.Parameters.AddWithValue("@tournamentid", newTournamentId);
 
-                await CreateTeam_In_Tournament(TIM); ///Call method from other data file
+                using var readerTeam = await cmdTeam.ExecuteReaderAsync();
+                await readerTeam.CloseAsync();
             }
 
             ///Create phase in tournament for each team added
             foreach (string item in tournament.phases)
             {
-                var phase = new Phase
-                {
-                    name = item,
-                    tournamentID = newTournamentId
-                };
-                await CreatePhase(phase);///Call method from other data file
+                using var cmdPhase = new SqlCommand("insertPhase", sql);
+                cmdPhase.CommandType = CommandType.StoredProcedure;
+                cmdPhase.Parameters.AddWithValue("@name", item);
+                cmdPhase.Parameters.AddWithValue("@tournamentid", newTournamentId);
+
+                using var readerPhase = await cmdPhase.ExecuteReaderAsync();
+                await readerPhase.CloseAsync();
             }
-        }
-
-        /// <summary>
-        /// Method to create Team_In_Tournament
-        /// </summary>
-        /// <param name="team_In_Tournament"></param>
-        /// <returns></returns>
-        public async Task CreateTeam_In_Tournament(Team_In_Tournament team_In_Tournament)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("insertTIT", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-                                                          ///Add parameters with value
-            cmd.Parameters.AddWithValue("@teamid", team_In_Tournament.teamid);
-            cmd.Parameters.AddWithValue("@tournamentid", team_In_Tournament.tournamentid);
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
-        }
-
-        /// <summary>
-        /// Method to create a phase
-        /// </summary>
-        /// <param name="phase"></param>
-        /// <returns></returns>
-        public async Task CreatePhase(Phase phase)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("insertPhase", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedre
-                                                          ///Add parameters with value
-            cmd.Parameters.AddWithValue("@name", phase.name);
-            cmd.Parameters.AddWithValue("@tournamentid", phase.tournamentID);
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
+            await sql.CloseAsync();
         }
     }
 }
