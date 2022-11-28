@@ -104,7 +104,7 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@stateid", 1);
             cmd.Parameters.AddWithValue("@tournamentid", match.tournamentid);
             cmd.Parameters.AddWithValue("@phaseid", match.phaseid);
-            cmd.Parameters.AddWithValue("@mvp", match.mvpid);
+            cmd.Parameters.AddWithValue("@mvp", "mvp");
 
             await sql.OpenAsync();
             using var reader = await cmd.ExecuteReaderAsync();

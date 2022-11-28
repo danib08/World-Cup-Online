@@ -236,6 +236,8 @@ exec insertTeam 'SAP','Deportivo Saprissa','CONMEBOL',2
 exec insertTeam 'PSG','Paris Saint Germain','UEFA',2
 
 
+exec insertPlayer 'mvp', 'Place', 'Holder', 'MVP'
+
 exec insertPlayer 'arg1', 'Franco', 'Armani', 'Portero'
 exec insertPlayer 'arg2', 'Emiliano', 'Martinez', 'Portero'
 exec insertPlayer 'arg3', 'Nahuel', 'Molina', 'Lateral Derecho'
