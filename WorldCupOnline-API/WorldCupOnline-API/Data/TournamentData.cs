@@ -1,12 +1,13 @@
-﻿using System.Data.SqlClient;
-using System.Data;
+﻿using System.Data;
+using System.Data.SqlClient;
 using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Bodies;
+using WorldCupOnline_API.Interfaces;
 
 namespace WorldCupOnline_API.Data
 {
-    public class TournamentData
+    public class TournamentData : ITournamentData
     {
         ///Create connection
         private readonly DbConnection _con = new();
@@ -24,21 +25,23 @@ namespace WorldCupOnline_API.Data
                 await sql.OpenAsync();
                 cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
 
-                using var item = await cmd.ExecuteReaderAsync();
-                while (await item.ReadAsync())
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
                     ///Read from database
                     var tournament = new GetTournamentBody
                     {
-                        id = (string)item["id"],
-                        name = (string)item["name"],
-                        startdate = (DateTime)item["startdate"],
-                        enddate = (DateTime)item["enddate"],
-                        description = (string)item["description"],
-                        type = (string)item["type"]
+                        id = (string)reader["id"],
+                        name = (string)reader["name"],
+                        startdate = (DateTime)reader["startdate"],
+                        enddate = (DateTime)reader["enddate"],
+                        description = (string)reader["description"],
+                        type = (string)reader["type"]
                     };
                     list.Add(tournament); ///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
         }
@@ -58,20 +61,22 @@ namespace WorldCupOnline_API.Data
                 cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
                 cmd.Parameters.AddWithValue("@id", id); ///Add parameters with value
 
-                using var item = await cmd.ExecuteReaderAsync();
-                while (await item.ReadAsync())
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
                     ///Read from database
                     tournament = new GetTournamentBody
                     {
-                        id = (string)item["id"],
-                        name = (string)item["name"],
-                        startdate = (DateTime)item["startdate"],
-                        enddate = (DateTime)item["enddate"],
-                        description = (string)item["description"],
-                        type = (string)item["type"]
+                        id = (string)reader["id"],
+                        name = (string)reader["name"],
+                        startdate = (DateTime)reader["startdate"],
+                        enddate = (DateTime)reader["enddate"],
+                        description = (string)reader["description"],
+                        type = (string)reader["type"]
                     };
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return tournament; ///Return object
         }
@@ -91,23 +96,25 @@ namespace WorldCupOnline_API.Data
                 cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
                 cmd.Parameters.AddWithValue("@id", id); ///Add parameters with value
 
-                using var item = await cmd.ExecuteReaderAsync();
-                while (await item.ReadAsync())
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
                     ///Read from database
                     var tournamentMatches = new MatchTournamentBody
                     {
-                        id = (int)item["id"],
-                        name = (string)item["name"],
-                        startdate = (DateTime)item["startdate"],
-                        starttime = (TimeSpan)item["starttime"],
-                        location = (string)item["location"],
-                        state = (string)item["state"],
-                        goalsteam1 = (int)item["goalsteam1"],
-                        goalsteam2 = (int)item["goalsteam2"],
+                        id = (int)reader["id"],
+                        name = (string)reader["name"],
+                        startdate = (DateTime)reader["startdate"],
+                        starttime = (TimeSpan)reader["starttime"],
+                        location = (string)reader["location"],
+                        state = (string)reader["state"],
+                        goalsteam1 = (int)reader["goalsteam1"],
+                        goalsteam2 = (int)reader["goalsteam2"],
                     };
                     list.Add(tournamentMatches); ///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
         }
@@ -139,6 +146,8 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(item);///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
         }
@@ -170,6 +179,8 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(team); ///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; /// Return list
         }
@@ -206,7 +217,6 @@ namespace WorldCupOnline_API.Data
             await sql.CloseAsync();
 
             ///Create teams in tournament for each team added
-            var teams = new Team_In_TournamentData();
             foreach (string teamid in tournament.teamsIds)
             {
                 var TIM = new Team_In_Tournament
@@ -215,11 +225,10 @@ namespace WorldCupOnline_API.Data
                     tournamentid = newTournamentId
                 };
 
-                await teams.CreateTeam_In_Tournament(TIM); ///Call method from other data file
+                await CreateTeam_In_Tournament(TIM); ///Call method from other data file
             }
 
             ///Create phase in tournament for each team added
-            var phases = new PhaseData();
             foreach (string item in tournament.phases)
             {
                 var phase = new Phase
@@ -227,46 +236,43 @@ namespace WorldCupOnline_API.Data
                     name = item,
                     tournamentID = newTournamentId
                 };
-                await phases.CreatePhase(phase);///Call method from other data file
+                await CreatePhase(phase);///Call method from other data file
             }
         }
 
         /// <summary>
-        /// Method to edit tournaments
+        /// Method to create Team_In_Tournament
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="tournament"></param>
+        /// <param name="team_In_Tournament"></param>
         /// <returns></returns>
-        public async Task EditTournament(string id, Tournament tournament)
+        public async Task CreateTeam_In_Tournament(Team_In_Tournament team_In_Tournament)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("editTournament", sql);///Calls stored procedure via sql connection
+            using var cmd = new SqlCommand("insertTIT", sql);///Calls stored procedure via sql connection
 
             cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-            ///Add parameters with value
-            cmd.Parameters.AddWithValue("@id", id);
-            cmd.Parameters.AddWithValue("@name", tournament.name);
-            cmd.Parameters.AddWithValue("@startdate", tournament.startdate);
-            cmd.Parameters.AddWithValue("@enddate", tournament.enddate);
-            cmd.Parameters.AddWithValue("@description", tournament.description);
-            cmd.Parameters.AddWithValue("@typeid", tournament.typeid);
+                                                          ///Add parameters with value
+            cmd.Parameters.AddWithValue("@teamid", team_In_Tournament.teamid);
+            cmd.Parameters.AddWithValue("@tournamentid", team_In_Tournament.tournamentid);
 
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();
         }
 
         /// <summary>
-        /// Method to delete tournament
+        /// Method to create a phase
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="phase"></param>
         /// <returns></returns>
-        public async Task DeleteTournament(string id)
+        public async Task CreatePhase(Phase phase)
         {
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("deleteTournament", sql);///Calls stored procedure via sql connection
+            using var cmd = new SqlCommand("insertPhase", sql);///Calls stored procedure via sql connection
 
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-            cmd.Parameters.AddWithValue("@id", id); ///Add parameter with value
+            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedre
+                                                          ///Add parameters with value
+            cmd.Parameters.AddWithValue("@name", phase.name);
+            cmd.Parameters.AddWithValue("@tournamentid", phase.tournamentID);
 
             await sql.OpenAsync();
             await cmd.ExecuteReaderAsync();

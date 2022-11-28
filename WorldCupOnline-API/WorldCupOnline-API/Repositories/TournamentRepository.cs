@@ -3,11 +3,11 @@ using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
 
-namespace WorldCupOnline_API.Controllers
+namespace WorldCupOnline_API.Repositories
 {
-    [Route("api/[controller]")]
+    [Route("api/Tournament")]
     [ApiController]
-    public class TournamentController : ControllerBase
+    public class TournamentRepository : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly TournamentData _funct;
@@ -16,14 +16,14 @@ namespace WorldCupOnline_API.Controllers
         /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
-        public TournamentController(IConfiguration configuration)
+        public TournamentRepository(IConfiguration configuration)
         {
             _configuration = configuration;
             _funct = new TournamentData();
         }
 
         /// <summary>
-        /// Service to Get all Tournament
+        /// Service to get all tournaments
         /// </summary>
         /// <returns>List of GetTournamentBody</returns>
         [HttpGet]
@@ -32,9 +32,8 @@ namespace WorldCupOnline_API.Controllers
             return await _funct.GetTournament();
         }
 
-
         /// <summary>
-        /// Service to get one Tournament 
+        /// Service to get one tournament 
         /// </summary>
         /// <param name="id"></param>
         /// <returns>GetTournamentBody</returns>
@@ -45,7 +44,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Service to insert Tournament
+        /// Service to insert tournament
         /// </summary>
         /// <param name="tournament"></param>
         /// <returns></returns>
@@ -56,30 +55,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Service to edit Tournament
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="tournament"></param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        public async Task Put(string id, [FromBody] Tournament tournament)
-        {
-            await _funct.EditTournament(id, tournament);
-        }
-
-        /// <summary>
-        /// Service to delete Tournament
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpDelete("{id}")]
-        public async Task Delete(string id)
-        {
-            await _funct.DeleteTournament(id);
-        }
-
-        /// <summary>
-        /// Service to get all matches in a Tournament
+        /// Service to get all matches in a tournament
         /// </summary>
         /// <param name="id"></param>
         /// <returns>List of MatchTournamentBody</returns>
@@ -90,7 +66,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Service to get all phases in a Tournament
+        /// Service to get all phases in a tournament
         /// </summary>
         /// <param name="id"></param>
         /// <returns>List of ValueIntBody</returns>
@@ -101,7 +77,7 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Service to get teams in a Tournament
+        /// Service to get all teams in a tournament
         /// </summary>
         /// <param name="id"></param>
         /// <returns>List of TeamTournamentBody</returns>
