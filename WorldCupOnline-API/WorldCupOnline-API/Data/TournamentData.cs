@@ -103,7 +103,8 @@ namespace WorldCupOnline_API.Data
                         starttime = (TimeSpan)item["starttime"],
                         location = (string)item["location"],
                         state = (string)item["state"],
-                        score = (string)item["score"]
+                        goalsteam1 = (int)item["goalsteam1"],
+                        goalsteam2 = (int)item["goalsteam2"],
                     };
                     list.Add(tournamentMatches); ///Add to list
                 }

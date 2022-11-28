@@ -8,6 +8,7 @@
         public TimeSpan starttime { get; set; }
         public string location { get; set; }
         public string state { get; set; }
-        public string score { get; set; }
+        public int goalsteam1 { get; set; }
+        public int goalsteam2 { get; set; }
     }
 }
