@@ -852,7 +852,7 @@ as begin
 end
 go
 
-create procedure isInTournamentLeague(@UserID varchar(15),
+create procedure isInLeague(@UserID varchar(15),
 				@TournamentID varchar(6))
 as begin
 				select
@@ -864,10 +864,25 @@ as begin
 					)
 					then 'TRUE'
 					else 'FALSE'
-				end as isInLeague
+				end 
+				as isInLeague
 end
 go
 
+create procedure codeExists(@AccessCode varchar(12))
+as begin
+				select
+					case when exists 
+					(
+						select * from League
+						where AccessCode=@AccessCode
+					)
+					then 'TRUE'
+					else 'FALSE'
+				end
+				as codeExists
+end
+go
 
 ---- USER_IN_LEAGUE PROCEDURES ----
 
