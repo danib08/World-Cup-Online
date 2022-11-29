@@ -131,6 +131,10 @@ TournamentID varchar(6) NOT NULL,
 UserID varchar(12) NOT NULL
 )
 
+CREATE TABLE dbo.User_In_League(
+LeagueID varchar(6) NOT NULL,
+UserID varchar(12) NOT NULL,
+)
 
 ---------------------------------------------------------------------------------------
 
@@ -191,6 +195,9 @@ ADD CONSTRAINT PK_AssistMatch PRIMARY KEY(MatchID,PlayerID)
 
 ALTER TABLE dbo.User_In_Bet
 ADD CONSTRAINT PK_UserBet PRIMARY KEY(BetID,UserID)
+
+ALTER TABLE dbo.User_In_League
+ADD CONSTRAINT PK_UserLeague PRIMARY KEY(LeagueID,UserID)
 
 --------------------------------------------------------------------------------------
 
@@ -293,3 +300,11 @@ REFERENCES dbo.Match(ID)
 ALTER TABLE dbo.Assist_In_Match
 ADD CONSTRAINT FK_AIM_Player FOREIGN KEY(PlayerID)
 REFERENCES dbo.Player(ID)
+
+ALTER TABLE dbo.User_In_League
+ADD CONSTRAINT FK_UIL_League FOREIGN KEY(LeagueID)
+REFERENCES dbo.League(ID)
+
+ALTER TABLE dbo.User_In_League
+ADD CONSTRAINT FK_UIL_User FOREIGN KEY(UserID)
+REFERENCES dbo.Users(Username)

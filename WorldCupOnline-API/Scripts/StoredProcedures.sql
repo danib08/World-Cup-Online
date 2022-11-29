@@ -343,7 +343,7 @@ create procedure updateMatch(@ID int,
 				@GoalsTeam2 int,
 				@MVP varchar(15))
 as begin
-		update dbo.Match set GoalsTeam1=@GoalsTeam1,GoalsTeam2=@GoalsTeam2,MVP=@MVP
+		update dbo.Match set GoalsTeam1=@GoalsTeam1,GoalsTeam2=@GoalsTeam2,MVP=@MVP,StateID=3
 		where ID=@ID	
 end
 go
@@ -849,5 +849,69 @@ create procedure deleteLeague(@ID varchar(6))
 as begin
 		delete from dbo.League
 		where ID = @ID
+end
+go
+
+create procedure isInLeague(@UserID varchar(15),
+				@TournamentID varchar(6))
+as begin
+				select
+					case when exists 
+					(
+						select * from 
+						User_In_League join League on League.ID = LeagueID
+						where User_In_League.UserID=@UserID and TournamentID=@TournamentID
+					)
+					then 'TRUE'
+					else 'FALSE'
+				end 
+				as isInLeague
+end
+go
+
+create procedure codeExists(@AccessCode varchar(12))
+as begin
+				select
+					case when exists 
+					(
+						select * from League
+						where AccessCode=@AccessCode
+					)
+					then 'TRUE'
+					else 'FALSE'
+				end
+				as codeExists
+end
+go
+
+---- USER_IN_LEAGUE PROCEDURES ----
+
+create procedure getUIL
+as begin
+        select * from dbo.User_In_League
+end
+go
+
+create procedure getOneUIL(@LeagueID varchar(6),
+						@UserID varchar(12))
+as begin
+        select * from dbo.User_In_League
+        where LeagueID=@LeagueID and UserID=@UserID
+end
+go
+
+create procedure insertUIL(@LeagueID varchar(6),
+                @UserID varchar(12))
+as begin
+        insert into dbo.User_In_League(LeagueID,UserID)
+        values(@LeagueID,@UserID)
+end
+go
+
+create procedure deleteUIL(@LeagueID varchar(6),
+						@UserID varchar(12))
+as begin
+        delete from dbo.User_In_League
+        where LeagueID=@LeagueID and UserID=@UserID
 end
 go
