@@ -4,7 +4,7 @@ using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Repositories
 {
-    [Route("api/League")]
+    [Route("api/Bet")]
     [ApiController]
     public class BetRepository : ControllerBase
     {

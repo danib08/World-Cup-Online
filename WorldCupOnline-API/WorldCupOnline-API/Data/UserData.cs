@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Interfaces;
+using WorldCupOnline_API.Bodies;
 
 namespace WorldCupOnline_API.Data
 {
@@ -83,6 +84,36 @@ namespace WorldCupOnline_API.Data
                 await sql.CloseAsync();
             }
             return user;///Return object
+        }
+
+        /// <summary>
+        /// Method to obtain all countries
+        /// </summary>
+        /// <returns>List of ValueStringBody objects</returns>
+        public async Task<List<ValueStringBody>> GetCountries()
+        {
+            var list = new List<ValueStringBody>();///Create list of ValueStingBody object
+            using (var sql = new SqlConnection(_con.SQLCon()))
+            {
+                using var cmd = new SqlCommand("getCountries", sql);
+                await sql.OpenAsync();
+                cmd.CommandType = System.Data.CommandType.StoredProcedure; ///Indicates that command is a stored procedure
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    ///Read from Database
+                    var country = new ValueStringBody
+                    {
+                        ///Create ValueStingBody object
+                        value = (string)reader["value"],
+                        label = (string)reader["label"]
+                    };
+                    list.Add(country);/// Add object to list
+                }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
+            }
+            return list; ///return list
         }
 
         /// <summary>
