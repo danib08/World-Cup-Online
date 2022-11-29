@@ -2,6 +2,7 @@
 using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
+using WorldCupOnline_API.Interfaces;
 
 namespace WorldCupOnline_API.Repositories
 {
@@ -10,7 +11,7 @@ namespace WorldCupOnline_API.Repositories
     public class TeamRepository : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly TeamData _funct;
+        private readonly ITeamData _funct;
 
         /// <summary>
         /// Establish configuration for controller to get connection
