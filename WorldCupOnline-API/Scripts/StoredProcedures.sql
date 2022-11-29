@@ -343,7 +343,7 @@ create procedure updateMatch(@ID int,
 				@GoalsTeam2 int,
 				@MVP varchar(15))
 as begin
-		update dbo.Match set GoalsTeam1=@GoalsTeam1,GoalsTeam2=@GoalsTeam2,MVP=@MVP
+		update dbo.Match set GoalsTeam1=@GoalsTeam1,GoalsTeam2=@GoalsTeam2,MVP=@MVP,StateID=3
 		where ID=@ID	
 end
 go

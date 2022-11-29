@@ -1,6 +1,5 @@
 using System.Data;
 using System.Data.SqlClient;
-using System.Text.RegularExpressions;
 using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Interfaces;
@@ -156,8 +155,15 @@ namespace WorldCupOnline_API.Data
                 cmd.Parameters.AddWithValue("@userid", league.userid);
 
                 using var reader = await cmd.ExecuteReaderAsync();
-
                 await reader.CloseAsync();
+
+                using var cmdUserInLeague = new SqlCommand("insertUIL", sql);
+                cmdUserInLeague.Parameters.AddWithValue("@leagueid", newLeagueId);
+                cmdUserInLeague.Parameters.AddWithValue("@userid", league.userid);
+
+                using var readerUser = await cmdUserInLeague.ExecuteReaderAsync();
+                await readerUser.CloseAsync();
+
                 await sql.CloseAsync();
 
                 return accessCode;
