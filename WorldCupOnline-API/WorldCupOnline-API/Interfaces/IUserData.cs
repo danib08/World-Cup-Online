@@ -1,4 +1,5 @@
-﻿using WorldCupOnline_API.Models;
+﻿using WorldCupOnline_API.Bodies;
+using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Interfaces
 {
@@ -8,5 +9,6 @@ namespace WorldCupOnline_API.Interfaces
         Task<Users> GetOneUser(string username);
         Task CreateUsers(Users user);
         Task<string> AuthUser(Auth auth);
+        Task<List<ValueStringBody>> GetCountries();
     }
 }
