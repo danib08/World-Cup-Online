@@ -86,5 +86,16 @@ namespace WorldCupOnline_API.Repositories
         {
             return await _funct.GetTeamsByTournament(id);
         }
+
+        /// <summary>
+        /// Service to get all Types
+        /// </summary>
+        /// <returns>List of ValueIntBody</returns>
+        [HttpGet("Types")]
+        public async Task<ActionResult<List<ValueIntBody>>> GetTypes()
+        {
+            return await _funct.GetTypes();
+        }
+
     }
 }
