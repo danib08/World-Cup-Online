@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
-using Microsoft.Extensions.Configuration.UserSecrets;
+using WorldCupOnline_API.Models;
 
-namespace WorldCupOnline_API.Controllers
+namespace WorldCupOnline_API.Repositories
 {
-    [Route("api/[controller]")]
+    [Route("api/League")]
     [ApiController]
-    public class BetController : ControllerBase
+    public class BetRepository : ControllerBase
     {
-
         private readonly IConfiguration _configuration;
         private readonly BetData _funct;
 
@@ -17,7 +15,7 @@ namespace WorldCupOnline_API.Controllers
         /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
-        public BetController(IConfiguration configuration)
+        public BetRepository(IConfiguration configuration)
         {
             _configuration = configuration;
             _funct = new BetData();
@@ -55,29 +53,6 @@ namespace WorldCupOnline_API.Controllers
         public async Task Post([FromBody] BetCreator bet, string userId, int matchId)
         {
             await _funct.CreateBet(userId, matchId, bet);
-        }
-
-        /// <summary>
-        /// Service to edit Bet
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="bet"></param>
-        /// <returns>Task Action result</returns>
-        [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Bet bet)
-        {
-            await _funct.EditBet(id, bet);
-        }
-
-        /// <summary>
-        /// Service to delete Bet
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Task Action result</returns>
-        [HttpDelete("{id}")]
-        public async Task Delete(int id)
-        {
-            await _funct.DeleteBet(id);
         }
     }
 }

@@ -1,14 +1,12 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Text.RegularExpressions;
 using WorldCupOnline_API.Connection;
 using WorldCupOnline_API.Models;
-
+using WorldCupOnline_API.Interfaces;
 
 namespace WorldCupOnline_API.Data
 {
-    public class BetData
+    public class BetData : IBetData
     {
         ///Create new connenction
         private readonly DbConnection _con = new();
@@ -42,6 +40,8 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(bet); ///Add object to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
         }
@@ -76,6 +76,8 @@ namespace WorldCupOnline_API.Data
                         matchid = (int)reader["matchid"],
                     };
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return bet; ///Return object
         }
@@ -104,105 +106,62 @@ namespace WorldCupOnline_API.Data
             await sql.OpenAsync();
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
-                ///Read from Database
+            ///Read from Database
             {
                 var id = reader["id"];
                 newBetId = Convert.ToInt32(id);
             }
 
             await reader.CloseAsync();
-            await sql.CloseAsync();
 
-            ///Call methods from other Data files
-            var scorers = new Scorer_In_BetData();
-            var assists = new Assist_In_BetData();
-
-            ///Create Scorer in bet for team1 for each scorer
+            //Create Scorer_In_Bet for Team 1
             foreach (string scorerId in bet.team1scorers)
             {
-                var SIB = new Scorer_In_Bet
-                {
-                    betid = newBetId,
-                    playerid = scorerId
-                };
-                await scorers.CreateScorer_In_Bet(SIB); ///Create Scorer in Bet
+                using var cmdScorer1 = new SqlCommand("insertSIB", sql);
+                cmdScorer1.CommandType = CommandType.StoredProcedure;
+                cmdScorer1.Parameters.AddWithValue("@betid", newBetId);
+                cmdScorer1.Parameters.AddWithValue("@playerid", scorerId);
+
+                using var readerScorer1 = await cmdScorer1.ExecuteReaderAsync();
+                await readerScorer1.CloseAsync();
             }
 
-            ///Create Scorer in bet for team2 for each scorer
+            //Create Scorer_In_Bet for Team 2
             foreach (string scorerId in bet.team2scorers)
             {
-                var SIB = new Scorer_In_Bet
-                {
-                    betid = newBetId,
-                    playerid = scorerId
-                };
-                await scorers.CreateScorer_In_Bet(SIB); ///Create Scorer in Bet
+                using var cmdScorer2 = new SqlCommand("insertSIB", sql);
+                cmdScorer2.CommandType = CommandType.StoredProcedure;
+                cmdScorer2.Parameters.AddWithValue("@betid", newBetId);
+                cmdScorer2.Parameters.AddWithValue("@playerid", scorerId);
+
+                using var readerScorer2 = await cmdScorer2.ExecuteReaderAsync();
+                await readerScorer2.CloseAsync();
             }
 
-            ///Create Assist in bet for team1 for each assist
+            //Create Assist_In_Bet for Team 1
             foreach (string assistId in bet.team1assists)
             {
-                var AIB = new Assist_In_Bet
-                {
-                    betid = newBetId,
-                    playerid = assistId
-                };
-                await assists.CreateAssist_In_Bet(AIB);///Create Assist in Bet
+                using var cmdAssist1 = new SqlCommand("insertAIB", sql);
+                cmdAssist1.CommandType = CommandType.StoredProcedure;
+                cmdAssist1.Parameters.AddWithValue("@betid", newBetId);
+                cmdAssist1.Parameters.AddWithValue("@playerid", assistId);
+
+                using var readerAssist1 = await cmdAssist1.ExecuteReaderAsync();
+                await readerAssist1.CloseAsync();
             }
 
-            ///Create Assist in bet for team2 for each assist
+            //Create Assist_In_Bet for Team 2
             foreach (string assistId in bet.team2assists)
             {
-                var AIB = new Assist_In_Bet
-                {
-                    betid = newBetId,
-                    playerid = assistId
-                };
-                await assists.CreateAssist_In_Bet(AIB);///Create Assist in Bet
+                using var cmdAssist2 = new SqlCommand("insertAIB", sql);
+                cmdAssist2.CommandType = CommandType.StoredProcedure;
+                cmdAssist2.Parameters.AddWithValue("@betid", newBetId);
+                cmdAssist2.Parameters.AddWithValue("@playerid", assistId);
+
+                using var readerAssist2 = await cmdAssist2.ExecuteReaderAsync();
+                await readerAssist2.CloseAsync();
             }
-        }
-
-        /// <summary>
-        /// Method to edit a bet
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="bet"></param>
-        /// <returns></returns>
-        public async Task EditBet(int id, Bet bet)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("editBet", sql); ///Calls the stored procedure
-
-            cmd.CommandType = CommandType.StoredProcedure; //Indicates that command is a stored procedure
-            
-            ///Add parameters with value for bet
-            cmd.Parameters.AddWithValue("@id", id);
-            cmd.Parameters.AddWithValue("@goalsteam1", bet.goalsteam1);
-            cmd.Parameters.AddWithValue("@goalsteam2", bet.goalsteam2);
-            cmd.Parameters.AddWithValue("@score", bet.score);
-            cmd.Parameters.AddWithValue("@mvp", bet.mvp);
-            cmd.Parameters.AddWithValue("@userid", bet.userid);
-            cmd.Parameters.AddWithValue("@matchid", bet.matchid);
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
-        }
-
-        /// <summary>
-        /// Method to delete a bet by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task DeleteBet(int id)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("deleteBet", sql); ///Calls the stored procedure
-
-            cmd.CommandType = CommandType.StoredProcedure; //Indicates that command is a stored procedure
-            cmd.Parameters.AddWithValue("@id", id); ///Add parameter with value
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
+            await sql.CloseAsync();
         }
     }
 }

@@ -214,6 +214,7 @@ namespace WorldCupOnline_API.Data
                 using var readerAssist2 = await cmdAssist2.ExecuteReaderAsync();
                 await readerAssist2.CloseAsync();
             }
+            await sql.CloseAsync();
         }
     }
 }
