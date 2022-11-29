@@ -82,6 +82,37 @@ namespace WorldCupOnline_API.Data
         }
 
         /// <summary>
+        /// Method to obtain all Types
+        /// </summary>
+        /// <returns>List of ValueIntBody object</returns>
+        public async Task<List<ValueIntBody>> GetTypes()
+        {
+            var list = new List<ValueIntBody>();///Create list of ValueIntBody object
+
+            using (var sql = new SqlConnection(_con.SQLCon()))
+            {
+                using var cmd = new SqlCommand("getTypes", sql);///Calls stored procedure via sql connection
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    ///Read from database
+                    var type = new ValueIntBody
+                    {
+                        value = (int)reader["value"],
+                        label = (string)reader["label"]
+                    };
+                    list.Add(type); ///Add to list
+                }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
+            }
+            return list; ///Return list
+        }
+
+        /// <summary>
         /// Method to obtain all matches in a tournament
         /// </summary>
         /// <param name="id"></param>
@@ -240,37 +271,6 @@ namespace WorldCupOnline_API.Data
                 await readerPhase.CloseAsync();
             }
             await sql.CloseAsync();
-        }
-
-        /// <summary>
-        /// Method to obtain all Types
-        /// </summary>
-        /// <returns>List of ValueIntBody object</returns>
-        public async Task<List<ValueIntBody>> GetTypes()
-        {
-            var list = new List<ValueIntBody>();///Create list of ValueIntBody object
-
-            using (var sql = new SqlConnection(_con.SQLCon()))
-            {
-                using var cmd = new SqlCommand("getTypes", sql);///Calls stored procedure via sql connection
-                await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-
-                using var reader = await cmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
-                {
-                    ///Read from database
-                    var type = new ValueIntBody
-                    {
-                        value = (int)reader["value"],
-                        label = (string)reader["label"]
-                    };
-                    list.Add(type); ///Add to list
-                }
-                await reader.CloseAsync();
-                await sql.CloseAsync();
-            }
-            return list; ///Return list
         }
     }
 }
