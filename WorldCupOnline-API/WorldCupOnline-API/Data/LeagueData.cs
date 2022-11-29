@@ -2,11 +2,12 @@ using System.Data;
 using System.Data.SqlClient;
 using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Connection;
+using WorldCupOnline_API.Interfaces;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
-    public class LeagueData
+    public class LeagueData : ILeagueData
     {
         ///Create new connenction
         private readonly DbConnection _con = new();
@@ -15,7 +16,7 @@ namespace WorldCupOnline_API.Data
         /// Method to obtain all Leagues
         /// </summary>
         /// <returns>List of League objects</returns>
-        public async Task <List<League>> GetLeague()
+        public async Task <List<League>> GetLeagues()
         {
             var list = new List<League>();///Creates a List of League objects
             using (var sql = new SqlConnection(_con.SQLCon()))
@@ -38,6 +39,8 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(league);
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///return list
         }
@@ -70,6 +73,8 @@ namespace WorldCupOnline_API.Data
                         userid = (string)reader["userid"]
                     };
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return league; ///Return object
         }
@@ -78,9 +83,9 @@ namespace WorldCupOnline_API.Data
         /// Method to obtain all Tournaments
         /// </summary>
         /// <returns>List of ValueIntBody object</returns>
-        public async Task<List<ValueIntBody>> GetTournaments()
+        public async Task<List<ValueStringBody>> GetTournaments()
         {
-            var list = new List<ValueIntBody>();///Create list of ValueIntBody object
+            var list = new List<ValueStringBody>();///Create list of ValueIntBody object
 
             using (var sql = new SqlConnection(_con.SQLCon()))
             {
@@ -92,13 +97,15 @@ namespace WorldCupOnline_API.Data
                 while (await reader.ReadAsync())
                 {
                     ///Read from database
-                    var type = new ValueIntBody
+                    var type = new ValueStringBody
                     {
-                        value = (int)reader["value"],
+                        value = (string)reader["value"],
                         label = (string)reader["label"]
                     };
                     list.Add(type); ///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
         }
@@ -128,50 +135,12 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@userid", league.userid);
 
             await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            await reader.CloseAsync();
+            await sql.CloseAsync();
+
             return accessCode;
-        }
-
-        /// <summary>
-        /// Method to edit a league
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="league"></param>
-        /// <returns></returns>
-        public async Task EditLeague(string id, League league)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("editLeague", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-
-            ///Add parameters with value
-            cmd.Parameters.AddWithValue("@id", id);
-            cmd.Parameters.AddWithValue("@name", league.name);
-            cmd.Parameters.AddWithValue("@accesscode", league.accesscode);
-            cmd.Parameters.AddWithValue("@tournamentid", league.tournamentid);
-            cmd.Parameters.AddWithValue("@userid", league.userid);
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
-        }
-
-        /// <summary>
-        /// Method to delete a league
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task DeleteLeague(string id)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("deleteLeague", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedre
-            cmd.Parameters.AddWithValue("@id", id);///Add parameter with value id
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
-        }
-
+        }    
     }
 }

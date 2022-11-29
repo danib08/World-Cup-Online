@@ -829,7 +829,7 @@ create procedure insertLeague(@ID varchar(6),
 				@TournamentID varchar(6),
 				@UserID varchar(15))
 as begin
-		insert into dbo.League(Name,AccessCode,TournamentID,UserID)
+		insert into dbo.League(ID,Name,AccessCode,TournamentID,UserID)
 		values(@ID,@Name,@AccessCode,@TournamentID,@UserID)
 end
 go

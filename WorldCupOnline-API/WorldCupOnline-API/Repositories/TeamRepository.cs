@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WorldCupOnline_API.Models;
-using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Bodies;
+using WorldCupOnline_API.Data;
+using WorldCupOnline_API.Models;
 
-namespace WorldCupOnline_API.Controllers
+namespace WorldCupOnline_API.Repositories
 {
+    [Route("api/Team")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class TeamController : ControllerBase
+    public class TeamRepository : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private TeamData _funct; 
+        private readonly TeamData _funct;
 
         /// <summary>
         /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
-        public TeamController(IConfiguration configuration)
+        public TeamRepository(IConfiguration configuration)
         {
             _configuration = configuration;
             _funct = new TeamData();
@@ -64,42 +64,5 @@ namespace WorldCupOnline_API.Controllers
         {
             return await _funct.GetPlayersByTeam(teamId);
         }
-
-        /// <summary>
-        /// Service to insert Team
-        /// </summary>
-        /// <param name="team"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task Post([FromBody] Team team)
-        {
-            await _funct.CreateTeam(team);
-        }
-
-        /// <summary>
-        /// Service to edit Team
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="team"></param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        public async Task Put(string id, [FromBody] Team team)
-        {
-            await _funct.EditTeam(id, team);
-            
-        }
-
-        /// <summary>
-        /// Service to delete Team
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpDelete("{id}")]
-        public async Task Delete(string id)
-        {
-            await _funct.DeleteTeam(id);  
-        }
     }
 }
-
-
