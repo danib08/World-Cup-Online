@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
 
@@ -42,6 +43,17 @@ namespace WorldCupOnline_API.Repositories
         {
             return await _funct.GetOneUser(id);
         }
+
+        /// <summary>
+        /// Service to get all Countries
+        /// </summary>
+        /// <returns>List of ValueStringBody</returns>
+        [HttpGet("Country")]
+        public async Task<ActionResult<List<ValueStringBody>>> GetCountries()
+        {
+            return await _funct.GetCountries();
+        }
+
 
         /// <summary>
         /// Service to post Users
