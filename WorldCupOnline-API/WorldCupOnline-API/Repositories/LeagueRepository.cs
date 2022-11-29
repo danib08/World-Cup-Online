@@ -3,6 +3,7 @@ using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace WorldCupOnline_API.Repositories
 {
@@ -65,7 +66,16 @@ namespace WorldCupOnline_API.Repositories
         public IActionResult Post([FromBody] LeagueCreator league)
         {
             string accessCode = _funct.CreateLeague(league).Result;
-            return Ok(accessCode);
+
+            if (accessCode == "FAIL")
+            {
+                return Conflict();
+            }
+            else
+            {
+                var data = new JObject(new JProperty("code", accessCode));
+                return Ok(data);
+            }
         }
     }
 }
