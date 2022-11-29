@@ -83,7 +83,7 @@ namespace WorldCupOnline_API.Repositories
         /// <param name="id"></param>
         /// <returns>List of TeamTournamentBody</returns>
         [HttpGet("Teams/{id}")]
-        public async Task<ActionResult<List<TeamTournamentBody>>> GetTeamsByTournament(string id)
+        public async Task<ActionResult<List<IdStringBody>>> GetTeamsByTournament(string id)
         {
             return await _funct.GetTeamsByTournament(id);
         }
