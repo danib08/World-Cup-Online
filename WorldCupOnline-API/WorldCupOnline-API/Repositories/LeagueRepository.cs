@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using WorldCupOnline_API.Models;
-using WorldCupOnline_API.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Bodies;
+using WorldCupOnline_API.Data;
+using WorldCupOnline_API.Models;
 
-namespace WorldCupOnline_API.Controllers
+namespace WorldCupOnline_API.Repositories
 {
-    [Route("api/[controller]")]
+    [Route("api/League")]
     [ApiController]
-    public class LeagueController : ControllerBase
+    public class LeagueRepository : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly LeagueData _funct;
@@ -16,11 +16,12 @@ namespace WorldCupOnline_API.Controllers
         /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
-        public LeagueController(IConfiguration configuration)
+        public LeagueRepository(IConfiguration configuration)
         {
             _configuration = configuration;
             _funct = new LeagueData();
         }
+
 
         /// <summary>
         /// Service to get all Leagues
@@ -29,7 +30,7 @@ namespace WorldCupOnline_API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<League>>> Get()
         {
-            return await _funct.GetLeague();
+            return await _funct.GetLeagues();
         }
 
         /// <summary>
@@ -44,12 +45,12 @@ namespace WorldCupOnline_API.Controllers
         }
 
         /// <summary>
-        /// Service to get one Tournament 
+        /// Service to get list of Tournaments for Leagues
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>GetTournamentBody</returns>
+        /// <returns></returns>
         [HttpGet("Tournaments")]
-        public async Task<ActionResult<List<ValueIntBody>>> GetLeagues()
+        public async Task<ActionResult<List<ValueStringBody>>> GetTournamentsLeagues()
         {
             return await _funct.GetTournaments();
         }
@@ -64,29 +65,6 @@ namespace WorldCupOnline_API.Controllers
         {
             string accessCode = _funct.CreateLeague(league).Result;
             return Ok(accessCode);
-        }
-
-        /// <summary>
-        /// Service to edit League
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="league"></param>
-        /// <returns>Task action result</returns>
-        [HttpPut("{id}")]
-        public async Task Put(string id, [FromBody] League league)
-        {
-            await _funct.EditLeague(id, league);
-        }
-
-        /// <summary>
-        /// Service to delete League
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Task action result</returns>
-        [HttpDelete("{id}")]
-        public async Task Delete(string id)
-        {
-            await _funct.DeleteLeague(id);
         }
     }
 }
