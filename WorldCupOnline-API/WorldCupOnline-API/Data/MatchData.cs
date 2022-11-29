@@ -1,11 +1,12 @@
 using System.Data;
 using System.Data.SqlClient;
 using WorldCupOnline_API.Connection;
+using WorldCupOnline_API.Interfaces;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
-    public class MatchData
+    public class MatchData : IMatchData
     {
         ///Create new connenction
         private readonly DbConnection _con = new();
@@ -42,6 +43,8 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(match);
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///return list
         }
@@ -79,6 +82,8 @@ namespace WorldCupOnline_API.Data
                         mvp = (string)reader["mvp"]
                     };
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return match; ///Return object
         }
@@ -113,29 +118,29 @@ namespace WorldCupOnline_API.Data
                 var id = reader["id"];
                 newMatchId = Convert.ToInt32(id);
             }
-
             await reader.CloseAsync();
+
+            //Create Team_In_Match
+            using var cmdTeam1 = new SqlCommand("insertTIM", sql);
+            cmdTeam1.CommandType = CommandType.StoredProcedure;
+            cmdTeam1.Parameters.AddWithValue("@teamid", match.team1);
+            cmdTeam1.Parameters.AddWithValue("@matchid", newMatchId);
+
+            using var readerTeam1 = await cmdTeam1.ExecuteReaderAsync();
+            await readerTeam1.CloseAsync();
+
+            //Create Team_In_Match
+            using var cmdTeam2 = new SqlCommand("insertTIM", sql);
+            cmdTeam2.CommandType = CommandType.StoredProcedure;
+            cmdTeam2.Parameters.AddWithValue("@teamid", match.team2);
+            cmdTeam2.Parameters.AddWithValue("@matchid", newMatchId);
+
+            using var readerTeam2 = await cmdTeam2.ExecuteReaderAsync();
+            await readerTeam2.CloseAsync();
+
             await sql.CloseAsync();
-            var teams = new Team_In_MatchData();
-
-            ///Create team1 in match when creating a match
-            var team1 = new Team_In_Match
-            {
-                teamid = match.team1,
-                matchid = newMatchId
-            };
-
-            ///Create team2 in match when creating a match
-            var team2 = new Team_In_Match
-            {
-                teamid = match.team2,
-                matchid = newMatchId
-            };
-
-            ///Executing methods to create from other data files
-            await teams.CreateTeam_In_Match(team1);
-            await teams.CreateTeam_In_Match(team2);
         }
+
 
         /// <summary>
         /// Method to edit a match
@@ -158,71 +163,57 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@mvp", match.mvpid);
 
             await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
+            using var reader = await cmd.ExecuteReaderAsync();
+            await reader.CloseAsync();
 
-            var scorers = new Scorer_In_MatchData();
-            var assists = new Assist_In_MatchData();
-
-            foreach(string scorerId in match.team1scorers)
+            //Create Scorer_In_Match for Team 1
+            foreach (string scorerId in match.team1scorers)
             {
-                var SIM = new Scorer_In_Match
-                {
-                    matchid = id,
-                    playerid = scorerId
+                using var cmdScorer1 = new SqlCommand("insertSIM", sql);
+                cmdScorer1.CommandType = CommandType.StoredProcedure;
+                cmdScorer1.Parameters.AddWithValue("@matchid", id);
+                cmdScorer1.Parameters.AddWithValue("@playerid", scorerId);
 
-                };
-                await scorers.CreateScorer_In_Match(SIM);
+                using var readerScorer1 = await cmdScorer1.ExecuteReaderAsync();
+                await readerScorer1.CloseAsync();
             }
 
+            //Create Scorer_In_Match for Team 2
             foreach (string scorerId in match.team2scorers)
             {
-                var SIM = new Scorer_In_Match
-                {
-                    matchid = id,
-                    playerid = scorerId
+                using var cmdScorer2 = new SqlCommand("insertSIM", sql);
+                cmdScorer2.CommandType = CommandType.StoredProcedure;
+                cmdScorer2.Parameters.AddWithValue("@matchid", id);
+                cmdScorer2.Parameters.AddWithValue("@playerid", scorerId);
 
-                };
-                await scorers.CreateScorer_In_Match(SIM);
+                using var readerScorer1 = await cmdScorer2.ExecuteReaderAsync();
+                await readerScorer1.CloseAsync();
             }
 
-            foreach(string assistId in match.team1assists)
+            //Create Assist_In_Match for Team 1
+            foreach (string assistId in match.team1assists)
             {
-                var AIM = new Assist_In_Match
-                {
-                    matchid = id,
-                    playerid = assistId
-                };
-                await assists.CreateAssist_In_Match(AIM);
+                using var cmdAssist1 = new SqlCommand("insertAIM", sql);
+                cmdAssist1.CommandType = CommandType.StoredProcedure;
+                cmdAssist1.Parameters.AddWithValue("@matchid", id);
+                cmdAssist1.Parameters.AddWithValue("@playerid", assistId);
+
+                using var readerAssist1 = await cmdAssist1.ExecuteReaderAsync();
+                await readerAssist1.CloseAsync();
+             
             }
 
+            //Create Assist_In_Match for Team 2
             foreach (string assistId in match.team2assists)
             {
-                var AIM = new Assist_In_Match
-                {
-                    matchid = id,
-                    playerid = assistId
-                };
-                await assists.CreateAssist_In_Match(AIM);
+                using var cmdAssist2 = new SqlCommand("insertAIM", sql);
+                cmdAssist2.CommandType = CommandType.StoredProcedure;
+                cmdAssist2.Parameters.AddWithValue("@matchid", id);
+                cmdAssist2.Parameters.AddWithValue("@playerid", assistId);
+
+                using var readerAssist2 = await cmdAssist2.ExecuteReaderAsync();
+                await readerAssist2.CloseAsync();
             }
-
         }
-
-        /// <summary>
-        /// Method to delete a match
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task DeleteMatch(int id)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("deleteMatch", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedre
-            cmd.Parameters.AddWithValue("@id", id);///Add parameter with value id
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
-        }
-
     }
 }

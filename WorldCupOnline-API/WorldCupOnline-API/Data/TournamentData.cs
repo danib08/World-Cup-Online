@@ -219,7 +219,6 @@ namespace WorldCupOnline_API.Data
             ///Create teams in tournament for each team added
             foreach (string teamid in tournament.teamsIds)
             {
-                //await CreateTeam_In_Tournament(TIM);
                 using var cmdTeam = new SqlCommand("insertTIT", sql);
                 cmdTeam.CommandType = CommandType.StoredProcedure;
                 cmdTeam.Parameters.AddWithValue("@teamid", teamid);
