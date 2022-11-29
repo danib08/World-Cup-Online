@@ -10,7 +10,7 @@ namespace WorldCupOnline_API.Interfaces
         Task<List<ValueIntBody>> GetTypes();
         Task<List<MatchTournamentBody>> GetMatchesByTournament(string id);
         Task<List<ValueIntBody>> GetPhasesByTournament(string id);
-        Task<List<TeamTournamentBody>> GetTeamsByTournament(string id);
+        Task<List<IdStringBody>> GetTeamsByTournament(string id);
         Task CreateTournament(TournamentCreator tournament);
     }
 }

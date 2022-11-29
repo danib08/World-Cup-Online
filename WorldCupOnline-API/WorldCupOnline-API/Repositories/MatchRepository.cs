@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorldCupOnline_API.Data;
+using WorldCupOnline_API.Interfaces;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Repositories
@@ -9,7 +10,7 @@ namespace WorldCupOnline_API.Repositories
     public class MatchRepository : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly MatchData _funct;
+        private readonly IMatchData _funct;
 
         /// <summary>
         /// Establish configuration for controller to get connection
