@@ -1,8 +1,8 @@
 ﻿namespace WorldCupOnline_API.Bodies
 {
-    public class ValueIntBody
+    public class TeamTypeBody
     {
-        public int value { get; set; }
+        public string id { get; set; }
         public string label { get; set; }
     }
 }

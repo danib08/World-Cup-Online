@@ -1,10 +1,12 @@
-﻿namespace WorldCupOnline_API.Connection
-{
-    public class DbConnection
-    {
-        private string connectionString = string.Empty;
+﻿using Newtonsoft.Json.Linq;
 
-        public DbConnection()
+namespace WorldCupOnline_API.Conection
+{
+    public class DbConection
+    {
+        private string connectionString = String.Empty;
+
+        public DbConection()
         {
             var constructor = new ConfigurationBuilder().SetBasePath
                 (Directory.GetCurrentDirectory()).AddJsonFile

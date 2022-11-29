@@ -1,146 +1,153 @@
-﻿using System.Data;
+﻿
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using WorldCupOnline_API.Bodies;
-using WorldCupOnline_API.Connection;
-using WorldCupOnline_API.Interfaces;
+using WorldCupOnline_API.Conection;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
-    public class TeamData : ITeamData
+    public class TeamData
     {
-        ///Create connection
-        private readonly DbConnection _con = new();
-
-        /// <summary>
-        /// Method to obtain all teams
-        /// </summary>
-        /// <returns>List of IdStringBody objects</returns>
-        public async Task <List<IdStringBody>> GetTeams()
+        DbConection con = new DbConection();
+        public async Task <List<Team>> GetTeams()
         {
-            var list = new List<IdStringBody>(); ///Create list of IdStringBody object
-
-            using (var sql = new SqlConnection(_con.SQLCon()))
+            var list = new List<Team>();
+            using (var sql = new SqlConnection(con.SQLCon()))
             {
-                using var cmd = new SqlCommand("getTeams", sql);///Calls stored procedure via sql connection
-                await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-
-                using var reader = await cmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                using(var cmd = new SqlCommand("get_teams", sql))
                 {
-                    ///Read from database
-                    var team = new IdStringBody
+                    await sql.OpenAsync();
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using(var item = await cmd.ExecuteReaderAsync())
                     {
-                        id = (string)reader["id"],
-                        label = (string)reader["label"]
-                    };
-                    list.Add(team); ///Add to list
+                        while(await item.ReadAsync())
+                        {
+                            var team = new Team();
+                            team.id = (string)item["id"];
+                            team.name = (string)item["name"];
+                            team.confederation = (string)item["confederation"];
+                            team.typeid = (int)item["typeid"];
+                            list.Add(team);
+                        }
+                    }
                 }
-                await reader.CloseAsync();
-                await sql.CloseAsync();
             }
-            return list; ///Return list
+            return list;
         }
 
-        /// <summary>
-        /// Method to obtain one team
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Team object</returns>
-        public async Task<Team> GetOneTeam(string id)
+        public async Task<List<Team>> GetOneTeam(Team data)
         {
-            var team = new Team(); ///Create Team object
-            using var sql = new SqlConnection(_con.SQLCon());
-
-            using (var cmd = new SqlCommand("getOneTeam", sql))///Calls stored procedure via sql connection
+            var list = new List<Team>();
+            using (var sql = new SqlConnection(con.SQLCon()))
             {
-                await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-                cmd.Parameters.AddWithValue("@id", id);///Add value with parameters
-
-                using var reader = await cmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                using (var cmd = new SqlCommand("getOneTeam", sql))
                 {
-                    ///Read from database
-                    team = new Team
+                    await sql.OpenAsync();
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", data.id);
+
+                    using (var item = await cmd.ExecuteReaderAsync())
                     {
-                        id = (string)reader["id"],
-                        name = (string)reader["name"],
-                        confederation = (string)reader["confederation"],
-                        typeid = (int)reader["typeid"]
-                    };
+                        while(await item.ReadAsync())
+                        {
+                            var team = new Team();
+                            team.id = (string)item["id"];
+                            team.name = (string)item["name"];
+                            team.confederation = (string)item["confederation"];
+                            team.typeid = (int)item["typeid"];
+                            list.Add(team);
+
+                        }
+                    }
                 }
-                await reader.CloseAsync();
-                await sql.CloseAsync();
+
+                return list;
             }
-            return team; ///Return object
         }
 
-        /// <summary>
-        /// Method to obtain all teams by type
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns>List of IdStringBody objects</returns>
-        public async Task<List<IdStringBody>> GetTeamsByType(int type)
+        public async Task<List<TeamTypeBody>> GetType(Team data)
         {
-            var list = new List<IdStringBody>(); ///Create IdStringBody list
-
-            using var sql = new SqlConnection(_con.SQLCon());
-            using (var cmd = new SqlCommand("getTeamsByType", sql))///Calls stored procedure via sql connection
-            {
-                await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-                cmd.Parameters.AddWithValue("@typeid", type);
-
-                using var reader = await cmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                var list = new List<TeamTypeBody>();
+                using (var sql = new SqlConnection(con.SQLCon()))
                 {
-                    ///Read from database
-                    var item = new IdStringBody
+                    using (var cmd = new SqlCommand("getTypeTeam", sql))
                     {
-                        id = (string)reader["id"],
-                        label = (string)reader["label"]
-                    };
-                    list.Add(item); ///Add to list
+                        await sql.OpenAsync();
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@typeid", data.typeid);
+
+                        using (var item = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await item.ReadAsync())
+                            {
+                                var team = new TeamTypeBody();
+                                team.id = (string)item["id"];
+                                team.label = (string)item["label"];
+                                list.Add(team);
+
+                            }
+                        }
+                    }
+
+                    return list;
                 }
-                await reader.CloseAsync();
-                await sql.CloseAsync();
             }
-            return list; ///Return list
+
+
+            public async Task PostTeams(Team team)
+        {
+            using (var sql = new SqlConnection(con.SQLCon()))
+            {
+                using(var cmd = new SqlCommand("insertTeam", sql))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", team.id);
+                    cmd.Parameters.AddWithValue("@name", team.name);
+                    cmd.Parameters.AddWithValue("@confederation", team.confederation);
+                    cmd.Parameters.AddWithValue("@typeid", team.typeid);
+                    await sql.OpenAsync();
+                    await cmd.ExecuteReaderAsync();
+
+                }
+            }
         }
 
-        /// <summary>
-        /// Method to obtain all teams by type
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>List of IdStringBody objects</returns>
-        public async Task<List<IdStringBody>> GetPlayersByTeam(string id)
+        public async Task PutTeam(Team team)
         {
-            var list = new List<IdStringBody>(); ///Create IdStringBody list
-
-            using var sql = new SqlConnection(_con.SQLCon());
-            using (var cmd = new SqlCommand("getPlayersByTeam", sql))///Calls stored procedure via sql connection
+            using (var sql = new SqlConnection(con.SQLCon()))
             {
-                await sql.OpenAsync();
-                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-                cmd.Parameters.AddWithValue("@id", id);
-
-                using var reader = await cmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                using (var cmd = new SqlCommand("editTeam", sql))
                 {
-                    ///Read from database
-                    var item = new IdStringBody
-                    {
-                        id = (string)reader["id"],
-                        label = (string)reader["label"]
-                    };
-                    list.Add(item); ///Add to list
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", team.id);
+                    cmd.Parameters.AddWithValue("@name", team.name);
+                    cmd.Parameters.AddWithValue("@confederation", team.confederation);
+                    cmd.Parameters.AddWithValue("@typeid", team.typeid);
+                    await sql.OpenAsync();
+                    await cmd.ExecuteReaderAsync();
+
                 }
-                await reader.CloseAsync();
-                await sql.CloseAsync();
             }
-            return list; ///Return list
         }
+
+       
+
+        public async Task DeleteTeam(Team team)
+        {
+            using (var sql = new SqlConnection(con.SQLCon()))
+            {
+                using (var cmd = new SqlCommand("delete_team", sql))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", team.id);
+                    await sql.OpenAsync();
+                    await cmd.ExecuteReaderAsync();
+
+                }
+            }
+        }
+
     }
 }
