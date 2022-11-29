@@ -1,149 +1,102 @@
-----Nuevos procedimientos TOURNAMENT para arreglos del API----
+---- TOURNAMENT Procedures ----
 
-create procedure get_tournaments
+create procedure getTournaments
 as begin
-select * from dbo.Tournament
-end
-go
-
-create procedure getOneTournament(@ID int)
-as begin
-select * from dbo.Tournament
-		where ID = @ID
-end
-go
-
-
-
-create procedure insertTournament(@ID int,
-				@Name varchar(30),
-				@StartDate datetime,
-				@EndDate datetime,
-				@Description varchar(1000),
-				@TypeID int)
-as begin
-		insert into dbo.Tournament(Name,StartDate,EndDate,Description,TypeID)
-		values(@Name,@StartDate,@EndDate,@Description,@TypeID)
-		select SCOPE_IDENTITY() as ID
-end
-go
-
-create procedure editTournament(@ID int,
-				@Name varchar(30),
-				@StartDate datetime,
-				@EndDate datetime,
-				@Description varchar(1000),
-				@TypeID int)
-as begin
-update dbo.Tournament set Name=@Name,StartDate=@StartDate,EndDate=@EndDate,Description=@Description,TypeID=@TypeID
-		where ID=@ID 	
-end
-go
-
-create procedure delete_tournament(@ID int)
-as begin
-delete from dbo.Tournament
-		where ID = @ID
-end
-go
-
----------------------------------------------------------------------------------
-
-create procedure proc_tournament(@ID int,
-				@Name varchar(30),
-				@StartDate datetime,
-				@EndDate datetime,
-				@Description varchar(1000),
-				@TypeID int,
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Tournament(Name,StartDate,EndDate,Description,TypeID)
-		values(@Name,@StartDate,@EndDate,@Description,@TypeID)
-		select SCOPE_IDENTITY() as ID
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Tournament
-	end
-
-	if @StatementType = 'Select WebApp'
-	begin
 		select t.ID, t.name, StartDate, EndDate, Description, Type.Name as Type
 		from Tournament as t join Type on TypeID = Type.ID
-	end
+end
+go
 
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Tournament
-		where ID = @ID
-	end
+create procedure getTournLeagues
+as begin
+		select ID as value, Name as label
+		from Tournament
+end
+go
 
-	if @StatementType = 'Select One WebApp'
-	begin
+create procedure getOneTournament(@ID varchar(6))
+as begin
 		select t.ID, t.name, StartDate, EndDate, Description, Type.Name as Type
 		from Tournament as t join Type on TypeID = Type.ID
 		where t.ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Tournament set Name=@Name,StartDate=@StartDate,EndDate=@EndDate,Description=@Description,TypeID=@TypeID
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Tournament
-		where ID = @ID
-	end
-
-	if @StatementType = 'Get Matches by Tourn'
-	begin	
-		select dbo.Match.ID, dbo.Team.Name, StartDate, StartTime, Location, dbo.State.Name as State, Score
-		from ((dbo.Match join dbo.State on StateID = dbo.State.ID) join dbo.Team_In_Match on MatchID = dbo.Match.ID) join dbo.Team on TeamID = dbo.Team.ID
-		where TournamentID = @ID
-		order by dbo.Match.ID 
-	end
-
-	if @StatementType = 'Get Phases by Tourn'
-	begin	
-		select ID as value, Name as label
-		from Phase
-		where TournamentID = @ID
-	end
-
-	if @StatementType = 'Get Teams by Tourn'
-	begin	
-		select ID, Name, Confederation
-		from (Team_In_Tournament join Team on TeamID = ID)
-		where TournamentID = @ID
-	end
-
 end
 go
 
-----Nuevos procedimientos TEAMS para arreglos del API----
-
-create procedure get_teams
+create procedure insertTournament(@ID varchar(6),
+				@Name varchar(30),
+				@StartDate datetime,
+				@EndDate datetime,
+				@Description varchar(1000),
+				@TypeID int)
 as begin
-select * from dbo.Team
+		insert into dbo.Tournament(ID,Name,StartDate,EndDate,Description,TypeID)
+		values(@ID,@Name,@StartDate,@EndDate,@Description,@TypeID)
+end
+go
+
+create procedure editTournament(@ID varchar(6),
+				@Name varchar(30),
+				@StartDate datetime,
+				@EndDate datetime,
+				@Description varchar(1000),
+				@TypeID int)
+as begin
+		update dbo.Tournament set Name=@Name,StartDate=@StartDate,EndDate=@EndDate,Description=@Description,TypeID=@TypeID
+		where ID=@ID 	
+end
+go
+
+create procedure deleteTournament(@ID varchar(6))
+as begin
+		delete from dbo.Tournament
+		where ID = @ID
+end
+go
+
+create procedure getMatchesByTournament(@ID varchar(6))
+as begin
+		select dbo.Match.ID, dbo.Team.Name, StartDate, StartTime, Location, dbo.State.Name as State, GoalsTeam1, GoalsTeam2
+		from ((dbo.Match join dbo.State on StateID = dbo.State.ID) join dbo.Team_In_Match on MatchID = dbo.Match.ID) join dbo.Team on TeamID = dbo.Team.ID
+		where TournamentID = @ID
+		order by dbo.Match.ID  
+end
+go
+
+create procedure getPhasesByTournament(@ID varchar(6))
+as begin
+		select ID as value, Name as label
+		from Phase
+		where TournamentID = @ID
+end
+go
+
+create procedure getTeamsByTournament(@ID varchar(6))
+as begin
+		select ID, Name, Confederation
+		from (Team_In_Tournament join Team on TeamID = ID)
+		where TournamentID = @ID
+end
+go
+
+---- TEAMS Procedures ----
+
+create procedure getTeams
+as begin
+		select ID, Name as label
+		from dbo.Team
 end
 go
 
 create procedure getOneTeam(@ID varchar(8))
 as begin
-select * from dbo.Team
+		select * from dbo.Team
 		where ID = @ID
 end
 go
 
-create procedure getTypeTeam(@TypeID int)
+create procedure getTeamsByType(@TypeID int)
 as begin
-select ID, Name as label from dbo.Team
+		select ID, Name as label from dbo.Team
 		where TypeID = @TypeID
 end
 go
@@ -153,7 +106,7 @@ create procedure insertTeam(@ID varchar(8),
 				@Confederation varchar(30),
 				@TypeID int)
 as begin
-insert into dbo.Team(ID,Name,Confederation,TypeID)
+		insert into dbo.Team(ID,Name,Confederation,TypeID)
 		values(@ID,@Name,@Confederation,@TypeID)
 end
 go
@@ -163,155 +116,72 @@ create procedure editTeam(@ID varchar(8),
 				@Confederation varchar(30),
 				@TypeID int)
 as begin
-update dbo.Team set Name=@Name,Confederation=@Confederation,TypeID=@TypeID
-		where ID=@ID 	
-end
-go
-
-create procedure delete_team(@ID varchar(8))
-as begin
-delete from dbo.Team
-		where ID = @ID
-end
-go
-
---------------------------------------------------------------------------------
-
-create procedure proc_team(@ID varchar(8),
-			   	@Name varchar(30),
-				@Confederation varchar(30),
-				@TypeID int,
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Team(ID,Name,Confederation,TypeID)
-		values(@ID,@Name,@Confederation,@TypeID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Team
-	end
-
-	if @StatementType = 'Select WebApp'
-	begin
-		select ID, Name as label
-		from dbo.Team
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Team
-		where ID = @ID
-	end
-
-	if @StatementType = 'Select Type'
-	begin
-		select ID, Name as label from dbo.Team
-		where TypeID = @TypeID
-	end
-
-	if @StatementType = 'Update'
-	begin
 		update dbo.Team set Name=@Name,Confederation=@Confederation,TypeID=@TypeID
 		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Team
-		where ID = @ID
-	end
 end
 go
 
-
-----Nuevos procedimientos Team_In_Tournament para arreglos del API----
-
-create procedure get_TIT
+create procedure deleteTeam(@ID varchar(8))
 as begin
-select * from dbo.Team_In_Tournament
+		delete from dbo.Team
+		where ID = @ID
+end
+go
+
+create procedure getPlayersByTeam(@ID varchar(8))
+as begin
+		select Player.ID as id, Player.Name + ' ' + Lastname as label
+		from Player join (Team join Player_In_Team on ID = TeamID) on Player.ID = PlayerID
+		where Team.ID = @ID
+end
+go
+
+---- TEAM_IN_TOURNAMENT Procedures ---
+
+create procedure getTIT
+as begin
+		select * from dbo.Team_In_Tournament
 end
 go
 
 create procedure getOneTIT(@TeamID varchar(8),
-				@TournamentID int)
+				@TournamentID varchar(6))
 as begin
-select * from dbo.Team_In_Tournament
+		select * from dbo.Team_In_Tournament
 		where TeamID = @TeamID and TournamentID = @TournamentID
 end
 go
-
-
 
 create procedure insertTIT(@TeamID varchar(8),
-				@TournamentID int)
+				@TournamentID varchar(6))
 as begin
 		insert into dbo.Team_In_Tournament(TeamID,TournamentID)
 		values(@TeamID,@TournamentID)
 end
 go
 
-create procedure delete_TIT(@TeamID varchar(8),
-				@TournamentID int)
+create procedure deleteTIT(@TeamID varchar(8),
+				@TournamentID varchar(6))
 as begin
 		delete from dbo.Team_In_Tournament
 		where TeamID = @TeamID and TournamentID = @TournamentID
 end
 go
 
--------------------------------------------------------------------------
+---- PLAYERS Procedures ----
 
-create procedure proc_teamInTournament(@TeamID varchar(8),
-				@TournamentID int,
-				@StatementType varchar(50) = '')
+create procedure getPlayers
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Team_In_Tournament(TeamID,TournamentID)
-		values(@TeamID,@TournamentID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Team_In_Tournament
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Team_In_Tournament
-		where TeamID = @TeamID and TournamentID = @TournamentID
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Team_In_Tournament
-		where TeamID = @TeamID and TournamentID = @TournamentID
-	end
-end
-go
-
-
-
-----Nuevos procedimientos PLAYERS para arreglos del API----
-
-create procedure get_players
-as begin
-select * from dbo.Player
+		select * from dbo.Player
 end
 go
 
 create procedure getOnePlayer(@ID varchar(15))
 as begin
-select * from dbo.Player
+		select * from dbo.Player
 		where ID = @ID
 end
 go
-
-
 
 create procedure insertPlayer(@ID varchar(15),
 				@Name varchar(30),
@@ -328,65 +198,23 @@ create procedure editPlayer(@ID varchar(15),
 				@Lastname varchar(30),
 				@Position varchar(30))
 as begin
-update dbo.Player set Name=@Name,Lastname=@Lastname,Position=@Position
+		update dbo.Player set Name=@Name,Lastname=@Lastname,Position=@Position
 		where ID=@ID	
 end
 go
 
-create procedure delete_player(@ID varchar(15))
+create procedure deletePlayer(@ID varchar(15))
 as begin
-delete from dbo.Player
-		where ID = @ID
-end
-go
-
----------------------------------------------------------------------------------
-
-
-create procedure proc_player(@ID varchar(15),
-				@Name varchar(30),
-				@Lastname varchar(30),
-				@Position varchar(30),
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Player(ID,Name,Lastname,Position)
-		values(@ID,@Name,@Lastname,@Position)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Player
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Player
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Player set Name=@Name,Lastname=@Lastname,Position=@Position
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
 		delete from dbo.Player
 		where ID = @ID
-	end
 end
 go
 
+---- PLAYER_IN_TEAM Procedures ----
 
-----Nuevos procedimientos Player_In_Team para arreglos del API----
-
-create procedure get_PIT
+create procedure getPIT
 as begin
-select * from dbo.Player_In_Team
+		select * from dbo.Player_In_Team
 end
 go
 
@@ -397,8 +225,6 @@ as begin
 		where TeamID = @TeamID and PlayerID= @PlayerID
 end
 go
-
-
 
 create procedure insertPIT(@TeamID varchar(6),
 				@PlayerID varchar(15),
@@ -413,64 +239,24 @@ create procedure editPIT(@TeamID varchar(6),
 				@PlayerID varchar(15),
 				@JerseyNum int)
 as begin
-update dbo.Player_In_Team set JerseyNum=@JerseyNum
-		where TeamID = @TeamID and PlayerID= @PlayerID	
-end
-go
-
-create procedure delete_PIT(@TeamID varchar(6),
-				@PlayerID varchar(15))
-as begin
-delete from dbo.Player_In_Team 
-		where TeamID = @TeamID and PlayerID= @PlayerID
-end
-go
-
--------------------------------------------------------------------------
-
-create procedure proc_player_In_Team(@TeamID varchar(6),
-				@PlayerID varchar(15),
-				@JerseyNum int,
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Player_In_Team(TeamID,PlayerID,JerseyNum)
-		values(@TeamID,@PlayerID,@JerseyNum)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Player_In_Team
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Player_In_Team
-		where TeamID = @TeamID and PlayerID= @PlayerID
-	end
-
-
-	if @StatementType = 'Update'
-	begin
 		update dbo.Player_In_Team set JerseyNum=@JerseyNum
 		where TeamID = @TeamID and PlayerID= @PlayerID	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Player_In_Team 
-		where TeamID = @TeamID and PlayerID= @PlayerID
-	end
 end
 go
 
-----Nuevos procedimientos PHASE para arreglos del API----
-
-create procedure get_phase
+create procedure deletePIT(@TeamID varchar(6),
+				@PlayerID varchar(15))
 as begin
-select * from dbo.Phase
+		delete from dbo.Player_In_Team 
+		where TeamID = @TeamID and PlayerID= @PlayerID
+end
+go
+
+---- PHASE procedures ----
+
+create procedure getPhase
+as begin
+		select * from dbo.Phase
 end
 go
 
@@ -481,11 +267,8 @@ as begin
 end
 go
 
-
-
-create procedure insertPhase(@ID int,
-				@Name varchar(50),
-				@TournamentID int)
+create procedure insertPhase(@Name varchar(50),
+				@TournamentID varchar(6))
 as begin
 		insert into dbo.Phase(Name,TournamentID)
 		values(@Name,@TournamentID)
@@ -494,67 +277,25 @@ go
 
 create procedure editPhase(@ID int,
 				@Name varchar(50),
-				@TournamentID int)
+				@TournamentID varchar(6))
 as begin
-insert into dbo.Phase(Name,TournamentID)
-		values(@Name,@TournamentID)	
-end
-go
-
-create procedure delete_phase(@ID int)
-as begin
-delete from dbo.Phase 
-		where ID = @ID
-end
-go
-
--------------------------------------------------------------------------
-
-create procedure proc_phase(@ID int,
-				@Name varchar(50),
-				@TournamentID int,
-				@StatementType varchar(50) = '')
-as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Phase(Name,TournamentID)
-		values(@Name,@TournamentID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select ID as value, Name as label from dbo.Phase
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Phase
-		where ID = @ID
-	end
-
-
-	if @StatementType = 'Update'
-	begin
 		update dbo.Phase set Name=@Name, TournamentID=@TournamentID
 		where ID = @ID	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Phase 
-		where ID = @ID
-	end
 end
 go
 
---------------------------------------------------------------
-
-----Nuevos procedimientos MATCH para arreglos del API----
-
-create procedure get_matches
+create procedure deletePhase(@ID int)
 as begin
-select * from dbo.Match
+		delete from dbo.Phase 
+		where ID = @ID
+end
+go
+
+---- MATCH procedures ----
+
+create procedure getMatches
+as begin
+		select * from dbo.Match
 end
 go
 
@@ -565,19 +306,18 @@ as begin
 end
 go
 
-
-
-create procedure insertMatch(@ID int,
-			    @StartDate datetime,
+create procedure insertMatch(@StartDate datetime,
 			    @StartTime time,
-			    @Score varchar(7),
+			    @GoalsTeam1 int,
+				@GoalsTeam2 int,
 			    @Location varchar(50),
 			    @StateID int,
-			    @TournamentID int,
-				@PhaseID int)
+			    @TournamentID varchar(6),
+				@PhaseID int,
+				@MVP varchar(15))
 as begin
-		insert into dbo.Match(StartDate,StartTime,Score,Location,StateID,TournamentID,PhaseID)
-		values(@StartDate,@StartTime,@Score,@Location,@StateID,@TournamentID,@PhaseID)
+		insert into dbo.Match(StartDate,StartTime,GoalsTeam1,GoalsTeam2,Location,StateID,TournamentID,PhaseID,MVP)
+		values(@StartDate,@StartTime,@GoalsTeam1,@GoalsTeam2,@Location,@StateID,@TournamentID,@PhaseID,@MVP)
 		select SCOPE_IDENTITY() as ID
 end
 go
@@ -585,74 +325,42 @@ go
 create procedure editMatch(@ID int,
 			    @StartDate datetime,
 			    @StartTime time,
-			    @Score varchar(7),
+			    @GoalsTeam1 int,
+				@GoalsTeam2 int,
 			    @Location varchar(50),
 			    @StateID int,
-			    @TournamentID int,
-				@PhaseID int)
+			    @TournamentID varchar(6),
+				@PhaseID int,
+				@MVP varchar(15))
 as begin
-		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,StateID=@StateID,TournamentID=@TournamentID,PhaseID=@PhaseID
+		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,GoalsTeam1=@GoalsTeam1,GoalsTeam2=@GoalsTeam2, Location=@Location,StateID=@StateID,TournamentID=@TournamentID,PhaseID=@PhaseID, MVP=@MVP
 		where ID=@ID	
 end
 go
 
-create procedure delete_match(@ID int)
+create procedure updateMatch(@ID int,
+			    @GoalsTeam1 int,
+				@GoalsTeam2 int,
+				@MVP varchar(15))
+as begin
+		update dbo.Match set GoalsTeam1=@GoalsTeam1,GoalsTeam2=@GoalsTeam2,MVP=@MVP
+		where ID=@ID	
+end
+go
+
+
+create procedure deleteMatch(@ID int)
 as begin
 		delete from dbo.Match 
 		where ID = @ID
 end
 go
 
--------------------------------------------------------------------------
+---- STATE Procedures ----
 
-create procedure proc_match(@ID int,
-			    @StartDate datetime,
-			    @StartTime time,
-			    @Score varchar(7),
-			    @Location varchar(50),
-			    @StateID int,
-			    @TournamentID int,
-				@PhaseID int,
-			    @StatementType varchar(50) = '')
+create procedure getStates
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Match(StartDate,StartTime,Score,Location,StateID,TournamentID,PhaseID)
-		values(@StartDate,@StartTime,@Score,@Location,@StateID,@TournamentID,@PhaseID)
-		select SCOPE_IDENTITY() as ID
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Match
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Match
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Match set StartDate=@StartDate,StartTime=@StartTime,Location=@Location,StateID=@StateID,TournamentID=@TournamentID,PhaseID=@PhaseID
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Match 
-		where ID = @ID
-	end
-end
-go
-
-----Nuevos procedimientos STATE para arreglos del API----
-
-create procedure get_state
-as begin
-select * from dbo.State
+		select * from dbo.State
 end
 go
 
@@ -662,8 +370,6 @@ as begin
 		where ID = @ID
 end
 go
-
-
 
 create procedure insertState(@ID int,
 				@Name varchar(30))
@@ -681,57 +387,18 @@ as begin
 end
 go
 
-create procedure delete_state(@ID int)
+create procedure deleteState(@ID int)
 as begin
 		delete from dbo.State 
 		where ID = @ID
 end
 go
 
--------------------------------------------------------------------------
+---- TEAM_IN_MATCH Procedures ----
 
-
-create procedure proc_state(@ID int,
-				@Name varchar(30),
-			    @StatementType varchar(50) = '')
+create procedure getTIM
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.State(Name)
-		values(@Name)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.State
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.State
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.State set Name=@Name
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.State
-		where ID = @ID
-	end
-end
-go
-
-----Nuevos procedimientos Team_In_Match para arreglos del API----
-
-create procedure get_TIM
-as begin
-select * from dbo.Team_In_Match
+		select * from dbo.Team_In_Match
 end
 go
 
@@ -751,7 +418,7 @@ as begin
 end
 go
 
-create procedure delete_TIM(@TeamID varchar(8),
+create procedure deleteTIM(@TeamID varchar(8),
 				@MatchID int)
 as begin
 		delete from dbo.Team_In_Match
@@ -759,44 +426,13 @@ as begin
 end
 go
 
--------------------------------------------------------------------------
 
+---- TYPE Procedures ----
 
-create procedure proc_teamInMatch(@TeamID varchar(8),
-				@MatchID int,
-			    @StatementType varchar(50) = '')
+create procedure getTypes
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Team_In_Match(TeamID,MatchID)
-		values(@TeamID,@MatchID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Team_In_Match
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Team_In_Match
-		where TeamID = @TeamID and MatchID = @MatchID
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Team_In_Match
-		where TeamID = @TeamID and MatchID = @MatchID
-	end
-end
-go
-
-----Nuevos procedimientos TYPE para arreglos del API----
-
-create procedure get_types
-as begin
-select * from dbo.Type
+		select ID as value, Name as label
+		from dbo.Type
 end
 go
 
@@ -823,200 +459,395 @@ as begin
 end
 go
 
-create procedure delete_type(@ID int)
+create procedure deleteType(@ID int)
 as begin
 		delete from dbo.Type 
 		where ID = @ID
 end
 go
 
---------------------------------------------------------
 
-create procedure proc_type(@ID int,
-				@Name varchar(30),
-			    @StatementType varchar(50) = '')
+---  COUNTRY Procedures ---
+
+create procedure getCountries
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Type(Name)
-		values(@Name)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Type
-	end
-
-	if @StatementType = 'Select WebApp'
-	begin
 		select ID as value, Name as label
-		from dbo.Type
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.State
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Type set Name=@Name
-		where ID=@ID 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Type
-		where ID = @ID
-	end
+		from dbo.Country
 end
 go
 
-create procedure proc_users(@Username varchar(12),
+create procedure getOneCountry(@ID varchar(3))
+as begin
+		select * from dbo.Country
+		where ID = @ID
+end
+go
+
+create procedure insertCountry(@ID varchar(3),
+				@Name varchar(31))
+as begin
+		insert into dbo.Country(ID, Name)
+		values(@ID, @Name)
+end
+go
+
+create procedure editCountry(@ID varchar(3),
+				@Name varchar(31))
+as begin
+		update dbo.Country set Name=@Name
+		where ID=@ID 
+end
+go
+
+create procedure deleteCountry(@ID varchar(3))
+as begin
+		delete from dbo.Country
+		where ID = @ID
+end
+go
+
+
+--- USERS Procedures ---
+
+create procedure getUsers
+as begin
+		select * from dbo.Users
+end
+go
+
+create procedure getOneUser(@Username varchar(12))
+as begin
+		select * from dbo.Users
+		where @Username = @Username
+end
+go
+
+create procedure insertUser(@Username varchar(12),
 				@Name varchar(30),
 				@Lastname varchar(30),
 				@Email varchar(45),
 				@CountryID varchar(3),
 				@Birthdate datetime,
-				@Password varchar(40),
-			    @StatementType varchar(50) = '')
+				@isAdmin bit,
+				@Password varchar(MAX))
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Users(Username, Name, Lastname, Email, CountryID, Birthdate, Password)
-		values(@Username, @Name, @Lastname, @Email, @CountryID, @Birthdate, @Password)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Users
-	end
-
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Users
-		where Username = @Username
-	end
-
-	if @StatementType = 'Update'
-	begin
-		update dbo.Users set Name=@Name, Lastname=@Lastname, Email=@Email, CountryID=@CountryID, Birthdate=@Birthdate, Password=@Password
-		where Username = @Username 	
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Users
-		where Username = @Username
-	end
+		insert into dbo.Users(Username, Name, Lastname, Email, CountryID, Birthdate, isAdmin, Password)
+		values(@Username, @Name, @Lastname, @Email, @CountryID, @Birthdate, @isAdmin, @Password)
 end
 go
 
-create procedure proc_bet(@ID int,
-				@GoalsTeam1 int,
+create procedure editUser(@Username varchar(12),
+				@Name varchar(30),
+				@Lastname varchar(30),
+				@Email varchar(45),
+				@CountryID varchar(3),
+				@Birthdate datetime,
+				@isAdmin bit,
+				@Password varchar(MAX))
+as begin
+		update dbo.Users set Name=@Name, Lastname=@Lastname, Email=@Email, CountryID=@CountryID, Birthdate=@Birthdate, isAdmin=@isAdmin ,Password=@Password
+		where Username = @Username 
+end
+go
+
+create procedure deleteUser(@Username varchar(12))
+as begin
+		delete from dbo.Users
+		where @Username = @Username
+end
+go
+
+create procedure authUser(@Email varchar(45))
+as begin
+		select Username, Password from dbo.Users
+		where Email = @Email
+end
+go
+
+--- BET Procedures ---
+
+create procedure getBets
+as begin
+		select * from dbo.Bet
+end
+go
+
+create procedure getOneBet(@ID int)
+as begin
+		select * from dbo.Bet
+		where @ID = @ID
+end
+go
+
+create procedure insertBet(@GoalsTeam1 int,
 				@GoalsTeam2 int,
-				@Score int ,
 				@MVP varchar(15),
 				@UserID varchar(12),
-				@MatchID int,
-			    @StatementType varchar(50) = '')
+				@MatchID int)
 as begin
-
-	if @StatementType = 'Insert'
-	begin
 		insert into dbo.Bet(GoalsTeam1, GoalsTeam2, Score, MVP, UserID, MatchID)
-		values(@GoalsTeam1, @GoalsTeam2, @Score, @MVP, @UserID, @MatchID)
-	end
+		values(@GoalsTeam1, @GoalsTeam2, 0, @MVP, @UserID, @MatchID)
+		select SCOPE_IDENTITY() as ID
+end
+go
 
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Bet
-	end
-
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Bet
-		where ID = @ID
-	end
-
-	if @StatementType = 'Update'
-	begin
+create procedure editBet(@ID int,
+				@GoalsTeam1 int,
+				@GoalsTeam2 int,
+				@Score int,
+				@MVP varchar(15),
+				@UserID varchar(12),
+				@MatchID int)
+as begin
 		update dbo.Bet set GoalsTeam1=@GoalsTeam1, GoalsTeam2=@GoalsTeam2, Score=@Score, MVP=@MVP, UserID=@UserID, MatchID=@MatchID
 		where ID = @ID 	
-	end
+end
+go
 
-	if @StatementType = 'Delete'
-	begin
+create procedure deleteBet(@ID int)
+as begin
 		delete from dbo.Bet
 		where ID = @ID
-	end
 end
 go
 
 
-create procedure proc_scorerInBet(@ID int,
-				@BetID int,
-				@PlayerID varchar(15),
-			    @StatementType varchar(50) = '')
+--- ASSIST_IN_BET Procedures ---
+
+create procedure getAIB
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Scorer_In_Bet(ID,BetID,PlayerID)
-		values(@ID, @BetID,@PlayerID)
-	end
-
-	if @StatementType = 'Select'
-	begin
-		select * from dbo.Scorer_In_Bet
-	end
-
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Scorer_In_Bet
-		where BetID = @BetID and PlayerID = @PlayerID
-	end
-
-	if @StatementType = 'Delete'
-	begin
-		delete from dbo.Scorer_In_Bet
-		where BetID = @BetID and PlayerID = @PlayerID
-	end
+		select * from dbo.Assist_In_Bet
 end
 go
 
-create procedure proc_assistInBet(@ID int,
-				@BetID int,
-				@PlayerID varchar(15),
-			    @StatementType varchar(50) = '')
+create procedure getOneAIB(@ID int)
 as begin
-
-	if @StatementType = 'Insert'
-	begin
-		insert into dbo.Assist_In_Bet(ID,BetID,PlayerID)
-		values(@ID, @BetID,@PlayerID)
-	end
-
-	if @StatementType = 'Select'
-	begin
 		select * from dbo.Assist_In_Bet
-	end
+		where @ID = @ID
+end
+go
 
-	if @StatementType = 'Select One'
-	begin
-		select * from dbo.Assist_In_Bet
-		where BetID = @BetID and PlayerID = @PlayerID
-	end
+create procedure insertAIB(@BetID int,
+				@PlayerID varchar(15))
+as begin
+		insert into dbo.Assist_In_Bet(BetID, PlayerID)
+		values(@BetID, @PlayerID)
+end
+go
 
-	if @StatementType = 'Delete'
-	begin
+create procedure editAIB(@ID int,
+				@BetID int,
+				@PlayerID varchar(15))
+as begin
+		update dbo.Assist_In_Bet set BetID=@BetID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteAIB(@ID int)
+as begin
 		delete from dbo.Assist_In_Bet
-		where BetID = @BetID and PlayerID = @PlayerID
-	end
+		where ID = @ID
+end
+go
+
+--- SCORER_IN_BET Procedures ---
+
+create procedure getSIB
+as begin
+		select * from dbo.Scorer_In_Bet
+end
+go
+
+create procedure getOneSIB(@ID int)
+as begin
+		select * from dbo.Scorer_In_Bet
+		where @ID = @ID
+end
+go
+
+create procedure insertSIB(@BetID int,
+				@PlayerID varchar(15))
+as begin
+		insert into dbo.Scorer_In_Bet(BetID, PlayerID)
+		values(@BetID, @PlayerID)
+end
+go
+
+create procedure editSIB(@ID int,
+				@BetID int,
+				@PlayerID varchar(15))
+as begin
+		update dbo.Scorer_In_Bet set BetID=@BetID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteSIB(@ID int)
+as begin
+		delete from dbo.Scorer_In_Bet
+		where ID = @ID
+end
+go
+
+
+--- SCORER_IN_MATCH Procedures ---
+
+create procedure getSIM
+as begin
+		select * from dbo.Scorer_In_Match
+end
+go
+
+create procedure getOneSIM(@ID int)
+as begin
+		select * from dbo.Scorer_In_Match
+		where @ID = @ID
+end
+go
+
+create procedure insertSIM(@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		insert into dbo.Scorer_In_Match(MatchID, PlayerID)
+		values(@MatchID, @PlayerID)
+end
+go
+
+create procedure editSIM(@ID int,
+				@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		update dbo.Scorer_In_Match set MatchID=@MatchID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteSIM(@ID int)
+as begin
+		delete from dbo.Scorer_In_Match
+		where ID = @ID
+end
+go
+
+--- ASSIST_IN_MATCH Procedures ---
+
+create procedure getAIM
+as begin
+		select * from dbo.Assist_In_Match
+end
+go
+
+create procedure getOneAIM(@ID int)
+as begin
+		select * from dbo.Assist_In_Match
+		where @ID = @ID
+end
+go
+
+create procedure insertAIM(@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		insert into dbo.Assist_In_Match(MatchID, PlayerID)
+		values(@MatchID, @PlayerID)
+end
+go
+
+create procedure editAIM(@ID int,
+				@MatchID int,
+				@PlayerID varchar(15))
+as begin
+		update dbo.Assist_In_Match set MatchID=@MatchID, PlayerID=@PlayerID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteAIM(@ID int)
+as begin
+		delete from dbo.Assist_In_Match
+		where ID = @ID
+end
+go
+
+--- USER_IN_BET Procedures ---
+
+create procedure getUIB
+as begin
+		select * from dbo.User_In_Bet
+end
+go
+
+create procedure getOneUIB(@ID int)
+as begin
+		select * from dbo.User_In_Bet
+		where @ID = @ID
+end
+go
+
+create procedure insertUIB(@BetID int,
+				@UserID varchar(15))
+as begin
+		insert into dbo.User_In_Bet(BetID, UserID)
+		values(@BetID, @UserID)
+end
+go
+
+create procedure editUIB(@ID int,
+				@BetID int,
+				@UserID varchar(15))
+as begin
+		update dbo.User_In_Bet set BetID=@BetID, UserID=@UserID
+		where ID = @ID 	
+end
+go
+
+create procedure deleteUIB(@ID int)
+as begin
+		delete from dbo.User_In_Bet
+		where ID = @ID
+end
+go
+
+---- LEAGUES PROCEDURES ----
+
+create procedure getLeague
+as begin
+		select * from dbo.League
+end
+go
+
+create procedure getOneLeague(@ID varchar(6))
+as begin
+		select * from dbo.League
+		where ID = @ID
+end
+go
+
+create procedure insertLeague(@ID varchar(6),
+				@Name varchar(30),
+				@AccessCode varchar(max),
+				@TournamentID varchar(6),
+				@UserID varchar(15))
+as begin
+		insert into dbo.League(ID,Name,AccessCode,TournamentID,UserID)
+		values(@ID,@Name,@AccessCode,@TournamentID,@UserID)
+end
+go
+
+create procedure editLeague(@ID varchar(6),
+				@Name varchar(30),
+				@AccessCode varchar(max),
+				@TournamentID varchar(6),
+				@UserID varchar(15))
+as begin
+		update dbo.League set Name=@Name,AccessCode=@AccessCode,TournamentID=@TournamentID,UserID=@UserID
+		where ID=@ID 	
+end
+go
+
+create procedure deleteLeague(@ID varchar(6))
+as begin
+		delete from dbo.League
+		where ID = @ID
 end
 go

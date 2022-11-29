@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace WorldCupOnline_API.Models
+﻿namespace WorldCupOnline_API.Models
 {
     public class Users
     {
@@ -10,6 +8,7 @@ namespace WorldCupOnline_API.Models
         public string email { get; set; }
         public string countryid { get; set; }
         public DateTime birthdate { get; set; }
+        public int isadmin { get; set; }
         public string password { get; set; }
     }
 }
