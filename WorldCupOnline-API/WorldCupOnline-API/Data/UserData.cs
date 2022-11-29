@@ -4,10 +4,11 @@ using WorldCupOnline_API.Models;
 using System.Security.Cryptography;
 using System.Text;
 using WorldCupOnline_API.Connection;
+using WorldCupOnline_API.Interfaces;
 
 namespace WorldCupOnline_API.Data
 {
-    public class UserData
+    public class UserData : IUserData
     {
         ///Create connection
         private readonly DbConnection _con = new();
@@ -41,6 +42,8 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(user); ///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
         }
@@ -76,6 +79,8 @@ namespace WorldCupOnline_API.Data
                         password = (string)reader["password"]
                     };
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return user;///Return object
         }
@@ -114,7 +119,10 @@ namespace WorldCupOnline_API.Data
             cmd.Parameters.AddWithValue("@password", encrypted);
 
             await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
+            using var reader = await cmd.ExecuteReaderAsync();
+
+            await reader.CloseAsync();
+            await sql.CloseAsync();
         }
 
         /// <summary>
@@ -159,50 +167,11 @@ namespace WorldCupOnline_API.Data
             {
                 username = storedUsername;
             }
+
+            await reader.CloseAsync();
+            await sql.CloseAsync();
+
             return username; ///Returns username
-        }
-
-        /// <summary>
-        /// Method to edit users
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public async Task EditUser(string username, Users user)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("editUser", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-            ///Add params with values
-            cmd.Parameters.AddWithValue("@username", username);
-            cmd.Parameters.AddWithValue("@name", user.name);
-            cmd.Parameters.AddWithValue("@lastname", user.lastname);
-            cmd.Parameters.AddWithValue("@email", user.email);
-            cmd.Parameters.AddWithValue("@countryid", user.countryid);
-            cmd.Parameters.AddWithValue("@birthdate", user.birthdate);
-            cmd.Parameters.AddWithValue("@isadmin", user.isadmin);
-            cmd.Parameters.AddWithValue("@password", user.password);
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
-        }
-
-        /// <summary>
-        /// Method to delete users
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        public async Task DeleteUser(string username)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("deleteUser", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-            cmd.Parameters.AddWithValue("@username", username);///Add param with value
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WorldCupOnline_API.Models;
 using WorldCupOnline_API.Data;
+using WorldCupOnline_API.Models;
 
-namespace WorldCupOnline_API.Controllers
+namespace WorldCupOnline_API.Repositories
 {
-    [Route("api/[controller]")]
+    [Route("api/Match")]
     [ApiController]
-    public class MatchController : ControllerBase
+    public class MatchRepository : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly MatchData _funct;
@@ -15,14 +15,14 @@ namespace WorldCupOnline_API.Controllers
         /// Establish configuration for controller to get connection
         /// </summary>
         /// <param name="configuration"></param>
-        public MatchController(IConfiguration configuration)
+        public MatchRepository(IConfiguration configuration)
         {
             _configuration = configuration;
             _funct = new MatchData();
         }
 
         /// <summary>
-        /// Service to get all Matches
+        /// Service to get all matches
         /// </summary>
         /// <returns>List of Match</returns>
         [HttpGet]
@@ -65,15 +65,5 @@ namespace WorldCupOnline_API.Controllers
             await _funct.EditMatch(id, match);
         }
 
-        /// <summary>
-        /// Service to delete Match
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Task action result</returns>
-        [HttpDelete("{id}")]
-        public async Task Delete(int id)
-        {
-            await _funct.DeleteMatch(id);
-        }
     }
 }

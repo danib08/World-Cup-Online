@@ -2,11 +2,12 @@
 using System.Data.SqlClient;
 using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Connection;
+using WorldCupOnline_API.Interfaces;
 using WorldCupOnline_API.Models;
 
 namespace WorldCupOnline_API.Data
 {
-    public class TeamData
+    public class TeamData : ITeamData
     {
         ///Create connection
         private readonly DbConnection _con = new();
@@ -36,6 +37,8 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(team); ///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
         }
@@ -68,6 +71,8 @@ namespace WorldCupOnline_API.Data
                         typeid = (int)reader["typeid"]
                     };
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return team; ///Return object
         }
@@ -99,6 +104,8 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(item); ///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
         }
@@ -130,68 +137,10 @@ namespace WorldCupOnline_API.Data
                     };
                     list.Add(item); ///Add to list
                 }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
             }
             return list; ///Return list
-        }
-
-        /// <summary>
-        /// Method to create Team
-        /// </summary>
-        /// <param name="team"></param>
-        /// <returns></returns>
-        public async Task CreateTeam(Team team)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("insertTeam", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-            ///Add parameters with value
-            cmd.Parameters.AddWithValue("@id", team.id);
-            cmd.Parameters.AddWithValue("@name", team.name);
-            cmd.Parameters.AddWithValue("@confederation", team.confederation);
-            cmd.Parameters.AddWithValue("@typeid", team.typeid);
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
-        }
-
-        /// <summary>
-        /// Method to edit a team
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="team"></param>
-        /// <returns></returns>
-        public async Task EditTeam(string id, Team team)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("editTeam", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-            ///Add parameters with value
-            cmd.Parameters.AddWithValue("@id", id);
-            cmd.Parameters.AddWithValue("@name", team.name);
-            cmd.Parameters.AddWithValue("@confederation", team.confederation);
-            cmd.Parameters.AddWithValue("@typeid", team.typeid);
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
-        }
-
-        /// <summary>
-        /// Method to delete Teams
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task DeleteTeam(string id)
-        {
-            using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("deleteTeam", sql);///Calls stored procedure via sql connection
-
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-            cmd.Parameters.AddWithValue("@id", id);///Ad parameter with value
-
-            await sql.OpenAsync();
-            await cmd.ExecuteReaderAsync();
         }
     }
 }
