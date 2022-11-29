@@ -2,6 +2,7 @@
 using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
+using WorldCupOnline_API.Interfaces;
 
 namespace WorldCupOnline_API.Repositories
 {
@@ -10,7 +11,7 @@ namespace WorldCupOnline_API.Repositories
     public class TournamentRepository : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly TournamentData _funct;
+        private readonly ITournamentData _funct;
 
         /// <summary>
         /// Establish configuration for controller to get connection
@@ -82,7 +83,7 @@ namespace WorldCupOnline_API.Repositories
         /// <param name="id"></param>
         /// <returns>List of TeamTournamentBody</returns>
         [HttpGet("Teams/{id}")]
-        public async Task<ActionResult<List<TeamTournamentBody>>> GetTeamsByTournament(string id)
+        public async Task<ActionResult<List<IdStringBody>>> GetTeamsByTournament(string id)
         {
             return await _funct.GetTeamsByTournament(id);
         }

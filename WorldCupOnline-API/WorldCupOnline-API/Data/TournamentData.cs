@@ -188,9 +188,9 @@ namespace WorldCupOnline_API.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns>List of TeamTournamentBody object</returns>
-        public async Task<List<TeamTournamentBody>> GetTeamsByTournament(string id)
+        public async Task<List<IdStringBody>> GetTeamsByTournament(string id)
         {
-            var list = new List<TeamTournamentBody>(); ///TeamTournamentBody list creation
+            var list = new List<IdStringBody>(); ///TeamTournamentBody list creation
             using var sql = new SqlConnection(_con.SQLCon());
             using (var cmd = new SqlCommand("getTeamsByTournament", sql))///Calls stored procedure via sql connection
             {
@@ -202,11 +202,10 @@ namespace WorldCupOnline_API.Data
                 while (await reader.ReadAsync())
                 {
                     ///Read from database
-                    var team = new TeamTournamentBody
+                    var team = new IdStringBody
                     {
                         id = (string)reader["id"],
-                        name = (string)reader["name"],
-                        confederation = (string)reader["confederation"]
+                        label = (string)reader["name"],
                     };
                     list.Add(team); ///Add to list
                 }

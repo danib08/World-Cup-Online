@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using WorldCupOnline_API.Bodies;
 using WorldCupOnline_API.Data;
 using WorldCupOnline_API.Models;
+using WorldCupOnline_API.Interfaces;
 
 namespace WorldCupOnline_API.Repositories
 {
@@ -11,7 +12,7 @@ namespace WorldCupOnline_API.Repositories
     public class UserRepository : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly UserData _funct;
+        private readonly IUserData _funct;
 
         /// <summary>
         /// Establish configuration for controller to get connection

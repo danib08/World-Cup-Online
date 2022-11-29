@@ -9,6 +9,5 @@ namespace WorldCupOnline_API.Interfaces
         Task<Team> GetOneTeam(string id);
         Task<List<IdStringBody>> GetTeamsByType(int type);
         Task<List<IdStringBody>> GetPlayersByTeam(string id);
-        Task<List<Team_In_Tournament>> GetTeam_In_Tournament();
     }
 }
