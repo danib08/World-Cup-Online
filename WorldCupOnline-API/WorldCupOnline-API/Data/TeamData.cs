@@ -142,5 +142,35 @@ namespace WorldCupOnline_API.Data
             }
             return list; ///Return list
         }
+
+        /// <summary>
+        /// Method to obtain all Team_In_Tournament
+        /// </summary>
+        /// <returns>List of Team_In_Tournament</returns>
+        public async Task<List<Team_In_Tournament>> GetTeam_In_Tournament()
+        {
+            var list = new List<Team_In_Tournament>();///Create list of Team_In_Tournament object
+            using (var sql = new SqlConnection(_con.SQLCon()))
+            {
+                using var cmd = new SqlCommand("getTIT", sql);///Calls stored procedure via sql connection
+                await sql.OpenAsync();
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    ///Read from database
+                    var team_In_Tournament = new Team_In_Tournament
+                    {
+                        teamid = (string)reader["teamid"],
+                        tournamentid = (string)reader["tournamentid"]
+                    };
+                    list.Add(team_In_Tournament);///Add to list
+                }
+                await reader.CloseAsync();
+                await sql.CloseAsync();
+            }
+            return list; ///Return list
+        }
     }
 }

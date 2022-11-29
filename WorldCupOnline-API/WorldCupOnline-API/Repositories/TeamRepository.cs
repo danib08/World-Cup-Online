@@ -64,5 +64,15 @@ namespace WorldCupOnline_API.Repositories
         {
             return await _funct.GetPlayersByTeam(teamId);
         }
+
+        /// <summary>
+        /// Service to get all Team_In_Tournament
+        /// </summary>
+        /// <returns>List of Team_In_Tournament</returns>
+        [HttpGet("TeamInTournament")]
+        public async Task<ActionResult<List<Team_In_Tournament>>> GetTeamsInTournament()
+        {
+            return await _funct.GetTeam_In_Tournament();
+        }
     }
 }
