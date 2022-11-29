@@ -9,5 +9,6 @@ namespace WorldCupOnline_API.Interfaces
         Task<League> GetOneLeague(string id);
         Task<List<ValueStringBody>> GetTournaments();
         Task<string> CreateLeague(LeagueCreator league);
+        Task<string> JoinLeague(JoinLeague league);
     }
 }

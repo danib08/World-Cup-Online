@@ -1,6 +1,3 @@
-insert into dbo.Users
-values ('admin','Lorena','Zuniga','lzuniga@itcr.ac.cr','CRC','1960-11-29',1,'L0renita')
-
 insert into dbo.Type (Name)
 values ('Selecciones'),
 ('Clubes')

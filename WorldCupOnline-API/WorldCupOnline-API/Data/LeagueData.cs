@@ -117,30 +117,139 @@ namespace WorldCupOnline_API.Data
         /// <returns></returns>
         public async Task<string> CreateLeague(LeagueCreator league)
         {
-            Random random = new();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string newLeagueId = new(Enumerable.Repeat(chars, 6)
-                                    .Select(s => s[random.Next(s.Length)]).ToArray());
-            string accessCode = league.tournamentid + newLeagueId;
-
+            string isInLeague = "";
             using var sql = new SqlConnection(_con.SQLCon());
-            using var cmd = new SqlCommand("insertLeague", sql);///Calls stored procedure via sql connection
+            using var cmdExists = new SqlCommand("isInLeague", sql);
 
-            cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
-            ///Add parameters with value
-            cmd.Parameters.AddWithValue("@id", newLeagueId);
-            cmd.Parameters.AddWithValue("@name", league.name);
-            cmd.Parameters.AddWithValue("@accesscode", accessCode);
-            cmd.Parameters.AddWithValue("@tournamentid", league.tournamentid);
-            cmd.Parameters.AddWithValue("@userid", league.userid);
+            cmdExists.CommandType = CommandType.StoredProcedure;
+            cmdExists.Parameters.AddWithValue("@userid", league.userid);
+            cmdExists.Parameters.AddWithValue("@tournamentid", league.tournamentid);
 
             await sql.OpenAsync();
-            using var reader = await cmd.ExecuteReaderAsync();
+            using var readerExists = await cmdExists.ExecuteReaderAsync();
 
-            await reader.CloseAsync();
-            await sql.CloseAsync();
+            while (await readerExists.ReadAsync())
+            {
+                isInLeague = (string)readerExists["isInLeague"];      
+            }
 
-            return accessCode;
-        }    
+            await readerExists.CloseAsync();
+
+            if (isInLeague == "FALSE")
+            {
+                Random random = new();
+                const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                string newLeagueId = new(Enumerable.Repeat(chars, 6)
+                                        .Select(s => s[random.Next(s.Length)]).ToArray());
+
+                string accessCode = league.tournamentid + newLeagueId;
+
+                using var cmd = new SqlCommand("insertLeague", sql);///Calls stored procedure via sql connection
+
+                cmd.CommandType = CommandType.StoredProcedure;///Indicates that command is a stored procedure
+                                                              ///Add parameters with value
+                cmd.Parameters.AddWithValue("@id", newLeagueId);
+                cmd.Parameters.AddWithValue("@name", league.name);
+                cmd.Parameters.AddWithValue("@accesscode", accessCode);
+                cmd.Parameters.AddWithValue("@tournamentid", league.tournamentid);
+                cmd.Parameters.AddWithValue("@userid", league.userid);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                await reader.CloseAsync();
+
+                using var cmdUserInLeague = new SqlCommand("insertUIL", sql);
+                cmdUserInLeague.CommandType = CommandType.StoredProcedure;
+                cmdUserInLeague.Parameters.AddWithValue("@leagueid", newLeagueId);
+                cmdUserInLeague.Parameters.AddWithValue("@userid", league.userid);
+
+                using var readerUser = await cmdUserInLeague.ExecuteReaderAsync();
+                await readerUser.CloseAsync();
+
+                await sql.CloseAsync();
+
+                return accessCode;
+            }
+            else
+            {
+                await sql.CloseAsync();
+                var message = "FAIL";
+                return message;
+            }
+        }
+
+        /// <summary>
+        /// Method to create League
+        /// </summary>
+        /// <param name="league"></param>
+        /// <returns></returns>
+        public async Task<string> JoinLeague(JoinLeague league)
+        {
+            string codeExists = "";
+            using var sql = new SqlConnection(_con.SQLCon());
+            using var cmdCode = new SqlCommand("codeExists", sql);
+
+            cmdCode.CommandType = CommandType.StoredProcedure;
+            cmdCode.Parameters.AddWithValue("@accesscode", league.accesscode);
+
+            await sql.OpenAsync();
+            using var readerCode = await cmdCode.ExecuteReaderAsync();
+
+            while (await readerCode.ReadAsync())
+            {
+                codeExists = (string)readerCode["codeExists"];
+            }
+
+            await readerCode.CloseAsync();
+
+            string message;
+            if (codeExists == "TRUE")
+            {
+                //--------------------------
+                string isInLeague = "";
+                string tournamentId = league.accesscode[..6];
+                string leagueId = league.accesscode.Substring(5, 6);
+
+                using var cmdExists = new SqlCommand("isInLeague", sql);
+
+                cmdExists.CommandType = CommandType.StoredProcedure;
+                cmdExists.Parameters.AddWithValue("@userid", league.username);
+                cmdExists.Parameters.AddWithValue("@tournamentid", tournamentId);
+
+                using var readerExists = await cmdExists.ExecuteReaderAsync();
+
+                while (await readerExists.ReadAsync())
+                {
+                    isInLeague = (string)readerExists["isInLeague"];
+                }
+
+                await readerExists.CloseAsync();
+
+                if (isInLeague == "FALSE")
+                {
+                    using var cmdUserInLeague = new SqlCommand("insertUIL", sql);
+                    cmdUserInLeague.CommandType = CommandType.StoredProcedure;
+                    cmdUserInLeague.Parameters.AddWithValue("@leagueid", leagueId);
+                    cmdUserInLeague.Parameters.AddWithValue("@userid", league.username);
+
+                    using var readerUser = await cmdUserInLeague.ExecuteReaderAsync();
+                    await readerUser.CloseAsync();
+
+                    await sql.CloseAsync();
+                    return league.accesscode;
+                }
+                else
+                {
+                    await sql.CloseAsync();
+                    message = "CONFLICT";
+                    return message;
+                }
+            }
+            else
+            {
+                await sql.CloseAsync();
+                message = "BADREQUEST";
+                return message;
+            }
+        }
     }
 }
